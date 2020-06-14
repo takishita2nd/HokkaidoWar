@@ -75,11 +75,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="City.cs" />
     <Compile Include="FileAccess.cs" />
     <Compile Include="HokkaidoWar.cs" />
+    <Compile Include="InfomationWindow.cs" />
+    <Compile Include="Map.cs" />
     <Compile Include="MapData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Singleton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

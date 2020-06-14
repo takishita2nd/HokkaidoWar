@@ -9,6 +9,7 @@ namespace HokkaidoWar
     class HokkaidoWar
     {
         MapData mapData = null;
+        List<City> cities = null;
         public HokkaidoWar()
         {
             mapData = FileAccess.Load();
@@ -25,26 +26,46 @@ namespace HokkaidoWar
             bgRect.DrawingArea = new asd.RectF(0, 0, 1800, 1000);
             background.Shape = bgRect;
 
+            cities = new List<City>();
             var r = new Random();
             foreach (var map in mapData.list)
             {
-                var color = new asd.Color((byte)r.Next(0, 255), (byte)r.Next(0, 255), (byte)r.Next(0, 255));
-                foreach (var point in map.point)
-                {
-                    var geometryObj = new asd.GeometryObject2D();
-                    geometryObj.Color = color;
-                    asd.Engine.AddObject2D(geometryObj);
-                    var rect = new asd.RectangleShape();
-                    rect.DrawingArea = new asd.RectF(24 * point.x + 50, 24 * point.y + 50, 24, 24);
-                    geometryObj.Shape = rect;
-                }
+                City city = new City(map.name, map.point);
+                cities.Add(city);
             }
 
             while (asd.Engine.DoEvents())
             {
+                asd.Vector2DF pos = asd.Engine.Mouse.Position;
+                if (isOnMaouseMap(pos))
+                {
+                    foreach (var city in cities)
+                    {
+                        city.OnMouse(pos);
+                    }
+                }
+                else
+                {
+                    var info = Singleton.GetInfomationWindow();
+                    info.ShowText(pos, string.Empty);
+                }
+
                 asd.Engine.Update();
             }
             asd.Engine.Terminate();
+        }
+
+        private bool isOnMaouseMap(asd.Vector2DF pos)
+        {
+            bool ret = false;
+            foreach (var city in cities)
+            {
+                if (city.IsOnMouse(pos))
+                {
+                    ret = true;
+                }
+            }
+            return ret;
         }
     }
 }
