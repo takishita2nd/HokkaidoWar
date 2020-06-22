@@ -30,7 +30,7 @@ namespace HokkaidoWar
             var r = new Random();
             foreach (var map in mapData.list)
             {
-                City city = new City(map.name, map.point);
+                City city = new City(map.name, map.point, map.population);
                 cities.Add(city);
             }
 

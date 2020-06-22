@@ -9,12 +9,14 @@ namespace HokkaidoWar
     class City
     {
         private string _name = string.Empty;
+        private int _population = 0;
         private List<Map> _maps = null;
         private asd.Color _color;
 
-        public City(string name, Point[] points)
+        public City(string name, Point[] points, int population)
         {
             _name = name;
+            _population = population;
             _maps = new List<Map>();
             var r = Singleton.GetRandom();
             _color = new asd.Color((byte)r.Next(0, 255), (byte)r.Next(0, 255), (byte)r.Next(0, 255));
@@ -33,7 +35,7 @@ namespace HokkaidoWar
                 if(m.IsOnMouse(pos))
                 {
                     var info = Singleton.GetInfomationWindow();
-                    info.ShowText(pos, _name);
+                    info.ShowText(pos, _name + "\r\n" + _population.ToString());
                 }
             }
         }

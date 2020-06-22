@@ -21,6 +21,8 @@ namespace HokkaidoWar
         public string name { get; set; }
         [JsonProperty("point")]
         public Point[] point { get; set; }
+        [JsonProperty("population")]
+        public int population { get; set; }
     }
 
     [JsonObject("Point")]
