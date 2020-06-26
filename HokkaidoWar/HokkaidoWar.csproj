@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="City.cs" />
+    <Compile Include="FieldMap.cs" />
     <Compile Include="FileAccess.cs" />
     <Compile Include="HokkaidoWar.cs" />
     <Compile Include="InfomationWindow.cs" />

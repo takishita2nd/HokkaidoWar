@@ -21,21 +21,27 @@ namespace HokkaidoWar
             var r = Singleton.GetRandom();
             _color = new asd.Color((byte)r.Next(0, 255), (byte)r.Next(0, 255), (byte)r.Next(0, 255));
 
+            var fieldMap = Singleton.GetFieldMap();
+
             foreach (var p in points)
             {
                 Map m = new Map(p.x, p.y, _color);
                 _maps.Add(m);
+                fieldMap.SetMap(m);
             }
         }
 
         public void OnMouse(asd.Vector2DF pos)
         {
-            foreach(var m in _maps)
+            var fieldMap = Singleton.GetFieldMap();
+            foreach (var m in _maps)
             {
                 if(m.IsOnMouse(pos))
                 {
                     var info = Singleton.GetInfomationWindow();
                     info.ShowText(pos, _name + "\r\n" + _population.ToString());
+                    // test
+                    fieldMap.onMouse(m);
                 }
             }
         }

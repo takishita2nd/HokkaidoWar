@@ -12,6 +12,7 @@ namespace HokkaidoWar
         private static InfomationWindow _info = null;
         private static Random random = null;
         private static asd.Font _font = null;
+        private static FieldMap _map = null;
 
         public static Random GetRandom()
         {
@@ -38,6 +39,15 @@ namespace HokkaidoWar
                 _info = new InfomationWindow();
             }
             return _info;
+        }
+
+        public static FieldMap GetFieldMap()
+        {
+            if (_map == null)
+            {
+                _map = new FieldMap();
+            }
+            return _map;
         }
     }
 }
