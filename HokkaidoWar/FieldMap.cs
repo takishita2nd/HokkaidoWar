@@ -21,7 +21,14 @@ namespace HokkaidoWar
 
         public Map GetMap(int x, int y)
         {
-            return _map[x, y];
+            if(x < 0 || x >= MaxX || y < 0 || y >= MaxY)
+            {
+                return null;
+            }
+            else
+            {
+                return _map[x, y];
+            }
         }
 
         public void SetMap(Map map)
@@ -42,33 +49,21 @@ namespace HokkaidoWar
                     }
                 }
             }
-            if(map.X > 0)
+            if(map.Up != null)
             {
-                if (_map[map.X + 1, map.Y] != null)
-                {
-                    _map[map.X + 1, map.Y].linkedMap();
-                }
+                map.Up.linkedMap();
             }
-            if (map.X < MaxX)
+            if (map.Down != null)
             {
-                if (_map[map.X - 1, map.Y] != null)
-                {
-                    _map[map.X - 1, map.Y].linkedMap();
-                }
+                map.Down.linkedMap();
             }
-            if (map.Y > 0)
+            if (map.Left != null)
             {
-                if (_map[map.X, map.Y - 1] != null)
-                {
-                    _map[map.X, map.Y - 1].linkedMap();
-                }
+                map.Left.linkedMap();
             }
-            if (map.Y < MaxY)
+            if (map.Right != null)
             {
-                if (_map[map.X, map.Y + 1] != null)
-                {
-                    _map[map.X, map.Y + 1].linkedMap();
-                }
+                map.Right.linkedMap();
             }
         }
     }

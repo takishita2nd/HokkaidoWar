@@ -22,6 +22,40 @@ namespace HokkaidoWar
         public int X { get { return _x; } }
         public int Y { get { return _y; } }
 
+        public Map Up { 
+            get {
+                var field = Singleton.GetFieldMap();
+                return field.GetMap(_x, _y - 1);
+            }
+        }
+
+        public Map Down
+        {
+            get
+            {
+                var field = Singleton.GetFieldMap();
+                return field.GetMap(_x, _y + 1);
+            }
+        }
+
+        public Map Left
+        {
+            get
+            {
+                var field = Singleton.GetFieldMap();
+                return field.GetMap(_x - 1, _y);
+            }
+        }
+
+        public Map Right
+        {
+            get
+            {
+                var field = Singleton.GetFieldMap();
+                return field.GetMap(_x + 1, _y);
+            }
+        }
+
         public Map(int x, int y, asd.Color color)
         {
             _x = x;
