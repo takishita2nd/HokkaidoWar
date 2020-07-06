@@ -37,7 +37,7 @@ namespace HokkaidoWar
         }
 
         // Test
-        public void onMouse(Map map)
+        public void unlinkMap()
         {
             for(int x = 0; x < MaxX; x++)
             {
@@ -48,22 +48,6 @@ namespace HokkaidoWar
                         _map[x, y].unlinkedMap();
                     }
                 }
-            }
-            if(map.Up != null)
-            {
-                map.Up.linkedMap();
-            }
-            if (map.Down != null)
-            {
-                map.Down.linkedMap();
-            }
-            if (map.Left != null)
-            {
-                map.Left.linkedMap();
-            }
-            if (map.Right != null)
-            {
-                map.Right.linkedMap();
             }
         }
     }

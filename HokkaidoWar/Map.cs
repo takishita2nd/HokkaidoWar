@@ -11,6 +11,7 @@ namespace HokkaidoWar
     {
         private int _x;
         private int _y;
+        private City _city;
         private asd.Color _color;
         private asd.GeometryObject2D _geometryObj;
 
@@ -25,7 +26,22 @@ namespace HokkaidoWar
         public Map Up { 
             get {
                 var field = Singleton.GetFieldMap();
-                return field.GetMap(_x, _y - 1);
+                if(_x == 18 && _y == 0)
+                {
+                    return field.GetMap(23, 0);
+                }
+                else if(_x == 23 && _y == 0)
+                {
+                    return field.GetMap(18, 0);
+                }
+                else if (_x == 20 && _y == 1)
+                {
+                    return field.GetMap(18, 0);
+                }
+                else
+                {
+                    return field.GetMap(_x, _y - 1);
+                }
             }
         }
 
@@ -34,7 +50,14 @@ namespace HokkaidoWar
             get
             {
                 var field = Singleton.GetFieldMap();
-                return field.GetMap(_x, _y + 1);
+                if(_x == 18 && _y == 0)
+                {
+                    return field.GetMap(19, 1);
+                }
+                else
+                {
+                    return field.GetMap(_x, _y + 1);
+                }
             }
         }
 
@@ -43,7 +66,22 @@ namespace HokkaidoWar
             get
             {
                 var field = Singleton.GetFieldMap();
-                return field.GetMap(_x - 1, _y);
+                if (_x == 2 && _y == 29)
+                {
+                    return field.GetMap(0, 29);
+                }
+                else if(_x == 19 && _y == 1)
+                {
+                    return field.GetMap(18, 0);
+                }
+                else if (_x == 23 && _y == 0)
+                {
+                    return field.GetMap(20, 1);
+                }
+                else
+                {
+                    return field.GetMap(_x - 1, _y);
+                }
             }
         }
 
@@ -52,7 +90,22 @@ namespace HokkaidoWar
             get
             {
                 var field = Singleton.GetFieldMap();
-                return field.GetMap(_x + 1, _y);
+                if (_x == 0 && _y == 29)
+                {
+                    return field.GetMap(2, 29);
+                }
+                else if(_x == 18 && _y == 0)
+                {
+                    return field.GetMap(20, 1);
+                }
+                else if (_x == 20 && _y == 1)
+                {
+                    return field.GetMap(23, 0);
+                }
+                else
+                {
+                    return field.GetMap(_x + 1, _y);
+                }
             }
         }
 
@@ -72,6 +125,16 @@ namespace HokkaidoWar
         public void SetColor(asd.Color color)
         {
             _geometryObj.Color = color;
+        }
+
+        public void SetCity(City city)
+        {
+            _city = city;
+        }
+
+        public City GetCity()
+        {
+            return _city;
         }
 
         public bool IsOnMouse(asd.Vector2DF pos)

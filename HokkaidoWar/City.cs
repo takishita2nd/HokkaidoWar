@@ -26,6 +26,7 @@ namespace HokkaidoWar
             foreach (var p in points)
             {
                 Map m = new Map(p.x, p.y, _color);
+                m.SetCity(this);
                 _maps.Add(m);
                 fieldMap.SetMap(m);
             }
@@ -33,7 +34,6 @@ namespace HokkaidoWar
 
         public void OnMouse(asd.Vector2DF pos)
         {
-            var fieldMap = Singleton.GetFieldMap();
             foreach (var m in _maps)
             {
                 if(m.IsOnMouse(pos))
@@ -41,7 +41,11 @@ namespace HokkaidoWar
                     var info = Singleton.GetInfomationWindow();
                     info.ShowText(pos, _name + "\r\n" + _population.ToString());
                     // test
-                    fieldMap.onMouse(m);
+                    var cities = GetLinkedCities();
+                    foreach (var c in cities)
+                    {
+                        c.linkedCity();
+                    }
                 }
             }
         }
@@ -57,6 +61,56 @@ namespace HokkaidoWar
                 }
             }
             return ret;
+        }
+
+        private List<City> GetLinkedCities()
+        {
+            List<City> cities = new List<City>();
+            foreach (var m in _maps)
+            {
+                if (m.Up != null)
+                {
+                    var c = m.Up.GetCity();
+                    if (cities.Contains(c) == false && c != this)
+                    {
+                        cities.Add(c);
+                    }
+                }
+                if (m.Down != null)
+                {
+                    var c = m.Down.GetCity();
+                    if (cities.Contains(c) == false && c != this)
+                    {
+                        cities.Add(c);
+                    }
+                }
+                if (m.Left != null)
+                {
+                    var c = m.Left.GetCity();
+                    if (cities.Contains(c) == false && c != this)
+                    {
+                        cities.Add(c);
+                    }
+                }
+                if (m.Right != null)
+                {
+                    var c = m.Right.GetCity();
+                    if (cities.Contains(c) == false && c != this)
+                    {
+                        cities.Add(c);
+                    }
+                }
+            }
+            return cities;
+        }
+
+        //test
+        private void linkedCity()
+        {
+            foreach(var m in _maps)
+            {
+                m.linkedMap();
+            }
         }
     }
 }

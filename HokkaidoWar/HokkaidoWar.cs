@@ -36,6 +36,8 @@ namespace HokkaidoWar
 
             while (asd.Engine.DoEvents())
             {
+                FieldMap fieldMap = Singleton.GetFieldMap();
+                fieldMap.unlinkMap();
                 asd.Vector2DF pos = asd.Engine.Mouse.Position;
                 if (isOnMaouseMap(pos))
                 {
