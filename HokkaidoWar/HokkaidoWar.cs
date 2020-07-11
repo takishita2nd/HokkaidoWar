@@ -10,6 +10,7 @@ namespace HokkaidoWar
     {
         MapData mapData = null;
         List<City> cities = null;
+        Battle _battle = null;
         public HokkaidoWar()
         {
             mapData = FileAccess.Load();
@@ -34,10 +35,10 @@ namespace HokkaidoWar
                 cities.Add(city);
             }
 
+            _battle = new Battle(cities);
+
             while (asd.Engine.DoEvents())
             {
-                FieldMap fieldMap = Singleton.GetFieldMap();
-                fieldMap.unlinkMap();
                 asd.Vector2DF pos = asd.Engine.Mouse.Position;
                 if (isOnMaouseMap(pos))
                 {
@@ -52,6 +53,10 @@ namespace HokkaidoWar
                     info.ShowText(pos, string.Empty);
                 }
 
+                if (asd.Engine.Mouse.LeftButton.ButtonState == asd.ButtonState.Push)
+                {
+                    _battle.NextTurn();
+                }
                 asd.Engine.Update();
             }
             asd.Engine.Terminate();

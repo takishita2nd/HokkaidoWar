@@ -10,6 +10,7 @@ namespace HokkaidoWar
     class Singleton
     {
         private static InfomationWindow _info = null;
+        private static InfomationWindow _gameInfo = null;
         private static Random random = null;
         private static asd.Font _font = null;
         private static FieldMap _map = null;
@@ -39,6 +40,15 @@ namespace HokkaidoWar
                 _info = new InfomationWindow();
             }
             return _info;
+        }
+
+        public static InfomationWindow GetGameProcessInfomation()
+        {
+            if (_gameInfo == null)
+            {
+                _gameInfo = new InfomationWindow();
+            }
+            return _gameInfo;
         }
 
         public static FieldMap GetFieldMap()

@@ -178,3 +178,6 @@
 èºëO
 ñÿå√ì‡
 1234567890
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+ /

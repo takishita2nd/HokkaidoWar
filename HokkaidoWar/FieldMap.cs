@@ -35,20 +35,5 @@ namespace HokkaidoWar
         {
             _map[map.X, map.Y] = map;
         }
-
-        // Test
-        public void unlinkMap()
-        {
-            for(int x = 0; x < MaxX; x++)
-            {
-                for(int y = 0; y < MaxY; y++)
-                {
-                    if(_map[x,y] != null)
-                    {
-                        _map[x, y].unlinkedMap();
-                    }
-                }
-            }
-        }
     }
 }

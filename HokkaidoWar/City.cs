@@ -13,6 +13,8 @@ namespace HokkaidoWar
         private List<Map> _maps = null;
         private asd.Color _color;
 
+        public string Name { get { return _name; } }
+
         public City(string name, Point[] points, int population)
         {
             _name = name;
@@ -40,12 +42,6 @@ namespace HokkaidoWar
                 {
                     var info = Singleton.GetInfomationWindow();
                     info.ShowText(pos, _name + "\r\n" + _population.ToString());
-                    // test
-                    var cities = GetLinkedCities();
-                    foreach (var c in cities)
-                    {
-                        c.linkedCity();
-                    }
                 }
             }
         }
@@ -61,6 +57,11 @@ namespace HokkaidoWar
                 }
             }
             return ret;
+        }
+
+        public asd.Vector2DF GetPosition()
+        {
+            return new asd.Vector2DF(24 * _maps[0].X + 50, 24 * _maps[0].Y + 50);
         }
 
         private List<City> GetLinkedCities()
@@ -102,15 +103,6 @@ namespace HokkaidoWar
                 }
             }
             return cities;
-        }
-
-        //test
-        private void linkedCity()
-        {
-            foreach(var m in _maps)
-            {
-                m.linkedMap();
-            }
         }
     }
 }

@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Battle.cs" />
     <Compile Include="City.cs" />
     <Compile Include="FieldMap.cs" />
     <Compile Include="FileAccess.cs" />

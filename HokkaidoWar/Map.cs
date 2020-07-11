@@ -149,17 +149,5 @@ namespace HokkaidoWar
                 return false;
             }
         }
-
-        // Test
-        public void linkedMap()
-        {
-            var changeColor = new asd.Color(200, 200, 200);
-           _geometryObj.Color = changeColor;
-        }
-
-        public void unlinkedMap()
-        {
-            _geometryObj.Color = _color;
-        }
     }
 }
