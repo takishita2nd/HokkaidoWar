@@ -64,7 +64,7 @@ namespace HokkaidoWar
             return new asd.Vector2DF(24 * _maps[0].X + 50, 24 * _maps[0].Y + 50);
         }
 
-        private List<City> GetLinkedCities()
+        public List<City> GetLinkedCities()
         {
             List<City> cities = new List<City>();
             foreach (var m in _maps)
@@ -103,6 +103,32 @@ namespace HokkaidoWar
                 }
             }
             return cities;
+        }
+
+        public void PaintAttackColor()
+        {
+            var color = new asd.Color(255, 0, 0);
+            foreach(var m in _maps)
+            {
+                m.SetColor(color);
+            }
+        }
+
+        public void PaintDeffenceColor()
+        {
+            var color = new asd.Color(0, 0, 255);
+            foreach (var m in _maps)
+            {
+                m.SetColor(color);
+            }
+        }
+
+        public void ClearPaint()
+        {
+            foreach (var m in _maps)
+            {
+                m.SetColor(_color);
+            }
         }
     }
 }

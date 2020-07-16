@@ -12,6 +12,10 @@ namespace HokkaidoWar
         private List<City> _cities = null;
         private int turn;
         private int cityCnt;
+
+        private City prevAttack = null;
+        private City prevDeffece = null;
+
         public Battle(List<City> cities)
         {
             turn = 1;
@@ -26,8 +30,34 @@ namespace HokkaidoWar
 
         public void NextTurn()
         {
+            if(prevAttack != null)
+            {
+                prevAttack.ClearPaint();
+            }
+            if(prevDeffece != null)
+            {
+                prevDeffece.ClearPaint();
+            }
+
+            var targets = _cities[cityCnt].GetLinkedCities();
+            var r = Singleton.GetRandom();
+            int targetIdx = r.Next(0, targets.Count + 1);
+            prevAttack = _cities[cityCnt];
+            prevAttack.PaintAttackColor();
+
             var info = Singleton.GetGameProcessInfomation();
-            info.ShowText(_cities[cityCnt].GetPosition(), string.Format("{0} turn {1} / {2} {3}", turn, cityCnt + 1, _cities.Count, _cities[cityCnt].Name));
+            if(targetIdx >= targets.Count)
+            {
+                info.ShowText(prevAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}",
+                    turn, cityCnt + 1, _cities.Count, prevAttack.Name));
+            }
+            else
+            {
+                prevDeffece = targets[targetIdx];
+                prevDeffece.PaintDeffenceColor();
+                info.ShowText(prevAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4}",
+                    turn, cityCnt + 1, _cities.Count, prevAttack.Name, prevDeffece.Name));
+            }
 
             cityCnt++;
             if(cityCnt >= _cities.Count)
