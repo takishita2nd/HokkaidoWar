@@ -13,8 +13,8 @@ namespace HokkaidoWar
         private int turn;
         private int cityCnt;
 
-        private City prevAttack = null;
-        private City prevDeffece = null;
+        private City lastAttack = null;
+        private City lastDeffece = null;
 
         public Battle(List<City> cities)
         {
@@ -28,35 +28,53 @@ namespace HokkaidoWar
             _cities = cityRandomReplace(_cities);
         }
 
+        public List<City> GetCityList()
+        {
+            return _cities;
+        }
+
         public void NextTurn()
         {
-            if(prevAttack != null)
+            if (lastDeffece != null)
             {
-                prevAttack.ClearPaint();
+                lastDeffece.ClearPaint();
             }
-            if(prevDeffece != null)
+            if (lastAttack != null)
             {
-                prevDeffece.ClearPaint();
+                lastAttack.ClearPaint();
             }
 
             var targets = _cities[cityCnt].GetLinkedCities();
             var r = Singleton.GetRandom();
             int targetIdx = r.Next(0, targets.Count + 1);
-            prevAttack = _cities[cityCnt];
-            prevAttack.PaintAttackColor();
+            lastAttack = _cities[cityCnt];
+            lastAttack.PaintAttackColor();
 
             var info = Singleton.GetGameProcessInfomation();
             if(targetIdx >= targets.Count)
             {
-                info.ShowText(prevAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}",
-                    turn, cityCnt + 1, _cities.Count, prevAttack.Name));
+                info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}",
+                    turn, cityCnt + 1, _cities.Count, lastAttack.Name));
             }
             else
             {
-                prevDeffece = targets[targetIdx];
-                prevDeffece.PaintDeffenceColor();
-                info.ShowText(prevAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4}",
-                    turn, cityCnt + 1, _cities.Count, prevAttack.Name, prevDeffece.Name));
+                lastDeffece = targets[targetIdx];
+                lastDeffece.PaintDeffenceColor();
+                float attack = lastAttack.Population * (float)(r.Next(5, 30) / 10.0);
+                float deffence = lastDeffece.Population * (float)(r.Next(5, 30) / 10.0);
+                if(attack > deffence)
+                {
+                    info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nwin",
+                        turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
+                    lastAttack.CombinationCity(lastDeffece);
+                    _cities.Remove(lastDeffece);
+                    lastDeffece = null;
+                }
+                else
+                {
+                    info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nlose",
+                        turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
+                }
             }
 
             cityCnt++;

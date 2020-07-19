@@ -18,7 +18,7 @@ namespace HokkaidoWar
 
         public void Run()
         {
-            asd.Engine.Initialize("北海道大戦", 1800, 1000, new asd.EngineOption());
+            asd.Engine.Initialize("北海道大戦", 1200, 1000, new asd.EngineOption());
 
             // 下地
             var background = new asd.GeometryObject2D();
@@ -55,7 +55,11 @@ namespace HokkaidoWar
 
                 if (asd.Engine.Mouse.LeftButton.ButtonState == asd.ButtonState.Push)
                 {
-                    _battle.NextTurn();
+                    if(cities.Count > 1)
+                    {
+                        _battle.NextTurn();
+                        cities = _battle.GetCityList();
+                    }
                 }
                 asd.Engine.Update();
             }

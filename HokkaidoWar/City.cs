@@ -14,6 +14,7 @@ namespace HokkaidoWar
         private asd.Color _color;
 
         public string Name { get { return _name; } }
+        public int Population { get { return _population; } }
 
         public City(string name, Point[] points, int population)
         {
@@ -32,6 +33,26 @@ namespace HokkaidoWar
                 _maps.Add(m);
                 fieldMap.SetMap(m);
             }
+        }
+
+        public List<Map> GetMaps()
+        {
+            return _maps;
+        }
+
+        public void CombinationCity(City lose)
+        {
+            addMaps(lose.GetMaps());
+            _population += lose.Population;
+        }
+
+        private void addMaps(List<Map> maps)
+        {
+            foreach(var m in maps)
+            {
+                m.SetCity(this);
+            }
+            _maps.AddRange(maps);
         }
 
         public void OnMouse(asd.Vector2DF pos)
