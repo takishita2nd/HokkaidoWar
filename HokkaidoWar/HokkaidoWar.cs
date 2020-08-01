@@ -60,6 +60,10 @@ namespace HokkaidoWar
                         _battle.NextTurn();
                         cities = _battle.GetCityList();
                     }
+                    else
+                    {
+                        cities[0].ClearPaint();
+                    }
                 }
                 asd.Engine.Update();
             }

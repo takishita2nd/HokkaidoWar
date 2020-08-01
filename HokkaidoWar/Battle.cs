@@ -9,6 +9,9 @@ namespace HokkaidoWar
 {
     class Battle
     {
+        private const int maxRate = 50;
+        private const int minRate = 1;
+
         private List<City> _cities = null;
         private int turn;
         private int cityCnt;
@@ -60,8 +63,8 @@ namespace HokkaidoWar
             {
                 lastDeffece = targets[targetIdx];
                 lastDeffece.PaintDeffenceColor();
-                float attack = lastAttack.Population * (float)(r.Next(5, 30) / 10.0);
-                float deffence = lastDeffece.Population * (float)(r.Next(5, 30) / 10.0);
+                double attack = lastAttack.Population * (double)(r.Next(minRate, maxRate) / 10.0);
+                double deffence = lastDeffece.Population * (double)(r.Next(minRate, maxRate) / 10.0);
                 if(attack > deffence)
                 {
                     info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nwin",
