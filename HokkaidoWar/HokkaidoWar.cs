@@ -11,8 +11,23 @@ namespace HokkaidoWar
         MapData mapData = null;
         List<City> cities = null;
         Battle _battle = null;
+
+        Player _player = null;
+
+        enum GameStatus
+        {
+            SelectCity,
+            ActionEnemy,
+            ActionPlayer,
+            ShowResult,
+            GameEnd
+        }
+
+        GameStatus gameStatus;
+
         public HokkaidoWar()
         {
+            gameStatus = GameStatus.SelectCity;
             mapData = FileAccess.Load();
         }
 
@@ -40,29 +55,24 @@ namespace HokkaidoWar
             while (asd.Engine.DoEvents())
             {
                 asd.Vector2DF pos = asd.Engine.Mouse.Position;
-                if (isOnMaouseMap(pos))
+
+                switch (gameStatus)
                 {
-                    foreach (var city in cities)
-                    {
-                        city.OnMouse(pos);
-                    }
-                }
-                else
-                {
-                    var info = Singleton.GetInfomationWindow();
-                    info.ShowText(pos, string.Empty);
+                    case GameStatus.SelectCity:
+                        var info = Singleton.GetInfomationWindow();
+                        info.ShowText(pos, "都市を選択してください\r\n");
+                        onMouse(pos);
+                        break;
                 }
 
                 if (asd.Engine.Mouse.LeftButton.ButtonState == asd.ButtonState.Push)
                 {
-                    if(cities.Count > 1)
+                    switch (gameStatus)
                     {
-                        _battle.NextTurn();
-                        cities = _battle.GetCityList();
-                    }
-                    else
-                    {
-                        cities[0].ClearPaint();
+                        case GameStatus.SelectCity:
+                            _player = new Player(getCity(pos));
+                            gameStatus = GameStatus.ActionEnemy;
+                            break;
                     }
                 }
                 asd.Engine.Update();
@@ -81,6 +91,34 @@ namespace HokkaidoWar
                 }
             }
             return ret;
+        }
+
+        private void onMouse(asd.Vector2DF pos)
+        {
+            if (isOnMaouseMap(pos))
+            {
+                foreach (var city in cities)
+                {
+                    city.OnMouse(pos);
+                }
+            }
+        }
+
+        private City getCity(asd.Vector2DF pos)
+        {
+            City retcity = null;
+            if (isOnMaouseMap(pos))
+            {
+                foreach(var city in cities)
+                {
+                    if (city.IsOnMouse(pos))
+                    {
+                        retcity = city;
+                        break;
+                    }
+                }
+            }
+            return retcity;
         }
     }
 }

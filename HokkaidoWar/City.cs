@@ -62,7 +62,7 @@ namespace HokkaidoWar
                 if(m.IsOnMouse(pos))
                 {
                     var info = Singleton.GetInfomationWindow();
-                    info.ShowText(pos, _name + "\r\n" + _population.ToString());
+                    info.AppendText(pos, _name + "\r\n" + _population.ToString());
                 }
             }
         }

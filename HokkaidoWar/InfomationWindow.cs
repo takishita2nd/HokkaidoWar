@@ -22,5 +22,11 @@ namespace HokkaidoWar
             _valueText.Text = text;
             _valueText.Position = new asd.Vector2DF(pos.X, pos.Y);
         }
+
+        public void AppendText(asd.Vector2DF pos, string text)
+        {
+            _valueText.Text += text;
+            _valueText.Position = new asd.Vector2DF(pos.X, pos.Y);
+        }
     }
 }
