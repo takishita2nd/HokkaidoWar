@@ -8,10 +8,13 @@ namespace HokkaidoWar
 {
     class Player
     {
-        private City city;
+        private City _city;
+
+        public City City { get { return _city; } }
+
         public Player(City city)
         {
-            this.city = city;
+            _city = city;
         }
     }
 }

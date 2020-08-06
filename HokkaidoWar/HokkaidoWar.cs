@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HokkaidoWar
@@ -63,6 +64,17 @@ namespace HokkaidoWar
                         info.ShowText(pos, "都市を選択してください\r\n");
                         onMouse(pos);
                         break;
+                    case GameStatus.ActionEnemy:
+                        if (_player.City.Equals(_battle.GetActionCity()))
+                        {
+                            gameStatus = GameStatus.ActionPlayer;
+                        }
+                        else
+                        {
+                            Thread.Sleep(100);
+                            _battle.NextTurn();
+                        }
+                        break;
                 }
 
                 if (asd.Engine.Mouse.LeftButton.ButtonState == asd.ButtonState.Push)
@@ -70,8 +82,14 @@ namespace HokkaidoWar
                     switch (gameStatus)
                     {
                         case GameStatus.SelectCity:
-                            _player = new Player(getCity(pos));
-                            gameStatus = GameStatus.ActionEnemy;
+                            var selectcity = getCity(pos);
+                            if(selectcity != null)
+                            {
+                                _player = new Player(selectcity);
+                                gameStatus = GameStatus.ActionEnemy;
+                            }
+                            break;
+                        case GameStatus.ActionEnemy:
                             break;
                     }
                 }

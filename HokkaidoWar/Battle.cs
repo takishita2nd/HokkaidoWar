@@ -36,6 +36,11 @@ namespace HokkaidoWar
             return _cities;
         }
 
+        public City GetActionCity()
+        {
+            return _cities[cityCnt];
+        }
+
         public void NextTurn()
         {
             if (lastDeffece != null)
