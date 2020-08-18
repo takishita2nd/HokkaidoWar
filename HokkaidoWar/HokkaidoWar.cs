@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +22,8 @@ namespace HokkaidoWar
             ActionEnemy,
             ActionPlayer,
             ShowResult,
-            GameEnd
+            GameEnd,
+            GameOver
         }
 
         GameStatus gameStatus;
@@ -60,20 +62,21 @@ namespace HokkaidoWar
                 switch (gameStatus)
                 {
                     case GameStatus.SelectCity:
-                        var info = Singleton.GetInfomationWindow();
-                        info.ShowText(pos, "都市を選択してください\r\n");
-                        onMouse(pos);
+                        cycleProcessSelectCity(pos);
                         break;
                     case GameStatus.ActionEnemy:
-                        if (_player.City.Equals(_battle.GetActionCity()))
-                        {
-                            gameStatus = GameStatus.ActionPlayer;
-                        }
-                        else
-                        {
-                            Thread.Sleep(100);
-                            _battle.NextTurn();
-                        }
+                        cycleProcessActionEnemy(pos);
+                        break;
+                    case GameStatus.ActionPlayer:
+                        cycleProcessActionPlayer(pos);
+                        break;
+                    case GameStatus.ShowResult:
+                        break;
+                    case GameStatus.GameEnd:
+                        cycleProcessGameEnd();
+                        break;
+                    case GameStatus.GameOver:
+                        cycleProcessGameOver(pos);
                         break;
                 }
 
@@ -82,14 +85,19 @@ namespace HokkaidoWar
                     switch (gameStatus)
                     {
                         case GameStatus.SelectCity:
-                            var selectcity = getCity(pos);
-                            if(selectcity != null)
-                            {
-                                _player = new Player(selectcity);
-                                gameStatus = GameStatus.ActionEnemy;
-                            }
+                            onClickMouseSelectCity(pos);
                             break;
                         case GameStatus.ActionEnemy:
+                            break;
+                        case GameStatus.ActionPlayer:
+                            onClickMouseActionPlayer(pos);
+                            break;
+                        case GameStatus.ShowResult:
+                            onClickMouseShowResult();
+                            break;
+                        case GameStatus.GameEnd:
+                            break;
+                        case GameStatus.GameOver:
                             break;
                     }
                 }
@@ -137,6 +145,117 @@ namespace HokkaidoWar
                 }
             }
             return retcity;
+        }
+
+        private void cycleProcessSelectCity(asd.Vector2DF pos)
+        {
+            var info = Singleton.GetInfomationWindow();
+            info.ShowText(pos, "都市を選択してください\r\n");
+            onMouse(pos);
+        }
+
+        private void cycleProcessActionEnemy(asd.Vector2DF pos)
+        {
+            if (_player.City.Equals(_battle.GetActionCity()))
+            {
+                gameStatus = GameStatus.ActionPlayer;
+            }
+            else
+            {
+                Thread.Sleep(200);
+                _battle.NextTurn();
+                cities = _battle.GetCityList();
+                if(cities.Contains(_player.City) == false)
+                {
+                    gameStatus = GameStatus.GameOver;
+                }
+            }
+        }
+
+        private void cycleProcessActionPlayer(asd.Vector2DF pos)
+        {
+            _battle.MyTurn(_player.City);
+            _player.City.PaintAttackColor();
+            var info = Singleton.GetInfomationWindow();
+            info.ShowText(pos, "都市を選択してください\r\n");
+            if (_player.City.IsOnMouse(pos))
+            {
+                _player.City.OnMouse(pos);
+            }
+            else
+            {
+                var linkedCities = _player.City.GetLinkedCities();
+                foreach (var city in linkedCities)
+                {
+                    if (city.IsOnMouse(pos))
+                    {
+                        city.OnMouse(pos);
+                        city.PaintDeffenceColor();
+                    }
+                    else
+                    {
+                        city.ClearPaint();
+                    }
+                }
+            }
+        }
+
+        private void cycleProcessGameEnd()
+        {
+            var gameinfo = Singleton.GetGameProcessInfomation();
+            gameinfo.ShowText(_player.City.GetPosition(), string.Empty);
+            var info = Singleton.GetInfomationWindow();
+            info.ShowText(cities[0].GetPosition(), "ゲームが終了しました\r\n");
+            info.ShowText(cities[0].GetPosition(), cities[0].Name + "の勝利です\r\n");
+        }
+
+        private void cycleProcessGameOver(asd.Vector2DF pos)
+        {
+            var gameinfo = Singleton.GetGameProcessInfomation();
+            gameinfo.ShowText(_player.City.GetPosition(), string.Empty);
+            var info = Singleton.GetInfomationWindow();
+            info.ShowText(pos, "敗北しました\r\n");
+        }
+
+        private void onClickMouseSelectCity(asd.Vector2DF pos)
+        {
+            var selectcity = getCity(pos);
+            if (selectcity != null)
+            {
+                _player = new Player(selectcity);
+                gameStatus = GameStatus.ActionEnemy;
+            }
+        }
+
+        private City _target = null;
+        private void onClickMouseActionPlayer(asd.Vector2DF pos)
+        {
+            var info = Singleton.GetInfomationWindow();
+            info.ShowText(pos, String.Empty);
+            var linkedCities = _player.City.GetLinkedCities();
+            foreach (var city in linkedCities)
+            {
+                if (city.IsOnMouse(pos))
+                {
+                    _target = city;
+                    _battle.MyTrunAttack(_player.City, _target);
+                    gameStatus = GameStatus.ShowResult;
+                }
+            }
+        }
+
+        private void onClickMouseShowResult()
+        {
+            _battle.MyTurnEnd();
+            cities = _battle.GetCityList();
+            if(cities.Count <= 1)
+            {
+                gameStatus = GameStatus.GameEnd;
+            }
+            else
+            {
+                gameStatus = GameStatus.ActionEnemy;
+            }
         }
     }
 }

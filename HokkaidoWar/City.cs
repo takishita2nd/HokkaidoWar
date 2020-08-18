@@ -128,7 +128,7 @@ namespace HokkaidoWar
 
         public void PaintAttackColor()
         {
-            var color = new asd.Color(255, 0, 0);
+            var color = new asd.Color(200, 0, 0);
             foreach(var m in _maps)
             {
                 m.SetColor(color);
@@ -137,7 +137,7 @@ namespace HokkaidoWar
 
         public void PaintDeffenceColor()
         {
-            var color = new asd.Color(0, 0, 255);
+            var color = new asd.Color(0, 0, 200);
             foreach (var m in _maps)
             {
                 m.SetColor(color);

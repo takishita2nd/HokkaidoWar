@@ -94,6 +94,64 @@ namespace HokkaidoWar
             }
         }
 
+        public void MyTurn(City player)
+        {
+            if (lastDeffece != null)
+            {
+                lastDeffece.ClearPaint();
+            }
+            if (lastAttack != null)
+            {
+                lastAttack.ClearPaint();
+            }
+            var info = Singleton.GetGameProcessInfomation();
+            info.ShowText(player.GetPosition(), string.Format("{0} turn {1} / {2} {3}", turn, cityCnt + 1, _cities.Count, player.Name));
+        }
+
+        public void MyTrunAttack(City player, City target)
+        {
+            var info = Singleton.GetGameProcessInfomation();
+            var r = Singleton.GetRandom();
+            lastAttack = player;
+            lastDeffece = target;
+            double attack = lastAttack.Population * (double)(r.Next(minRate, maxRate) / 10.0);
+            double deffence = lastDeffece.Population * (double)(r.Next(minRate, maxRate) / 10.0);
+            if (attack > deffence)
+            {
+                info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nwin",
+                    turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
+                lastAttack.CombinationCity(lastDeffece);
+                _cities.Remove(lastDeffece);
+                lastDeffece = null;
+            }
+            else
+            {
+                info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nlose",
+                    turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
+            }
+        }
+
+        public void MyTurnEnd()
+        {
+            if (lastDeffece != null)
+            {
+                lastDeffece.ClearPaint();
+                lastDeffece = null;
+            }
+            if (lastAttack != null)
+            {
+                lastAttack.ClearPaint();
+                lastAttack = null;
+            }
+            cityCnt++;
+            if (cityCnt >= _cities.Count)
+            {
+                _cities = cityRandomReplace(_cities);
+                cityCnt = 0;
+                turn++;
+            }
+        }
+
         private List<City> cityRandomReplace(List<City> beforeCities)
         {
             var r = Singleton.GetRandom();
