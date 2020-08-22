@@ -10,16 +10,19 @@ namespace HokkaidoWar
     {
         private string _name = string.Empty;
         private int _population = 0;
+        private bool _isAlive;
         private List<Map> _maps = null;
         private asd.Color _color;
 
         public string Name { get { return _name; } }
         public int Population { get { return _population; } }
+        public bool IsAlive { get { return _isAlive; } }
 
         public City(string name, Point[] points, int population)
         {
             _name = name;
             _population = population;
+            _isAlive = true;
             _maps = new List<Map>();
             var r = Singleton.GetRandom();
             _color = new asd.Color((byte)r.Next(0, 255), (byte)r.Next(0, 255), (byte)r.Next(0, 255));
@@ -44,6 +47,11 @@ namespace HokkaidoWar
         {
             addMaps(lose.GetMaps());
             _population += lose.Population;
+        }
+
+        public void Lose()
+        {
+            _isAlive = false;
         }
 
         private void addMaps(List<Map> maps)

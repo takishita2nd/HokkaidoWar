@@ -12,6 +12,7 @@ namespace HokkaidoWar
     {
         MapData mapData = null;
         List<City> cities = null;
+        List<City> aliveCities = null;
         Battle _battle = null;
 
         Player _player = null;
@@ -54,6 +55,7 @@ namespace HokkaidoWar
             }
 
             _battle = new Battle(cities);
+            aliveCities = _battle.GetAliveCityList();
 
             while (asd.Engine.DoEvents())
             {
@@ -109,7 +111,7 @@ namespace HokkaidoWar
         private bool isOnMaouseMap(asd.Vector2DF pos)
         {
             bool ret = false;
-            foreach (var city in cities)
+            foreach (var city in aliveCities)
             {
                 if (city.IsOnMouse(pos))
                 {
@@ -123,7 +125,7 @@ namespace HokkaidoWar
         {
             if (isOnMaouseMap(pos))
             {
-                foreach (var city in cities)
+                foreach (var city in aliveCities)
                 {
                     city.OnMouse(pos);
                 }
@@ -135,7 +137,7 @@ namespace HokkaidoWar
             City retcity = null;
             if (isOnMaouseMap(pos))
             {
-                foreach(var city in cities)
+                foreach(var city in aliveCities)
                 {
                     if (city.IsOnMouse(pos))
                     {
@@ -164,8 +166,8 @@ namespace HokkaidoWar
             {
                 Thread.Sleep(200);
                 _battle.NextTurn();
-                cities = _battle.GetCityList();
-                if(cities.Contains(_player.City) == false)
+                aliveCities = _battle.GetAliveCityList();
+                if(aliveCities.Contains(_player.City) == false)
                 {
                     gameStatus = GameStatus.GameOver;
                 }
@@ -205,8 +207,8 @@ namespace HokkaidoWar
             var gameinfo = Singleton.GetGameProcessInfomation();
             gameinfo.ShowText(_player.City.GetPosition(), string.Empty);
             var info = Singleton.GetInfomationWindow();
-            info.ShowText(cities[0].GetPosition(), "ゲームが終了しました\r\n");
-            info.ShowText(cities[0].GetPosition(), cities[0].Name + "の勝利です\r\n");
+            info.ShowText(aliveCities[0].GetPosition(), "ゲームが終了しました\r\n");
+            info.ShowText(aliveCities[0].GetPosition(), aliveCities[0].Name + "の勝利です\r\n");
         }
 
         private void cycleProcessGameOver(asd.Vector2DF pos)
@@ -247,8 +249,8 @@ namespace HokkaidoWar
         private void onClickMouseShowResult()
         {
             _battle.MyTurnEnd();
-            cities = _battle.GetCityList();
-            if(cities.Count <= 1)
+            aliveCities = _battle.GetAliveCityList();
+            if(aliveCities.Count <= 1)
             {
                 gameStatus = GameStatus.GameEnd;
             }

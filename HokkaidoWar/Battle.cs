@@ -13,6 +13,7 @@ namespace HokkaidoWar
         private const int minRate = 1;
 
         private List<City> _cities = null;
+        private List<City> aliveCities = null;
         private int turn;
         private int cityCnt;
 
@@ -29,11 +30,17 @@ namespace HokkaidoWar
                 _cities.Add(c);
             }
             _cities = cityRandomReplace(_cities);
+            aliveCities = copyCity(_cities);
         }
 
         public List<City> GetCityList()
         {
             return _cities;
+        }
+
+        public List<City> GetAliveCityList()
+        {
+            return aliveCities;
         }
 
         public City GetActionCity()
@@ -50,6 +57,19 @@ namespace HokkaidoWar
             if (lastAttack != null)
             {
                 lastAttack.ClearPaint();
+            }
+
+            if (!_cities[cityCnt].IsAlive)
+            {
+                cityCnt++;
+                if (cityCnt >= _cities.Count)
+                {
+                    _cities = cityRandomReplace(aliveCities);
+                    aliveCities = copyCity(_cities);
+                    cityCnt = 0;
+                    turn++;
+                }
+                return;
             }
 
             var targets = _cities[cityCnt].GetLinkedCities();
@@ -75,7 +95,8 @@ namespace HokkaidoWar
                     info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nwin",
                         turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
                     lastAttack.CombinationCity(lastDeffece);
-                    _cities.Remove(lastDeffece);
+                    lastDeffece.Lose();
+                    aliveCities.Remove(lastDeffece);
                     lastDeffece = null;
                 }
                 else
@@ -88,7 +109,8 @@ namespace HokkaidoWar
             cityCnt++;
             if(cityCnt >= _cities.Count)
             {
-                _cities = cityRandomReplace(_cities);
+                _cities = cityRandomReplace(aliveCities);
+                aliveCities = copyCity(_cities);
                 cityCnt = 0;
                 turn++;
             }
@@ -121,7 +143,8 @@ namespace HokkaidoWar
                 info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nwin",
                     turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
                 lastAttack.CombinationCity(lastDeffece);
-                _cities.Remove(lastDeffece);
+                lastDeffece.Lose();
+                aliveCities.Remove(lastDeffece);
                 lastDeffece = null;
             }
             else
@@ -146,10 +169,21 @@ namespace HokkaidoWar
             cityCnt++;
             if (cityCnt >= _cities.Count)
             {
-                _cities = cityRandomReplace(_cities);
+                _cities = cityRandomReplace(aliveCities);
+                aliveCities = copyCity(_cities);
                 cityCnt = 0;
                 turn++;
             }
+        }
+
+        private List<City> copyCity(List<City> cities)
+        {
+            List<City> ret = new List<City>();
+            foreach(var c in cities)
+            {
+                ret.Add(c);
+            }
+            return ret;
         }
 
         private List<City> cityRandomReplace(List<City> beforeCities)
