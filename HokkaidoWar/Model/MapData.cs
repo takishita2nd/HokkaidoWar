@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HokkaidoWar
+namespace HokkaidoWar.Model
 {
     [JsonObject("MapDataModel")]
     public class MapData

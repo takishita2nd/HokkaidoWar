@@ -1,4 +1,5 @@
 ﻿using asd;
+using HokkaidoWar.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace HokkaidoWar
         private static Random random = null;
         private static asd.Font _font = null;
         private static FieldMap _map = null;
+        private static Layer2D _mainSceneLayer = null;
 
         public static Random GetRandom()
         {
@@ -58,6 +60,15 @@ namespace HokkaidoWar
                 _map = new FieldMap();
             }
             return _map;
+        }
+
+        public static Layer2D GetMainSceneLayer()
+        {
+            if(_mainSceneLayer == null)
+            {
+                _mainSceneLayer = new Layer2D();
+            }
+            return _mainSceneLayer;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.SqlServer.Server;
+﻿using HokkaidoWar.Model;
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;

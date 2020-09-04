@@ -1,11 +1,12 @@
-﻿using System;
+﻿using asd;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HokkaidoWar
+namespace HokkaidoWar.Model
 {
     class Map
     {
@@ -111,12 +112,14 @@ namespace HokkaidoWar
 
         public Map(int x, int y, asd.Color color)
         {
+            var layer = Singleton.GetMainSceneLayer();
+
             _x = x;
             _y = y;
             _geometryObj = new asd.GeometryObject2D();
             _color = color;
             _geometryObj.Color = color;
-            asd.Engine.AddObject2D(_geometryObj);
+            layer.AddObject(_geometryObj);
             var rect = new asd.RectangleShape();
             rect.DrawingArea = new asd.RectF(width * _x + offsetx, height * _y + offsety, width, height);
             _geometryObj.Shape = rect;

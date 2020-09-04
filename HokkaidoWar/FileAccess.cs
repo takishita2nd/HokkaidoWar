@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HokkaidoWar.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -76,16 +76,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Battle.cs" />
-    <Compile Include="City.cs" />
-    <Compile Include="FieldMap.cs" />
+    <Compile Include="Model\City.cs" />
+    <Compile Include="Model\FieldMap.cs" />
     <Compile Include="FileAccess.cs" />
     <Compile Include="HokkaidoWar.cs" />
     <Compile Include="InfomationWindow.cs" />
-    <Compile Include="Map.cs" />
-    <Compile Include="MapData.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Model\Map.cs" />
+    <Compile Include="Model\MapData.cs" />
+    <Compile Include="Model\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scene\MainScene.cs" />
     <Compile Include="Singleton.cs" />
   </ItemGroup>
   <ItemGroup>

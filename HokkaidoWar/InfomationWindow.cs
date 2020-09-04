@@ -1,4 +1,5 @@
-﻿using System;
+﻿using asd;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,11 @@ namespace HokkaidoWar
 
         public InfomationWindow()
         {
+            var layer = Singleton.GetMainSceneLayer();
+
             _valueText = new asd.TextObject2D();
             _valueText.Font = Singleton.GetFont();
-            asd.Engine.AddObject2D(_valueText);
+            layer.AddObject(_valueText);
         }
 
         public void ShowText(asd.Vector2DF pos, string text)
