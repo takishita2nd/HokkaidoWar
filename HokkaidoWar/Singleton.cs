@@ -1,5 +1,4 @@
-﻿using asd;
-using HokkaidoWar.Model;
+﻿using HokkaidoWar.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +13,12 @@ namespace HokkaidoWar
         private static InfomationWindow _gameInfo = null;
         private static Random random = null;
         private static asd.Font _font = null;
+        private static asd.Font _LargeFont = null;
         private static FieldMap _map = null;
-        private static Layer2D _mainSceneLayer = null;
+        private static asd.Layer2D _mainSceneLayer = null;
+        private static asd.Texture2D _texture_gu = null;
+        private static asd.Texture2D _texture_choki = null;
+        private static asd.Texture2D _texture_par = null;
 
         public static Random GetRandom()
         {
@@ -33,6 +36,15 @@ namespace HokkaidoWar
                 _font = asd.Engine.Graphics.CreateFont("FontText.aff");
             }
             return _font;
+        }
+
+        public static asd.Font GetLargeFont()
+        {
+            if (_LargeFont == null)
+            {
+                _LargeFont = asd.Engine.Graphics.CreateFont("FontTextLarge.aff");
+            }
+            return _LargeFont;
         }
 
         public static InfomationWindow GetInfomationWindow()
@@ -62,13 +74,40 @@ namespace HokkaidoWar
             return _map;
         }
 
-        public static Layer2D GetMainSceneLayer()
+        public static asd.Layer2D GetMainSceneLayer()
         {
             if(_mainSceneLayer == null)
             {
-                _mainSceneLayer = new Layer2D();
+                _mainSceneLayer = new asd.Layer2D();
             }
             return _mainSceneLayer;
+        }
+
+        public static asd.Texture2D GetImageGu()
+        {
+            if (_texture_gu == null)
+            {
+                _texture_gu = asd.Engine.Graphics.CreateTexture2D("image_gu.png");
+            }
+            return _texture_gu;
+        }
+
+        public static asd.Texture2D GetImageChoki()
+        {
+            if (_texture_choki == null)
+            {
+                _texture_choki = asd.Engine.Graphics.CreateTexture2D("image_choki.png");
+            }
+            return _texture_choki;
+        }
+
+        public static asd.Texture2D GetImagePar()
+        {
+            if (_texture_par == null)
+            {
+                _texture_par = asd.Engine.Graphics.CreateTexture2D("image_par.png");
+            }
+            return _texture_par;
         }
     }
 }
