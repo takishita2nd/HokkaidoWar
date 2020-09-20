@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Battle.cs" />
+    <Compile Include="GameData.cs" />
     <Compile Include="Model\City.cs" />
     <Compile Include="Model\FieldMap.cs" />
     <Compile Include="FileAccess.cs" />

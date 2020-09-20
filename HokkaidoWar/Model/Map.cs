@@ -112,17 +112,21 @@ namespace HokkaidoWar.Model
 
         public Map(int x, int y, asd.Color color)
         {
-            var layer = Singleton.GetMainSceneLayer();
-
             _x = x;
             _y = y;
-            _geometryObj = new asd.GeometryObject2D();
+            
             _color = color;
-            _geometryObj.Color = color;
-            layer.AddObject(_geometryObj);
+        }
+
+        public void AddLayer(asd.Layer2D layer)
+        {
+            _geometryObj = new asd.GeometryObject2D();
+            _geometryObj.Color = _color;
             var rect = new asd.RectangleShape();
             rect.DrawingArea = new asd.RectF(width * _x + offsetx, height * _y + offsety, width, height);
             _geometryObj.Shape = rect;
+
+            layer.AddObject(_geometryObj);
         }
 
         public void SetColor(asd.Color color)
@@ -133,6 +137,7 @@ namespace HokkaidoWar.Model
         public void SetCity(City city)
         {
             _city = city;
+            _color = city.GetColor();
         }
 
         public City GetCity()

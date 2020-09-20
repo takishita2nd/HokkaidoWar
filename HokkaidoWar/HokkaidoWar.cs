@@ -22,7 +22,7 @@ namespace HokkaidoWar
             asd.Engine.Initialize("北海道大戦", 1200, 1000, new asd.EngineOption());
 
             // シーンの登録
-            var scene = new BattleScene();
+            var scene = new MainScene();
             asd.Engine.ChangeScene(scene);
 
             while (asd.Engine.DoEvents())

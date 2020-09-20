@@ -1,4 +1,5 @@
 ﻿using HokkaidoWar.Model;
+using HokkaidoWar.Scene;
 using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace HokkaidoWar
             return _cities[cityCnt];
         }
 
-        public void NextTurn()
+        public void NextTurn(City player)
         {
             if (lastDeffece != null)
             {
@@ -89,21 +90,29 @@ namespace HokkaidoWar
             {
                 lastDeffece = targets[targetIdx];
                 lastDeffece.PaintDeffenceColor();
-                double attack = lastAttack.Population * (double)(r.Next(minRate, maxRate) / 10.0);
-                double deffence = lastDeffece.Population * (double)(r.Next(minRate, maxRate) / 10.0);
-                if(attack > deffence)
+                if(lastDeffece.Equals(player))
                 {
-                    info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nwin",
-                        turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
-                    lastAttack.CombinationCity(lastDeffece);
-                    lastDeffece.Lose();
-                    aliveCities.Remove(lastDeffece);
-                    lastDeffece = null;
+                    var scene = new BattleScene();
+                    asd.Engine.ChangeScene(scene);
                 }
                 else
                 {
-                    info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nlose",
-                        turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
+                    double attack = lastAttack.Population * (double)(r.Next(minRate, maxRate) / 10.0);
+                    double deffence = lastDeffece.Population * (double)(r.Next(minRate, maxRate) / 10.0);
+                    if (attack > deffence)
+                    {
+                        info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nwin",
+                            turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
+                        lastAttack.CombinationCity(lastDeffece);
+                        lastDeffece.Lose();
+                        aliveCities.Remove(lastDeffece);
+                        lastDeffece = null;
+                    }
+                    else
+                    {
+                        info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nlose",
+                            turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
+                    }
                 }
             }
 
@@ -133,26 +142,8 @@ namespace HokkaidoWar
 
         public void MyTrunAttack(City player, City target)
         {
-            var info = Singleton.GetGameProcessInfomation();
-            var r = Singleton.GetRandom();
-            lastAttack = player;
-            lastDeffece = target;
-            double attack = lastAttack.Population * (double)(r.Next(minRate, maxRate) / 10.0);
-            double deffence = lastDeffece.Population * (double)(r.Next(minRate, maxRate) / 10.0);
-            if (attack > deffence)
-            {
-                info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nwin",
-                    turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
-                lastAttack.CombinationCity(lastDeffece);
-                lastDeffece.Lose();
-                aliveCities.Remove(lastDeffece);
-                lastDeffece = null;
-            }
-            else
-            {
-                info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nlose",
-                    turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
-            }
+            var scene = new BattleScene();
+            asd.Engine.ChangeScene(scene);
         }
 
         public void MyTurnEnd()

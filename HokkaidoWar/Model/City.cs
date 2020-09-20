@@ -160,5 +160,10 @@ namespace HokkaidoWar.Model
                 m.SetColor(_color);
             }
         }
+
+        public asd.Color GetColor()
+        {
+            return _color;
+        }
     }
 }

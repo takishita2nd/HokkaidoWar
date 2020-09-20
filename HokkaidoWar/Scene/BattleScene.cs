@@ -100,7 +100,11 @@ namespace HokkaidoWar.Scene
 
         protected override void OnUpdated()
         {
-
+            if (asd.Engine.Mouse.LeftButton.ButtonState == asd.ButtonState.Push)
+            {
+                var scene = new MainScene();
+                asd.Engine.ChangeScene(scene);
+            }
         }
     }
 }

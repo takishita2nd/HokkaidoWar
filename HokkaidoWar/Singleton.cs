@@ -1,4 +1,5 @@
 ﻿using HokkaidoWar.Model;
+using HokkaidoWar.Scene;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +10,25 @@ namespace HokkaidoWar
 {
     class Singleton
     {
+        private static GameData _gameData = null;
         private static InfomationWindow _info = null;
         private static InfomationWindow _gameInfo = null;
         private static Random random = null;
         private static asd.Font _font = null;
         private static asd.Font _LargeFont = null;
         private static FieldMap _map = null;
-        private static asd.Layer2D _mainSceneLayer = null;
         private static asd.Texture2D _texture_gu = null;
         private static asd.Texture2D _texture_choki = null;
         private static asd.Texture2D _texture_par = null;
+
+        public static GameData GetGameData()
+        {
+            if (_gameData == null)
+            {
+                _gameData = new GameData();
+            }
+            return _gameData;
+        }
 
         public static Random GetRandom()
         {
@@ -72,15 +82,6 @@ namespace HokkaidoWar
                 _map = new FieldMap();
             }
             return _map;
-        }
-
-        public static asd.Layer2D GetMainSceneLayer()
-        {
-            if(_mainSceneLayer == null)
-            {
-                _mainSceneLayer = new asd.Layer2D();
-            }
-            return _mainSceneLayer;
         }
 
         public static asd.Texture2D GetImageGu()

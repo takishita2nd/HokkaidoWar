@@ -13,8 +13,10 @@ namespace HokkaidoWar
 
         public InfomationWindow()
         {
-            var layer = Singleton.GetMainSceneLayer();
+        }
 
+        public void AddLayer(asd.Layer2D layer)
+        {
             _valueText = new asd.TextObject2D();
             _valueText.Font = Singleton.GetFont();
             layer.AddObject(_valueText);
