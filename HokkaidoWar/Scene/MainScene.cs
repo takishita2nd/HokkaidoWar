@@ -13,7 +13,7 @@ namespace HokkaidoWar.Scene
         private GameData gameData = null;
         public MainScene()
         {
-            gameData = Singleton.GetGameData();
+            gameData = Singleton.GameData;
 
             if(gameData.gameStatus == GameData.GameStatus.None)
             {
@@ -52,9 +52,9 @@ namespace HokkaidoWar.Scene
                 }
             }
 
-            var info = Singleton.GetInfomationWindow();
+            var info = Singleton.InfomationWindow;
             info.AddLayer(layer);
-            var info2 = Singleton.GetGameProcessInfomation();
+            var info2 = Singleton.GameProcessInfomation;
             info2.AddLayer(layer);
         }
 
@@ -113,7 +113,7 @@ namespace HokkaidoWar.Scene
 
         private void cycleProcessSelectCity(asd.Vector2DF pos)
         {
-            var info = Singleton.GetInfomationWindow();
+            var info = Singleton.InfomationWindow;
             info.ShowText(pos, "都市を選択してください\r\n");
             onMouse(pos);
         }
@@ -138,7 +138,7 @@ namespace HokkaidoWar.Scene
         private void cycleProcessActionPlayer(asd.Vector2DF pos)
         {
             gameData.PlayPlayer();
-            var info = Singleton.GetInfomationWindow();
+            var info = Singleton.InfomationWindow;
             info.ShowText(pos, "都市を選択してください\r\n");
             if (gameData.IsOnMousePlayerCity(pos))
             {
@@ -164,18 +164,18 @@ namespace HokkaidoWar.Scene
 
         private void cycleProcessGameEnd()
         {
-            var gameinfo = Singleton.GetGameProcessInfomation();
+            var gameinfo = Singleton.GameProcessInfomation;
             gameinfo.ShowText(gameData.GetPlayCityPosition(), string.Empty);
-            var info = Singleton.GetInfomationWindow();
+            var info = Singleton.InfomationWindow;
             info.ShowText(gameData.AliveCities[0].GetPosition(), "ゲームが終了しました\r\n");
             info.ShowText(gameData.AliveCities[0].GetPosition(), gameData.AliveCities[0].Name + "の勝利です\r\n");
         }
 
         private void cycleProcessGameOver(asd.Vector2DF pos)
         {
-            var gameinfo = Singleton.GetGameProcessInfomation();
+            var gameinfo = Singleton.GameProcessInfomation;
             gameinfo.ShowText(gameData.GetPlayCityPosition(), string.Empty);
-            var info = Singleton.GetInfomationWindow();
+            var info = Singleton.InfomationWindow;
             info.ShowText(pos, "敗北しました\r\n");
         }
 
@@ -192,7 +192,7 @@ namespace HokkaidoWar.Scene
         private City _target = null;
         private void onClickMouseActionPlayer(asd.Vector2DF pos)
         {
-            var info = Singleton.GetInfomationWindow();
+            var info = Singleton.InfomationWindow;
             info.ShowText(pos, String.Empty);
             var linkedCities = gameData.GetPlayerLinkedCities();
             foreach (var city in linkedCities)

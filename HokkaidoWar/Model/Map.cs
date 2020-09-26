@@ -26,7 +26,7 @@ namespace HokkaidoWar.Model
 
         public Map Up { 
             get {
-                var field = Singleton.GetFieldMap();
+                var field = Singleton.FieldMap;
                 if(_x == 18 && _y == 0)
                 {
                     return field.GetMap(23, 0);
@@ -50,7 +50,7 @@ namespace HokkaidoWar.Model
         {
             get
             {
-                var field = Singleton.GetFieldMap();
+                var field = Singleton.FieldMap;
                 if(_x == 18 && _y == 0)
                 {
                     return field.GetMap(19, 1);
@@ -66,7 +66,7 @@ namespace HokkaidoWar.Model
         {
             get
             {
-                var field = Singleton.GetFieldMap();
+                var field = Singleton.FieldMap;
                 if (_x == 2 && _y == 29)
                 {
                     return field.GetMap(0, 29);
@@ -90,7 +90,7 @@ namespace HokkaidoWar.Model
         {
             get
             {
-                var field = Singleton.GetFieldMap();
+                var field = Singleton.FieldMap;
                 if (_x == 0 && _y == 29)
                 {
                     return field.GetMap(2, 29);

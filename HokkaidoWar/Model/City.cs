@@ -25,10 +25,10 @@ namespace HokkaidoWar.Model
             _population = population;
             _isAlive = true;
             _maps = new List<Map>();
-            var r = Singleton.GetRandom();
+            var r = Singleton.Random;
             _color = new asd.Color((byte)r.Next(0, 255), (byte)r.Next(0, 255), (byte)r.Next(0, 255));
 
-            var fieldMap = Singleton.GetFieldMap();
+            var fieldMap = Singleton.FieldMap;
 
             foreach (var p in points)
             {
@@ -70,7 +70,7 @@ namespace HokkaidoWar.Model
             {
                 if(m.IsOnMouse(pos))
                 {
-                    var info = Singleton.GetInfomationWindow();
+                    var info = Singleton.InfomationWindow;
                     info.AppendText(pos, _name + "\r\n" + _population.ToString());
                 }
             }

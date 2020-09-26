@@ -18,7 +18,7 @@ namespace HokkaidoWar
         public void AddLayer(asd.Layer2D layer)
         {
             _valueText = new asd.TextObject2D();
-            _valueText.Font = Singleton.GetFont();
+            _valueText.Font = Singleton.Font;
             layer.AddObject(_valueText);
         }
 

@@ -21,94 +21,124 @@ namespace HokkaidoWar
         private static asd.Texture2D _texture_choki = null;
         private static asd.Texture2D _texture_par = null;
 
-        public static GameData GetGameData()
+        public static GameData GameData
         {
-            if (_gameData == null)
+            get
             {
-                _gameData = new GameData();
+                if (_gameData == null)
+                {
+                    _gameData = new GameData();
+                }
+                return _gameData;
             }
-            return _gameData;
         }
 
-        public static Random GetRandom()
+        public static Random Random
         {
-            if(random == null)
+            get
             {
-                random = new Random();
+                if (random == null)
+                {
+                    random = new Random();
+                }
+                return random;
             }
-            return random;
         }
 
-        public static asd.Font GetFont()
+        public static asd.Font Font
         {
-            if(_font == null)
+            get
             {
-                _font = asd.Engine.Graphics.CreateFont("FontText.aff");
+                if (_font == null)
+                {
+                    _font = asd.Engine.Graphics.CreateFont("FontText.aff");
+                }
+                return _font;
             }
-            return _font;
         }
 
-        public static asd.Font GetLargeFont()
+        public static asd.Font LargeFont
         {
-            if (_LargeFont == null)
+            get
             {
-                _LargeFont = asd.Engine.Graphics.CreateFont("FontTextLarge.aff");
+                if (_LargeFont == null)
+                {
+                    _LargeFont = asd.Engine.Graphics.CreateFont("FontTextLarge.aff");
+                }
+                return _LargeFont;
             }
-            return _LargeFont;
         }
 
-        public static InfomationWindow GetInfomationWindow()
+        public static InfomationWindow InfomationWindow
         {
-            if (_info == null)
+            get
             {
-                _info = new InfomationWindow();
+                if (_info == null)
+                {
+                    _info = new InfomationWindow();
+                }
+                return _info;
             }
-            return _info;
         }
 
-        public static InfomationWindow GetGameProcessInfomation()
+        public static InfomationWindow GameProcessInfomation
         {
-            if (_gameInfo == null)
+            get
             {
-                _gameInfo = new InfomationWindow();
+                if (_gameInfo == null)
+                {
+                    _gameInfo = new InfomationWindow();
+                }
+                return _gameInfo;
             }
-            return _gameInfo;
         }
 
-        public static FieldMap GetFieldMap()
+        public static FieldMap FieldMap
         {
-            if (_map == null)
+            get
             {
-                _map = new FieldMap();
+                if (_map == null)
+                {
+                    _map = new FieldMap();
+                }
+                return _map;
             }
-            return _map;
         }
 
-        public static asd.Texture2D GetImageGu()
+        public static asd.Texture2D ImageGu
         {
-            if (_texture_gu == null)
+            get
             {
-                _texture_gu = asd.Engine.Graphics.CreateTexture2D("image_gu.png");
+                if (_texture_gu == null)
+                {
+                    _texture_gu = asd.Engine.Graphics.CreateTexture2D("image_gu.png");
+                }
+                return _texture_gu;
             }
-            return _texture_gu;
         }
 
-        public static asd.Texture2D GetImageChoki()
+        public static asd.Texture2D ImageChoki
         {
-            if (_texture_choki == null)
+            get
             {
-                _texture_choki = asd.Engine.Graphics.CreateTexture2D("image_choki.png");
+                if (_texture_choki == null)
+                {
+                    _texture_choki = asd.Engine.Graphics.CreateTexture2D("image_choki.png");
+                }
+                return _texture_choki;
             }
-            return _texture_choki;
         }
 
-        public static asd.Texture2D GetImagePar()
+        public static asd.Texture2D ImagePar
         {
-            if (_texture_par == null)
+            get
             {
-                _texture_par = asd.Engine.Graphics.CreateTexture2D("image_par.png");
+                if (_texture_par == null)
+                {
+                    _texture_par = asd.Engine.Graphics.CreateTexture2D("image_par.png");
+                }
+                return _texture_par;
             }
-            return _texture_par;
         }
     }
 }

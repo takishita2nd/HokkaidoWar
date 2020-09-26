@@ -75,12 +75,12 @@ namespace HokkaidoWar
             }
 
             var targets = _cities[cityCnt].GetLinkedCities();
-            var r = Singleton.GetRandom();
+            var r = Singleton.Random;
             int targetIdx = r.Next(0, targets.Count + 1);
             lastAttack = _cities[cityCnt];
             lastAttack.PaintAttackColor();
 
-            var info = Singleton.GetGameProcessInfomation();
+            var info = Singleton.GameProcessInfomation;
             if(targetIdx >= targets.Count)
             {
                 info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}",
@@ -92,7 +92,7 @@ namespace HokkaidoWar
                 lastDeffece.PaintDeffenceColor();
                 if(lastDeffece.Equals(player))
                 {
-                    var scene = new BattleScene();
+                    var scene = new BattleScene(lastAttack, player, BattleScene.Player.Deffence);
                     asd.Engine.ChangeScene(scene);
                 }
                 else
@@ -136,13 +136,13 @@ namespace HokkaidoWar
             {
                 lastAttack.ClearPaint();
             }
-            var info = Singleton.GetGameProcessInfomation();
+            var info = Singleton.GameProcessInfomation;
             info.ShowText(player.GetPosition(), string.Format("{0} turn {1} / {2} {3}", turn, cityCnt + 1, _cities.Count, player.Name));
         }
 
         public void MyTrunAttack(City player, City target)
         {
-            var scene = new BattleScene();
+            var scene = new BattleScene(player, target, BattleScene.Player.Attack);
             asd.Engine.ChangeScene(scene);
         }
 
@@ -180,7 +180,7 @@ namespace HokkaidoWar
 
         private List<City> cityRandomReplace(List<City> beforeCities)
         {
-            var r = Singleton.GetRandom();
+            var r = Singleton.Random;
             List<City> afterCities = new List<City>();
             int max = beforeCities.Count;
             for (int i = 0; i < max; i++)
