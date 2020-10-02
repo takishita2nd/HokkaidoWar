@@ -20,6 +20,9 @@ namespace HokkaidoWar
         private static asd.Texture2D _texture_gu = null;
         private static asd.Texture2D _texture_choki = null;
         private static asd.Texture2D _texture_par = null;
+        private static asd.Texture2D _texture_gu2 = null;
+        private static asd.Texture2D _texture_choki2 = null;
+        private static asd.Texture2D _texture_par2 = null;
 
         public static GameData GameData
         {
@@ -138,6 +141,42 @@ namespace HokkaidoWar
                     _texture_par = asd.Engine.Graphics.CreateTexture2D("image_par.png");
                 }
                 return _texture_par;
+            }
+        }
+
+        public static asd.Texture2D ImageGu2
+        {
+            get
+            {
+                if (_texture_gu2 == null)
+                {
+                    _texture_gu2 = asd.Engine.Graphics.CreateTexture2D("image_gu2.png");
+                }
+                return _texture_gu2;
+            }
+        }
+
+        public static asd.Texture2D ImageChoki2
+        {
+            get
+            {
+                if (_texture_choki2 == null)
+                {
+                    _texture_choki2 = asd.Engine.Graphics.CreateTexture2D("image_choki2.png");
+                }
+                return _texture_choki2;
+            }
+        }
+
+        public static asd.Texture2D ImagePar2
+        {
+            get
+            {
+                if (_texture_par2 == null)
+                {
+                    _texture_par2 = asd.Engine.Graphics.CreateTexture2D("image_par2.png");
+                }
+                return _texture_par2;
             }
         }
     }

@@ -21,12 +21,12 @@ namespace HokkaidoWar.Scene
             Deffence
         }
 
-        private asd.TextureObject2D _image_gu_attack = null;
-        private asd.TextureObject2D _image_choki_attack = null;
-        private asd.TextureObject2D _image_par_attack = null;
-        private asd.TextureObject2D _image_gu_deffence = null;
-        private asd.TextureObject2D _image_choki_deffence = null;
-        private asd.TextureObject2D _image_par_deffence = null;
+        private BattleIcon _image_gu_attack = null;
+        private BattleIcon _image_choki_attack = null;
+        private BattleIcon _image_par_attack = null;
+        private BattleIcon _image_gu_deffence = null;
+        private BattleIcon _image_choki_deffence = null;
+        private BattleIcon _image_par_deffence = null;
         private asd.TextObject2D _attackParam = null;
         private asd.TextObject2D _deffenceParam = null;
 
@@ -92,42 +92,28 @@ namespace HokkaidoWar.Scene
             _deffenceParam.Position = new asd.Vector2DF(700, 150);
             layer.AddObject(_deffenceParam);
 
-            _image_gu_attack = new asd.TextureObject2D();
-            _image_gu_attack.Texture = Singleton.ImageGu;
-            _image_gu_attack.Position = new asd.Vector2DF(300, 500);
-            layer.AddObject(_image_gu_attack);
-
-            _image_choki_attack = new asd.TextureObject2D();
-            _image_choki_attack.Texture = Singleton.ImageChoki;
-            _image_choki_attack.Position = new asd.Vector2DF(450, 500);
-            layer.AddObject(_image_choki_attack);
-
-            _image_par_attack = new asd.TextureObject2D();
-            _image_par_attack.Texture = Singleton.ImagePar;
-            _image_par_attack.Position = new asd.Vector2DF(600, 500);
-            layer.AddObject(_image_par_attack);
-
-            _image_gu_deffence = new asd.TextureObject2D();
-            _image_gu_deffence.Texture = Singleton.ImageGu;
-            _image_gu_deffence.Position = new asd.Vector2DF(300, 250);
-            layer.AddObject(_image_gu_deffence);
-
-            _image_choki_deffence = new asd.TextureObject2D();
-            _image_choki_deffence.Texture = Singleton.ImageChoki;
-            _image_choki_deffence.Position = new asd.Vector2DF(450, 250);
-            layer.AddObject(_image_choki_deffence);
-
-            _image_par_deffence = new asd.TextureObject2D();
-            _image_par_deffence.Texture = Singleton.ImagePar;
-            _image_par_deffence.Position = new asd.Vector2DF(600, 250);
-            layer.AddObject(_image_par_deffence);
+            _image_gu_attack = new BattleIcon(BattleIcon.Icon.Gu, BattleIcon.Position.Attack);
+            _image_gu_attack.AddLayer(layer);
+            _image_choki_attack = new BattleIcon(BattleIcon.Icon.Choki, BattleIcon.Position.Attack);
+            _image_choki_attack.AddLayer(layer);
+            _image_par_attack = new BattleIcon(BattleIcon.Icon.Par, BattleIcon.Position.Attack);
+            _image_par_attack.AddLayer(layer);
+            _image_gu_deffence = new BattleIcon(BattleIcon.Icon.Gu, BattleIcon.Position.Deffence);
+            _image_gu_deffence.AddLayer(layer);
+            _image_choki_deffence = new BattleIcon(BattleIcon.Icon.Choki, BattleIcon.Position.Deffence);
+            _image_choki_deffence.AddLayer(layer);
+            _image_par_deffence = new BattleIcon(BattleIcon.Icon.Par, BattleIcon.Position.Deffence);
+            _image_par_deffence.AddLayer(layer);
         }
 
         protected override void OnUpdated()
         {
+            asd.Vector2DF pos = asd.Engine.Mouse.Position;
+
             switch (_status)
             {
                 case GameStatus.SelectDeffenceAction:
+                    cycleProcessSelectDeffenceAction(pos);
                     break;
                 case GameStatus.SelectAttackAction:
                     break;
@@ -146,6 +132,13 @@ namespace HokkaidoWar.Scene
                         break;
                 }
             }
+        }
+
+        private void cycleProcessSelectDeffenceAction(asd.Vector2DF pos)
+        {
+            _image_gu_deffence.OnMouse(pos);
+            _image_choki_deffence.OnMouse(pos);
+            _image_par_deffence.OnMouse(pos);
         }
     }
 }
