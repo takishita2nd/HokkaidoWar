@@ -149,5 +149,10 @@ namespace HokkaidoWar.Model
                 return false;
             }
         }
+
+        public void SetIcon(Icon icon)
+        {
+            _icon = icon;
+        }
     }
 }
