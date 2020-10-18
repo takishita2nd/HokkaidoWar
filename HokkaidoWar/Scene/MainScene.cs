@@ -73,8 +73,6 @@ namespace HokkaidoWar.Scene
                 case GameData.GameStatus.ActionPlayer:
                     cycleProcessActionPlayer(pos);
                     break;
-                case GameData.GameStatus.ShowResult:
-                    break;
                 case GameData.GameStatus.GameEnd:
                     cycleProcessGameEnd();
                     break;
@@ -95,9 +93,6 @@ namespace HokkaidoWar.Scene
                     case GameData.GameStatus.ActionPlayer:
                         onClickMouseActionPlayer(pos);
                         break;
-                    case GameData.GameStatus.ShowResult:
-                        onClickMouseShowResult();
-                        break;
                     case GameData.GameStatus.GameEnd:
                         break;
                     case GameData.GameStatus.GameOver:
@@ -108,7 +103,7 @@ namespace HokkaidoWar.Scene
 
         private void onMouse(asd.Vector2DF pos)
         {
-            gameData.OnMaouseCity(pos);
+            gameData.OnMouseCity(pos);
         }
 
         private void cycleProcessSelectCity(asd.Vector2DF pos)
@@ -201,22 +196,7 @@ namespace HokkaidoWar.Scene
                 {
                     _target = city;
                     gameData.PlayerAttackCity(_target);
-                    gameData.gameStatus = GameData.GameStatus.ShowResult;
                 }
-            }
-        }
-
-        private void onClickMouseShowResult()
-        {
-            gameData.PlayerTurnEnd();
-            var aliveCities = gameData.Battle.GetAliveCityList();
-            if (aliveCities.Count <= 1)
-            {
-                gameData.gameStatus = GameData.GameStatus.GameEnd;
-            }
-            else
-            {
-                gameData.gameStatus = GameData.GameStatus.ActionEnemy;
             }
         }
     }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HokkaidoWar.GameData;
 
 namespace HokkaidoWar.Scene
 {
@@ -87,13 +88,13 @@ namespace HokkaidoWar.Scene
 
             _attackParam = new asd.TextObject2D();
             _attackParam.Font = Singleton.LargeFont;
-            _attackParam.Text = "戦闘力：" + _attack.Population;
+            _attackParam.Text = "戦闘力：" + _attackPower;
             _attackParam.Position = new asd.Vector2DF(700, 650);
             layer.AddObject(_attackParam);
 
             _deffenceParam = new asd.TextObject2D();
             _deffenceParam.Font = Singleton.LargeFont;
-            _deffenceParam.Text = "戦闘力：" + _deffence.Population;
+            _deffenceParam.Text = "戦闘力：" + _deffencePower;
             _deffenceParam.Position = new asd.Vector2DF(700, 150);
             layer.AddObject(_deffenceParam);
 
@@ -231,19 +232,27 @@ namespace HokkaidoWar.Scene
                 if (_image_gu_deffence.IsOnMouse(pos))
                 {
                     selectedDeffece = BattleIcon.Icon.Gu;
+                    _image_gu_deffence.Hide();
+                    _image_choki_deffence.Hide();
+                    _image_par_deffence.Hide();
+                    _status = GameStatus.SelectAttackAction;
                 }
                 else if (_image_choki_deffence.IsOnMouse(pos))
                 {
                     selectedDeffece = BattleIcon.Icon.Choki;
+                    _image_gu_deffence.Hide();
+                    _image_choki_deffence.Hide();
+                    _image_par_deffence.Hide();
+                    _status = GameStatus.SelectAttackAction;
                 }
                 else if (_image_par_deffence.IsOnMouse(pos))
                 {
                     selectedDeffece = BattleIcon.Icon.Par;
+                    _image_gu_deffence.Hide();
+                    _image_choki_deffence.Hide();
+                    _image_par_deffence.Hide();
+                    _status = GameStatus.SelectAttackAction;
                 }
-                _image_gu_deffence.Hide();
-                _image_choki_deffence.Hide();
-                _image_par_deffence.Hide();
-                _status = GameStatus.SelectAttackAction;
             }
         }
 
@@ -272,9 +281,77 @@ namespace HokkaidoWar.Scene
 
         private void onClickMouseShowActionResult(asd.Vector2DF pos)
         {
+            var result = janken(selectedAttack, selectedDeffece);
+            if(result == BattleResult.win)
+            {
+                _deffencePower -= _attackPower;
+                if(_deffencePower <= 0)
+                {
+                    Singleton.GameData.BattleResultUpdate(BattleResult.win);
+                    var scene = new MainScene();
+                    asd.Engine.ChangeScene(scene);
+                }
+                _deffenceParam.Text = "戦闘力：" + _deffencePower;
+            }
+            else if(result == BattleResult.lose)
+            {
+                _attackPower -= _deffencePower;
+                if (_attackPower <= 0)
+                {
+                    Singleton.GameData.BattleResultUpdate(BattleResult.lose);
+                    var scene = new MainScene();
+                    asd.Engine.ChangeScene(scene);
+                }
+                _attackParam.Text = "戦闘力：" + _attackPower;
+            }
             _attackResult.Hide();
             _deffenceResult.Hide();
             _status = GameStatus.SelectDeffenceAction;
+        }
+
+        private BattleResult janken(BattleIcon.Icon attack, BattleIcon.Icon deffence)
+        {
+            switch (attack)
+            {
+                case BattleIcon.Icon.Gu:
+                    switch (deffence)
+                    {
+                        case BattleIcon.Icon.Gu:
+                            return BattleResult.draw;
+                        case BattleIcon.Icon.Choki:
+                            return BattleResult.win;
+                        case BattleIcon.Icon.Par:
+                            return BattleResult.lose;
+                        default:
+                            return BattleResult.draw;
+                    }
+                case BattleIcon.Icon.Choki:
+                    switch (deffence)
+                    {
+                        case BattleIcon.Icon.Gu:
+                            return BattleResult.lose;
+                        case BattleIcon.Icon.Choki:
+                            return BattleResult.draw;
+                        case BattleIcon.Icon.Par:
+                            return BattleResult.win;
+                        default:
+                            return BattleResult.draw;
+                    }
+                case BattleIcon.Icon.Par:
+                    switch (deffence)
+                    {
+                        case BattleIcon.Icon.Gu:
+                            return BattleResult.win;
+                        case BattleIcon.Icon.Choki:
+                            return BattleResult.lose;
+                        case BattleIcon.Icon.Par:
+                            return BattleResult.draw;
+                        default:
+                            return BattleResult.draw;
+                    }
+                default:
+                    return BattleResult.draw;
+            }
         }
     }
 }

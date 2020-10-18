@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HokkaidoWar.GameData;
 
 namespace HokkaidoWar
 {
@@ -126,6 +127,17 @@ namespace HokkaidoWar
             }
         }
 
+        public void EnemyTurnEnd(BattleResult result)
+        {
+            if(result == BattleResult.win)
+            {
+                lastAttack.CombinationCity(lastDeffece);
+                lastDeffece.Lose();
+                aliveCities.Remove(lastDeffece);
+                lastDeffece = null;
+            }
+        }
+
         public void MyTurn(City player)
         {
             if (lastDeffece != null)
@@ -142,22 +154,26 @@ namespace HokkaidoWar
 
         public void MyTrunAttack(City player, City target)
         {
+            lastAttack = player;
+            lastDeffece = target;
             var scene = new BattleScene(player, target, BattleScene.Player.Attack);
             asd.Engine.ChangeScene(scene);
         }
 
-        public void MyTurnEnd()
+        public void MyTurnEnd(BattleResult result)
         {
-            if (lastDeffece != null)
+            if (result == BattleResult.win)
             {
+                lastAttack.CombinationCity(lastDeffece);
+                lastDeffece.Lose();
+                aliveCities.Remove(lastDeffece);
                 lastDeffece.ClearPaint();
                 lastDeffece = null;
             }
-            if (lastAttack != null)
-            {
-                lastAttack.ClearPaint();
-                lastAttack = null;
-            }
+
+            lastAttack.ClearPaint();
+            lastAttack = null;
+
             cityCnt++;
             if (cityCnt >= _cities.Count)
             {
