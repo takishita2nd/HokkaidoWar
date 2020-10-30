@@ -13,6 +13,7 @@ namespace HokkaidoWar
         {
             None,
             SelectCity,
+            VerificateCity,
             ActionEnemy,
             ActionPlayer,
             GameEnd,

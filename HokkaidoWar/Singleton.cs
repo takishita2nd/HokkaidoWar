@@ -23,6 +23,10 @@ namespace HokkaidoWar
         private static asd.Texture2D _texture_gu2 = null;
         private static asd.Texture2D _texture_choki2 = null;
         private static asd.Texture2D _texture_par2 = null;
+        private static asd.Texture2D _texture_ok = null;
+        private static asd.Texture2D _texture_ok2 = null;
+        private static asd.Texture2D _texture_cancel = null;
+        private static asd.Texture2D _texture_cancel2 = null;
 
         public static GameData GameData
         {
@@ -177,6 +181,51 @@ namespace HokkaidoWar
                     _texture_par2 = asd.Engine.Graphics.CreateTexture2D("image_par2.png");
                 }
                 return _texture_par2;
+            }
+        }
+
+        public static asd.Texture2D ImageOK
+        {
+            get
+            {
+                if (_texture_ok == null)
+                {
+                    _texture_ok = asd.Engine.Graphics.CreateTexture2D("image_OK.png");
+                }
+                return _texture_ok;
+            }
+        }
+        public static asd.Texture2D ImageOK2
+        {
+            get
+            {
+                if (_texture_ok2 == null)
+                {
+                    _texture_ok2 = asd.Engine.Graphics.CreateTexture2D("image_OK2.png");
+                }
+                return _texture_ok2;
+            }
+        }
+        public static asd.Texture2D ImageCancel
+        {
+            get
+            {
+                if (_texture_cancel == null)
+                {
+                    _texture_cancel = asd.Engine.Graphics.CreateTexture2D("image_Cancel.png");
+                }
+                return _texture_cancel;
+            }
+        }
+        public static asd.Texture2D ImageCancel2
+        {
+            get
+            {
+                if (_texture_cancel2 == null)
+                {
+                    _texture_cancel2 = asd.Engine.Graphics.CreateTexture2D("image_Cancel2.png");
+                }
+                return _texture_cancel2;
             }
         }
     }
