@@ -8,10 +8,19 @@ namespace HokkaidoWar.Model
 {
     class Dialog
     {
+        public enum Result{
+            OK,
+            Cancel,
+            None
+        }
+
         private asd.GeometryObject2D _dialog = null;
         private asd.TextureObject2D _okButton = null;
         private asd.TextureObject2D _cancelButton = null;
         private asd.TextObject2D _valueText = null;
+
+        private const int buttonWidth = 267;
+        private const int buttonHeight = 63;
 
         public Dialog()
         {
@@ -50,6 +59,68 @@ namespace HokkaidoWar.Model
             layer.RemoveObject(_valueText);
             layer.RemoveObject(_okButton);
             layer.RemoveObject(_cancelButton);
+        }
+
+        public void OnMouse(asd.Vector2DF pos)
+        {
+            if(isClickOK(pos))
+            {
+                _okButton.Texture = Singleton.ImageOK2;
+            }
+            else
+            {
+                _okButton.Texture = Singleton.ImageOK;
+            }
+
+            if (isClickCancel(pos))
+            {
+                _cancelButton.Texture = Singleton.ImageCancel2;
+            }
+            else
+            {
+                _cancelButton.Texture = Singleton.ImageCancel;
+            }
+        }
+
+        public Result OnClick(asd.Vector2DF pos)
+        {
+            if (isClickOK(pos))
+            {
+                return Result.OK;
+            }
+            else if (isClickCancel(pos))
+            {
+                return Result.Cancel;
+            }
+            else
+            {
+                return Result.None;
+            }
+        }
+
+        private bool isClickOK(asd.Vector2DF pos)
+        {
+            if (pos.X > _okButton.Position.X && pos.X < _okButton.Position.X + buttonWidth
+                && pos.Y > _okButton.Position.Y && pos.Y < _okButton.Position.Y + buttonHeight)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private bool isClickCancel(asd.Vector2DF pos)
+        {
+            if (pos.X > _cancelButton.Position.X && pos.X < _cancelButton.Position.X + buttonWidth
+                && pos.Y > _cancelButton.Position.Y && pos.Y < _cancelButton.Position.Y + buttonHeight)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

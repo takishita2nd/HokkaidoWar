@@ -124,7 +124,7 @@ namespace HokkaidoWar.Scene
 
         private void cycleProcessVerificateCity(asd.Vector2DF pos)
         {
-
+            dialog.OnMouse(pos);
         }
 
         private void cycleProcessActionEnemy(asd.Vector2DF pos)
@@ -201,11 +201,24 @@ namespace HokkaidoWar.Scene
 
         private void onClickVerificateCity(asd.Vector2DF pos)
         {
-            dialog.CloseDialog(layer);
-            if (selectcity != null)
+            switch (dialog.OnClick(pos))
             {
-                gameData.CreatePlayer(selectcity);
-                gameData.gameStatus = GameData.GameStatus.ActionEnemy;
+                case Dialog.Result.OK:
+                    var info = Singleton.InfomationWindow;
+                    info.ShowText(pos, string.Empty);
+                    dialog.CloseDialog(layer);
+                    if (selectcity != null)
+                    {
+                        gameData.CreatePlayer(selectcity);
+                        gameData.gameStatus = GameData.GameStatus.ActionEnemy;
+                    }
+                    break;
+                case Dialog.Result.Cancel:
+                    dialog.CloseDialog(layer);
+                    gameData.gameStatus = GameData.GameStatus.SelectCity;
+                    break;
+                case Dialog.Result.None:
+                    break;
             }
         }
 
