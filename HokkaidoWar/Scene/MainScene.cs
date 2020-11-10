@@ -11,6 +11,9 @@ namespace HokkaidoWar.Scene
     class MainScene : asd.Scene
     {
         private GameData gameData = null;
+        private Dialog dialog = new Dialog();
+        private asd.Layer2D layer = null;
+
         public MainScene()
         {
             gameData = Singleton.GameData;
@@ -33,7 +36,7 @@ namespace HokkaidoWar.Scene
 
         protected override void OnRegistered()
         {
-            var layer = new asd.Layer2D();
+            layer = new asd.Layer2D();
             AddLayer(layer);
 
             // 下地
@@ -43,7 +46,7 @@ namespace HokkaidoWar.Scene
             bgRect.DrawingArea = new asd.RectF(0, 0, 1800, 1000);
             background.Shape = bgRect;
 
-            foreach(var c in gameData.Battle.GetAliveCityList())
+            foreach (var c in gameData.Battle.GetAliveCityList())
             {
                 var maps = c.GetMaps();
                 foreach(var m in maps)
@@ -67,6 +70,9 @@ namespace HokkaidoWar.Scene
                 case GameData.GameStatus.SelectCity:
                     cycleProcessSelectCity(pos);
                     break;
+                case GameData.GameStatus.VerificateCity:
+                    cycleProcessVerificateCity(pos);
+                    break;
                 case GameData.GameStatus.ActionEnemy:
                     cycleProcessActionEnemy(pos);
                     break;
@@ -87,6 +93,9 @@ namespace HokkaidoWar.Scene
                 {
                     case GameData.GameStatus.SelectCity:
                         onClickMouseSelectCity(pos);
+                        break;
+                    case GameData.GameStatus.VerificateCity:
+                        onClickVerificateCity(pos);
                         break;
                     case GameData.GameStatus.ActionEnemy:
                         break;
@@ -111,6 +120,11 @@ namespace HokkaidoWar.Scene
             var info = Singleton.InfomationWindow;
             info.ShowText(pos, "都市を選択してください\r\n");
             onMouse(pos);
+        }
+
+        private void cycleProcessVerificateCity(asd.Vector2DF pos)
+        {
+            dialog.OnMouse(pos);
         }
 
         private void cycleProcessActionEnemy(asd.Vector2DF pos)
@@ -174,13 +188,37 @@ namespace HokkaidoWar.Scene
             info.ShowText(pos, "敗北しました\r\n");
         }
 
+        private City selectcity = null;
         private void onClickMouseSelectCity(asd.Vector2DF pos)
         {
-            var selectcity = gameData.GetSelectedCity(pos);
+            selectcity = gameData.GetSelectedCity(pos);
             if (selectcity != null)
             {
-                gameData.CreatePlayer(selectcity);
-                gameData.gameStatus = GameData.GameStatus.ActionEnemy;
+                dialog.ShowDialog(layer, selectcity.Name);
+                gameData.gameStatus = GameData.GameStatus.VerificateCity;
+            }
+        }
+
+        private void onClickVerificateCity(asd.Vector2DF pos)
+        {
+            switch (dialog.OnClick(pos))
+            {
+                case Dialog.Result.OK:
+                    var info = Singleton.InfomationWindow;
+                    info.ShowText(pos, string.Empty);
+                    dialog.CloseDialog(layer);
+                    if (selectcity != null)
+                    {
+                        gameData.CreatePlayer(selectcity);
+                        gameData.gameStatus = GameData.GameStatus.ActionEnemy;
+                    }
+                    break;
+                case Dialog.Result.Cancel:
+                    dialog.CloseDialog(layer);
+                    gameData.gameStatus = GameData.GameStatus.SelectCity;
+                    break;
+                case Dialog.Result.None:
+                    break;
             }
         }
 

@@ -13,6 +13,7 @@ namespace HokkaidoWar
         {
             None,
             SelectCity,
+            VerificateCity,
             ActionEnemy,
             ActionPlayer,
             GameEnd,
@@ -133,7 +134,15 @@ namespace HokkaidoWar
             else if (gameStatus == GameStatus.ActionPlayer)
             {
                 Battle.MyTurnEnd(result);
-                gameStatus = GameStatus.ActionEnemy;
+                var aliveCity = Battle.GetAliveCityList();
+                if(aliveCity.Count == 1)
+                {
+                    gameStatus = GameStatus.GameEnd;
+                }
+                else
+                {
+                    gameStatus = GameStatus.ActionEnemy;
+                }
             }
         }
 

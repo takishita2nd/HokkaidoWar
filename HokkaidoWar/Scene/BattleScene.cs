@@ -272,6 +272,10 @@ namespace HokkaidoWar.Scene
                 {
                     selectedAttack = BattleIcon.Icon.Par;
                 }
+                else
+                {
+                    return;
+                }
                 _image_gu_attack.Hide();
                 _image_choki_attack.Hide();
                 _image_par_attack.Hide();

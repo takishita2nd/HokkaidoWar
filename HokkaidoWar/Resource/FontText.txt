@@ -186,3 +186,4 @@ abcdefghijklmnopqrstuvwxyz
 の勝利です
 敗北しました
 戦闘力：
+でよろしいですか？
