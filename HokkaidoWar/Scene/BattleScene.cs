@@ -288,25 +288,34 @@ namespace HokkaidoWar.Scene
             var result = janken(selectedAttack, selectedDeffece);
             if(result == BattleResult.win)
             {
-                _deffencePower -= _attackPower;
+                _deffencePower -= (int)Math.Floor(_attackPower * (Singleton.Random.NextDouble() + 0.1));
                 if(_deffencePower <= 0)
                 {
                     Singleton.GameData.BattleResultUpdate(BattleResult.win);
                     var scene = new MainScene();
                     asd.Engine.ChangeScene(scene);
+                    _deffenceParam.Text = "戦闘力：0";
                 }
-                _deffenceParam.Text = "戦闘力：" + _deffencePower;
+                else
+                {
+                    _deffenceParam.Text = "戦闘力：" + _deffencePower;
+                }
             }
             else if(result == BattleResult.lose)
             {
-                _attackPower -= _deffencePower;
+                
+                _attackPower -= (int)Math.Floor(_deffencePower * (Singleton.Random.NextDouble() + 0.1));
                 if (_attackPower <= 0)
                 {
                     Singleton.GameData.BattleResultUpdate(BattleResult.lose);
                     var scene = new MainScene();
                     asd.Engine.ChangeScene(scene);
+                    _attackParam.Text = "戦闘力：0";
                 }
-                _attackParam.Text = "戦闘力：" + _attackPower;
+                else
+                {
+                    _attackParam.Text = "戦闘力：" + _attackPower;
+                }
             }
             _attackResult.Hide();
             _deffenceResult.Hide();
