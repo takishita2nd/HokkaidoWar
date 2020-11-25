@@ -21,6 +21,8 @@ namespace HokkaidoWar
         {
             asd.Engine.Initialize("北海道大戦", 1200, 1000, new asd.EngineOption());
 
+            asd.Engine.File.AddRootPackage("hokkaido.pack");
+
             // シーンの登録
             var scene = new MainScene();
             asd.Engine.ChangeScene(scene);

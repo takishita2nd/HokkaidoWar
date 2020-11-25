@@ -27,17 +27,17 @@ namespace HokkaidoWar.Model
         public Map Up { 
             get {
                 var field = Singleton.FieldMap;
-                if(_x == 18 && _y == 0)
+                if(_x == 21 && _y == 0)
                 {
-                    return field.GetMap(23, 0);
+                    return field.GetMap(26, 0);
                 }
-                else if(_x == 23 && _y == 0)
+                else if(_x == 26 && _y == 0)
                 {
-                    return field.GetMap(18, 0);
+                    return field.GetMap(21, 0);
                 }
-                else if (_x == 20 && _y == 1)
+                else if (_x == 23 && _y == 4)
                 {
-                    return field.GetMap(18, 0);
+                    return field.GetMap(21, 0);
                 }
                 else
                 {
@@ -51,9 +51,9 @@ namespace HokkaidoWar.Model
             get
             {
                 var field = Singleton.FieldMap;
-                if(_x == 18 && _y == 0)
+                if(_x == 21 && _y == 0)
                 {
-                    return field.GetMap(19, 1);
+                    return field.GetMap(22, 1);
                 }
                 else
                 {
@@ -67,17 +67,17 @@ namespace HokkaidoWar.Model
             get
             {
                 var field = Singleton.FieldMap;
-                if (_x == 2 && _y == 29)
+                if (_x == 2 && _y == 31)
                 {
-                    return field.GetMap(0, 29);
+                    return field.GetMap(0, 31);
                 }
-                else if(_x == 19 && _y == 1)
+                else if(_x == 22 && _y == 1)
                 {
-                    return field.GetMap(18, 0);
+                    return field.GetMap(21, 0);
                 }
-                else if (_x == 23 && _y == 0)
+                else if (_x == 26 && _y == 0)
                 {
-                    return field.GetMap(20, 1);
+                    return field.GetMap(23, 1);
                 }
                 else
                 {
@@ -91,17 +91,17 @@ namespace HokkaidoWar.Model
             get
             {
                 var field = Singleton.FieldMap;
-                if (_x == 0 && _y == 29)
+                if (_x == 0 && _y == 31)
                 {
-                    return field.GetMap(2, 29);
+                    return field.GetMap(2, 31);
                 }
-                else if(_x == 18 && _y == 0)
+                else if(_x == 21 && _y == 0)
                 {
-                    return field.GetMap(20, 1);
+                    return field.GetMap(23, 1);
                 }
-                else if (_x == 20 && _y == 1)
+                else if (_x == 23 && _y == 1)
                 {
-                    return field.GetMap(23, 0);
+                    return field.GetMap(26, 0);
                 }
                 else
                 {

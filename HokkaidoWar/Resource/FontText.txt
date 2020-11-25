@@ -177,6 +177,16 @@
 上ノ国
 松前
 木古内
+札幌中央
+札幌北
+札幌東
+札幌白石
+札幌豊平
+札幌南
+札幌西
+札幌厚別
+札幌手稲
+札幌清田
 1234567890
 ABCDEFGHIJKLMNOPQRSTUVWXYZ
 abcdefghijklmnopqrstuvwxyz
