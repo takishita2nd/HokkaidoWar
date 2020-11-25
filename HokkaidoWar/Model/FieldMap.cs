@@ -6,17 +6,17 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HokkaidoWar
+namespace HokkaidoWar.Model
 {
     class FieldMap
     {
-        public int MaxX { get { return 44; } }
-        public int MaxY { get { return 35; } }
+        public int MaxX { get { return 47; } }
+        public int MaxY { get { return 37; } }
 
         private Map[,] _map;
         public FieldMap()
         {
-            _map = new Map[44, 35];
+            _map = new Map[47, 37];
         }
 
         public Map GetMap(int x, int y)

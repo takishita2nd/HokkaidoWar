@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HokkaidoWar.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,11 +15,11 @@ namespace HokkaidoWar
         public static MapData Load()
         {
             string str = string.Empty;
-            using (var stream = new StreamReader(_filename, true))
-            {
-                str = stream.ReadToEnd();
-            }
-            return JsonConvert.DeserializeObject<MapData>(str);
+            asd.StreamFile stream = asd.Engine.File.CreateStreamFile(_filename);
+            List<byte> buffer = new List<byte>();
+            stream.Read(buffer, stream.Size);
+            string json = Encoding.UTF8.GetString(buffer.ToArray());
+            return JsonConvert.DeserializeObject<MapData>(json);
         }
     }
 }

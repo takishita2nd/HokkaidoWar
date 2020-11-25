@@ -1,11 +1,12 @@
-﻿using System;
+﻿using asd;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HokkaidoWar
+namespace HokkaidoWar.Model
 {
     class Map
     {
@@ -25,18 +26,18 @@ namespace HokkaidoWar
 
         public Map Up { 
             get {
-                var field = Singleton.GetFieldMap();
-                if(_x == 18 && _y == 0)
+                var field = Singleton.FieldMap;
+                if(_x == 21 && _y == 0)
                 {
-                    return field.GetMap(23, 0);
+                    return field.GetMap(26, 0);
                 }
-                else if(_x == 23 && _y == 0)
+                else if(_x == 26 && _y == 0)
                 {
-                    return field.GetMap(18, 0);
+                    return field.GetMap(21, 0);
                 }
-                else if (_x == 20 && _y == 1)
+                else if (_x == 23 && _y == 4)
                 {
-                    return field.GetMap(18, 0);
+                    return field.GetMap(21, 0);
                 }
                 else
                 {
@@ -49,10 +50,10 @@ namespace HokkaidoWar
         {
             get
             {
-                var field = Singleton.GetFieldMap();
-                if(_x == 18 && _y == 0)
+                var field = Singleton.FieldMap;
+                if(_x == 21 && _y == 0)
                 {
-                    return field.GetMap(19, 1);
+                    return field.GetMap(22, 1);
                 }
                 else
                 {
@@ -65,18 +66,18 @@ namespace HokkaidoWar
         {
             get
             {
-                var field = Singleton.GetFieldMap();
-                if (_x == 2 && _y == 29)
+                var field = Singleton.FieldMap;
+                if (_x == 2 && _y == 31)
                 {
-                    return field.GetMap(0, 29);
+                    return field.GetMap(0, 31);
                 }
-                else if(_x == 19 && _y == 1)
+                else if(_x == 22 && _y == 1)
                 {
-                    return field.GetMap(18, 0);
+                    return field.GetMap(21, 0);
                 }
-                else if (_x == 23 && _y == 0)
+                else if (_x == 26 && _y == 0)
                 {
-                    return field.GetMap(20, 1);
+                    return field.GetMap(23, 1);
                 }
                 else
                 {
@@ -89,18 +90,18 @@ namespace HokkaidoWar
         {
             get
             {
-                var field = Singleton.GetFieldMap();
-                if (_x == 0 && _y == 29)
+                var field = Singleton.FieldMap;
+                if (_x == 0 && _y == 31)
                 {
-                    return field.GetMap(2, 29);
+                    return field.GetMap(2, 31);
                 }
-                else if(_x == 18 && _y == 0)
+                else if(_x == 21 && _y == 0)
                 {
-                    return field.GetMap(20, 1);
+                    return field.GetMap(23, 1);
                 }
-                else if (_x == 20 && _y == 1)
+                else if (_x == 23 && _y == 1)
                 {
-                    return field.GetMap(23, 0);
+                    return field.GetMap(26, 0);
                 }
                 else
                 {
@@ -113,13 +114,19 @@ namespace HokkaidoWar
         {
             _x = x;
             _y = y;
-            _geometryObj = new asd.GeometryObject2D();
+            
             _color = color;
-            _geometryObj.Color = color;
-            asd.Engine.AddObject2D(_geometryObj);
+        }
+
+        public void AddLayer(asd.Layer2D layer)
+        {
+            _geometryObj = new asd.GeometryObject2D();
+            _geometryObj.Color = _color;
             var rect = new asd.RectangleShape();
             rect.DrawingArea = new asd.RectF(width * _x + offsetx, height * _y + offsety, width, height);
             _geometryObj.Shape = rect;
+
+            layer.AddObject(_geometryObj);
         }
 
         public void SetColor(asd.Color color)
@@ -130,6 +137,7 @@ namespace HokkaidoWar
         public void SetCity(City city)
         {
             _city = city;
+            _color = city.GetColor();
         }
 
         public City GetCity()
