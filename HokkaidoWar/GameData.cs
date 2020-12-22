@@ -32,10 +32,16 @@ namespace HokkaidoWar
         public List<City> AliveCities = null;
         public Battle Battle = null;
         public Player Player = null;
+        public MapData MapData = null;
 
         public GameData()
         {
             Cities = new List<City>();
+        }
+
+        public void setMapData(MapData mapData)
+        {
+            MapData = mapData;
         }
 
         public void Battleinitialize()

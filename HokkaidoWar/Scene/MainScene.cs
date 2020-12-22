@@ -16,22 +16,9 @@ namespace HokkaidoWar.Scene
 
         public MainScene()
         {
-            gameData = Singleton.GameData;
-
-            if(gameData.gameStatus == GameData.GameStatus.None)
-            {
-                MapData mapData = FileAccess.Load();
-
-                var r = new Random();
-                foreach (var map in mapData.list)
-                {
-                    City city = new City(map.name, map.point, map.population);
-                    gameData.Cities.Add(city);
-                }
-
-                gameData.Battleinitialize();
-                gameData.gameStatus = GameData.GameStatus.SelectCity;
-            }
+            //    gameData.Battleinitialize();
+            //    gameData.gameStatus = GameData.GameStatus.SelectCity;
+            //}
         }
 
         protected override void OnRegistered()
@@ -43,70 +30,74 @@ namespace HokkaidoWar.Scene
             var background = new asd.GeometryObject2D();
             layer.AddObject(background);
             var bgRect = new asd.RectangleShape();
-            bgRect.DrawingArea = new asd.RectF(0, 0, 1800, 1000);
+            bgRect.DrawingArea = new asd.RectF(0, 0, 1900, 1000);
             background.Shape = bgRect;
+            var hokkaido = new asd.TextureObject2D();
+            hokkaido.Texture = asd.Engine.Graphics.CreateTexture2D("101.png");
+            hokkaido.Scale = new asd.Vector2DF(1.5f, 1.5f);
+            layer.AddObject(hokkaido);
 
-            foreach (var c in gameData.Battle.GetAliveCityList())
-            {
-                var maps = c.GetMaps();
-                foreach(var m in maps)
-                {
-                    m.AddLayer(layer);
-                }
-            }
+            //foreach (var c in gameData.Battle.GetAliveCityList())
+            //{
+            //    var maps = c.GetMaps();
+            //    foreach(var m in maps)
+            //    {
+            //        m.AddLayer(layer);
+            //    }
+            //}
 
-            var info = Singleton.InfomationWindow;
-            info.AddLayer(layer);
-            var info2 = Singleton.GameProcessInfomation;
-            info2.AddLayer(layer);
+            //var info = Singleton.InfomationWindow;
+            //info.AddLayer(layer);
+            //var info2 = Singleton.GameProcessInfomation;
+            //info2.AddLayer(layer);
         }
 
         protected override void OnUpdated()
         {
             asd.Vector2DF pos = asd.Engine.Mouse.Position;
 
-            switch (gameData.gameStatus)
-            {
-                case GameData.GameStatus.SelectCity:
-                    cycleProcessSelectCity(pos);
-                    break;
-                case GameData.GameStatus.VerificateCity:
-                    cycleProcessVerificateCity(pos);
-                    break;
-                case GameData.GameStatus.ActionEnemy:
-                    cycleProcessActionEnemy(pos);
-                    break;
-                case GameData.GameStatus.ActionPlayer:
-                    cycleProcessActionPlayer(pos);
-                    break;
-                case GameData.GameStatus.GameEnd:
-                    cycleProcessGameEnd();
-                    break;
-                case GameData.GameStatus.GameOver:
-                    cycleProcessGameOver(pos);
-                    break;
-            }
+            //switch (gameData.gameStatus)
+            //{
+            //    case GameData.GameStatus.SelectCity:
+            //        cycleProcessSelectCity(pos);
+            //        break;
+            //    case GameData.GameStatus.VerificateCity:
+            //        cycleProcessVerificateCity(pos);
+            //        break;
+            //    case GameData.GameStatus.ActionEnemy:
+            //        cycleProcessActionEnemy(pos);
+            //        break;
+            //    case GameData.GameStatus.ActionPlayer:
+            //        cycleProcessActionPlayer(pos);
+            //        break;
+            //    case GameData.GameStatus.GameEnd:
+            //        cycleProcessGameEnd();
+            //        break;
+            //    case GameData.GameStatus.GameOver:
+            //        cycleProcessGameOver(pos);
+            //        break;
+            //}
 
             if (asd.Engine.Mouse.LeftButton.ButtonState == asd.ButtonState.Push)
             {
-                switch (gameData.gameStatus)
-                {
-                    case GameData.GameStatus.SelectCity:
-                        onClickMouseSelectCity(pos);
-                        break;
-                    case GameData.GameStatus.VerificateCity:
-                        onClickVerificateCity(pos);
-                        break;
-                    case GameData.GameStatus.ActionEnemy:
-                        break;
-                    case GameData.GameStatus.ActionPlayer:
-                        onClickMouseActionPlayer(pos);
-                        break;
-                    case GameData.GameStatus.GameEnd:
-                        break;
-                    case GameData.GameStatus.GameOver:
-                        break;
-                }
+                //switch (gameData.gameStatus)
+                //{
+                //    case GameData.GameStatus.SelectCity:
+                //        onClickMouseSelectCity(pos);
+                //        break;
+                //    case GameData.GameStatus.VerificateCity:
+                //        onClickVerificateCity(pos);
+                //        break;
+                //    case GameData.GameStatus.ActionEnemy:
+                //        break;
+                //    case GameData.GameStatus.ActionPlayer:
+                //        onClickMouseActionPlayer(pos);
+                //        break;
+                //    case GameData.GameStatus.GameEnd:
+                //        break;
+                //    case GameData.GameStatus.GameOver:
+                //        break;
+                //}
             }
         }
 

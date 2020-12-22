@@ -10,30 +10,29 @@ namespace HokkaidoWar.Model
 {
     class FieldMap
     {
-        public int MaxX { get { return 47; } }
-        public int MaxY { get { return 37; } }
-
-        private Map[,] _map;
+        private int maxId = 0;
+        private Map[] _map;
         public FieldMap()
         {
-            _map = new Map[47, 37];
+            maxId = Singleton.GameData.MapData.citydata.Length + 1;
+            _map = new Map[maxId];
         }
 
-        public Map GetMap(int x, int y)
+        public Map GetMap(int id)
         {
-            if(x < 0 || x >= MaxX || y < 0 || y >= MaxY)
+            if(id < 0 || id >= maxId)
             {
                 return null;
             }
             else
             {
-                return _map[x, y];
+                return _map[id];
             }
         }
 
         public void SetMap(Map map)
         {
-            _map[map.X, map.Y] = map;
+            _map[map.Id] = map;
         }
     }
 }

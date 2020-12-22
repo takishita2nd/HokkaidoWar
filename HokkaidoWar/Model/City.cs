@@ -11,6 +11,7 @@ namespace HokkaidoWar.Model
     {
         private string _name = string.Empty;
         private int _population = 0;
+        private int _money = 0;
         private bool _isAlive;
         private List<Map> _maps = null;
         private asd.Color _color;
@@ -19,24 +20,22 @@ namespace HokkaidoWar.Model
         public int Population { get { return _population; } }
         public bool IsAlive { get { return _isAlive; } }
 
-        public City(string name, Point[] points, int population)
+        public City(Citydata citydata)
         {
-            _name = name;
-            _population = population;
+            _name = citydata.name;
+            _population = citydata.population;
+            _money = citydata.money;
             _isAlive = true;
             _maps = new List<Map>();
             var r = Singleton.Random;
-            _color = new asd.Color((byte)r.Next(0, 255), (byte)r.Next(0, 255), (byte)r.Next(0, 255));
+            _color = new Color((byte)r.Next(0, 255), (byte)r.Next(0, 255), (byte)r.Next(0, 255));
 
             var fieldMap = Singleton.FieldMap;
 
-            foreach (var p in points)
-            {
-                Map m = new Map(p.x, p.y, _color);
-                m.SetCity(this);
-                _maps.Add(m);
-                fieldMap.SetMap(m);
-            }
+            Map m = new Map(citydata.id, citydata.point.x, citydata.point.y, _color, citydata.link);
+            m.SetCity(this);
+            _maps.Add(m);
+            fieldMap.SetMap(m);
         }
 
         public List<Map> GetMaps()
@@ -96,43 +95,43 @@ namespace HokkaidoWar.Model
 
         public List<City> GetLinkedCities()
         {
-            List<City> cities = new List<City>();
-            foreach (var m in _maps)
-            {
-                if (m.Up != null)
-                {
-                    var c = m.Up.GetCity();
-                    if (cities.Contains(c) == false && c != this)
-                    {
-                        cities.Add(c);
-                    }
-                }
-                if (m.Down != null)
-                {
-                    var c = m.Down.GetCity();
-                    if (cities.Contains(c) == false && c != this)
-                    {
-                        cities.Add(c);
-                    }
-                }
-                if (m.Left != null)
-                {
-                    var c = m.Left.GetCity();
-                    if (cities.Contains(c) == false && c != this)
-                    {
-                        cities.Add(c);
-                    }
-                }
-                if (m.Right != null)
-                {
-                    var c = m.Right.GetCity();
-                    if (cities.Contains(c) == false && c != this)
-                    {
-                        cities.Add(c);
-                    }
-                }
-            }
-            return cities;
+            //List<City> cities = new List<City>();
+            //foreach (var m in _maps)
+            //{
+            //    if (m.Up != null)
+            //    {
+            //        var c = m.Up.GetCity();
+            //        if (cities.Contains(c) == false && c != this)
+            //        {
+            //            cities.Add(c);
+            //        }
+            //    }
+            //    if (m.Down != null)
+            //    {
+            //        var c = m.Down.GetCity();
+            //        if (cities.Contains(c) == false && c != this)
+            //        {
+            //            cities.Add(c);
+            //        }
+            //    }
+            //    if (m.Left != null)
+            //    {
+            //        var c = m.Left.GetCity();
+            //        if (cities.Contains(c) == false && c != this)
+            //        {
+            //            cities.Add(c);
+            //        }
+            //    }
+            //    if (m.Right != null)
+            //    {
+            //        var c = m.Right.GetCity();
+            //        if (cities.Contains(c) == false && c != this)
+            //        {
+            //            cities.Add(c);
+            //        }
+            //    }
+            //}
+            return null;
         }
 
         public void PaintAttackColor()

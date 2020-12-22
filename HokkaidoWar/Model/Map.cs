@@ -10,8 +10,10 @@ namespace HokkaidoWar.Model
 {
     class Map
     {
+        private int _id;
         private int _x;
         private int _y;
+        private int[] _link;
         private City _city;
         private asd.Color _color;
         private asd.GeometryObject2D _geometryObj;
@@ -21,100 +23,16 @@ namespace HokkaidoWar.Model
         private readonly int offsetx = 50;
         private readonly int offsety = 50;
 
+        public int Id { get { return _id; } }
         public int X { get { return _x; } }
         public int Y { get { return _y; } }
 
-        public Map Up { 
-            get {
-                var field = Singleton.FieldMap;
-                if(_x == 21 && _y == 0)
-                {
-                    return field.GetMap(26, 0);
-                }
-                else if(_x == 26 && _y == 0)
-                {
-                    return field.GetMap(21, 0);
-                }
-                else if (_x == 23 && _y == 4)
-                {
-                    return field.GetMap(21, 0);
-                }
-                else
-                {
-                    return field.GetMap(_x, _y - 1);
-                }
-            }
-        }
-
-        public Map Down
-        {
-            get
-            {
-                var field = Singleton.FieldMap;
-                if(_x == 21 && _y == 0)
-                {
-                    return field.GetMap(22, 1);
-                }
-                else
-                {
-                    return field.GetMap(_x, _y + 1);
-                }
-            }
-        }
-
-        public Map Left
-        {
-            get
-            {
-                var field = Singleton.FieldMap;
-                if (_x == 2 && _y == 31)
-                {
-                    return field.GetMap(0, 31);
-                }
-                else if(_x == 22 && _y == 1)
-                {
-                    return field.GetMap(21, 0);
-                }
-                else if (_x == 26 && _y == 0)
-                {
-                    return field.GetMap(23, 1);
-                }
-                else
-                {
-                    return field.GetMap(_x - 1, _y);
-                }
-            }
-        }
-
-        public Map Right
-        {
-            get
-            {
-                var field = Singleton.FieldMap;
-                if (_x == 0 && _y == 31)
-                {
-                    return field.GetMap(2, 31);
-                }
-                else if(_x == 21 && _y == 0)
-                {
-                    return field.GetMap(23, 1);
-                }
-                else if (_x == 23 && _y == 1)
-                {
-                    return field.GetMap(26, 0);
-                }
-                else
-                {
-                    return field.GetMap(_x + 1, _y);
-                }
-            }
-        }
-
-        public Map(int x, int y, asd.Color color)
-        {
+        public Map(int id, int x, int y, asd.Color color, int[] link)
+        {   
+            _id = id;
             _x = x;
             _y = y;
-            
+            _link = link;
             _color = color;
         }
 
