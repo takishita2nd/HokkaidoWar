@@ -15,17 +15,20 @@ namespace HokkaidoWar.Model
         private int _y;
         private int[] _link;
         private City _city;
-        private asd.Color _color;
-        private asd.GeometryObject2D _geometryObj;
+        private Color _color;
+        private GeometryObject2D _geometryObj;
 
-        private readonly int width = 24;
-        private readonly int height = 24;
+        private readonly int width = 12;
+        private readonly int height = 12;
         private readonly int offsetx = 50;
         private readonly int offsety = 50;
+        private readonly int centerOffset = 6;
 
         public int Id { get { return _id; } }
         public int X { get { return _x; } }
         public int Y { get { return _y; } }
+        public int CenterX { get { return _x + centerOffset; } }
+        public int CenterY { get { return _y + centerOffset; } }
 
         public Map(int id, int x, int y, asd.Color color, int[] link)
         {   
@@ -36,12 +39,13 @@ namespace HokkaidoWar.Model
             _color = color;
         }
 
-        public void AddLayer(asd.Layer2D layer)
+        public void AddLayer(Layer2D layer)
         {
-            _geometryObj = new asd.GeometryObject2D();
+            _geometryObj = new GeometryObject2D();
+            _geometryObj.DrawingPriority = 10;
             _geometryObj.Color = _color;
-            var rect = new asd.RectangleShape();
-            rect.DrawingArea = new asd.RectF(width * _x + offsetx, height * _y + offsety, width, height);
+            var rect = new RectangleShape();
+            rect.DrawingArea = new RectF(_x, _y, width, height);
             _geometryObj.Shape = rect;
 
             layer.AddObject(_geometryObj);
@@ -61,6 +65,16 @@ namespace HokkaidoWar.Model
         public City GetCity()
         {
             return _city;
+        }
+
+        public List<Map> GetLinkdMap()
+        {
+            List<Map> maps = new List<Map>();
+            foreach(var i in _link)
+            {
+                maps.Add(Singleton.FieldMap.GetMap(i));
+            }
+            return maps;
         }
 
         public bool IsOnMouse(asd.Vector2DF pos)

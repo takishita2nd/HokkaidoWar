@@ -25,6 +25,7 @@ namespace HokkaidoWar
                 gameData.Cities.Add(city);
             }
 
+            gameData.Battleinitialize();
         }
 
         public void Run()

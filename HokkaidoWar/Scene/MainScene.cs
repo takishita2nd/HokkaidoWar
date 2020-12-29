@@ -16,9 +16,7 @@ namespace HokkaidoWar.Scene
 
         public MainScene()
         {
-            //    gameData.Battleinitialize();
-            //    gameData.gameStatus = GameData.GameStatus.SelectCity;
-            //}
+            gameData = Singleton.GameData;
         }
 
         protected override void OnRegistered()
@@ -37,14 +35,36 @@ namespace HokkaidoWar.Scene
             hokkaido.Scale = new asd.Vector2DF(1.5f, 1.5f);
             layer.AddObject(hokkaido);
 
-            //foreach (var c in gameData.Battle.GetAliveCityList())
-            //{
-            //    var maps = c.GetMaps();
-            //    foreach(var m in maps)
-            //    {
-            //        m.AddLayer(layer);
-            //    }
-            //}
+            // マップの配置
+            foreach (var c in gameData.Battle.GetAliveCityList())
+            {
+                var maps = c.GetMaps();
+                foreach (var m in maps)
+                {
+                    m.AddLayer(layer);
+                }
+            }
+
+            // リンクの描画
+            for (int i = 1; i <= gameData.MapData.citydata.Length; i++)
+            {
+                var m = Singleton.FieldMap.GetMap(i);
+                foreach (var linkedMap in m.GetLinkdMap())
+                {
+                    if(m.Id < linkedMap.Id)
+                    {
+                        var geometryObject = new asd.GeometryObject2D();
+                        geometryObject.Color = new asd.Color(0, 0, 255);
+                        geometryObject.DrawingPriority = 5;
+                        var linkLine = new asd.LineShape();
+                        linkLine.StartingPosition = new asd.Vector2DF(m.CenterX, m.CenterY);
+                        linkLine.EndingPosition = new asd.Vector2DF(linkedMap.CenterX, linkedMap.CenterY);
+                        linkLine.Thickness = 2;
+                        geometryObject.Shape = linkLine;
+                        layer.AddObject(geometryObject);
+                    }
+                }
+            }
 
             //var info = Singleton.InfomationWindow;
             //info.AddLayer(layer);
