@@ -63,7 +63,7 @@ namespace HokkaidoWar.Model
             _maps.AddRange(maps);
         }
 
-        public void OnMouse(asd.Vector2DF pos)
+        public void OnMouse(Vector2DF pos)
         {
             foreach (var m in _maps)
             {

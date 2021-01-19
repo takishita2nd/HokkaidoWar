@@ -20,8 +20,6 @@ namespace HokkaidoWar.Model
 
         private readonly int width = 12;
         private readonly int height = 12;
-        private readonly int offsetx = 50;
-        private readonly int offsety = 50;
         private readonly int centerOffset = 6;
 
         public int Id { get { return _id; } }
@@ -79,8 +77,7 @@ namespace HokkaidoWar.Model
 
         public bool IsOnMouse(asd.Vector2DF pos)
         {
-            if (pos.X > width * _x + offsetx && pos.X < width * (_x + 1) + offsetx
-                && pos.Y > height * _y + offsety && pos.Y < height * (_y + 1) + offsety)
+            if (pos.X > _x && pos.X < _x + width && pos.Y > _y && pos.Y < _y + height)
             {
                 return true;
             }
