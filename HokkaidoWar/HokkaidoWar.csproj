@@ -91,6 +91,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scene\BattleScene.cs" />
     <Compile Include="Scene\MainScene.cs" />
+    <Compile Include="Scene\TitleScene.cs" />
     <Compile Include="Singleton.cs" />
   </ItemGroup>
   <ItemGroup>
