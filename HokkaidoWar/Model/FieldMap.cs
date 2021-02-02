@@ -30,6 +30,11 @@ namespace HokkaidoWar.Model
             }
         }
 
+        public Map[] GetAllMaps()
+        {
+            return _map;
+        }
+
         public void SetMap(Map map)
         {
             _map[map.Id] = map;

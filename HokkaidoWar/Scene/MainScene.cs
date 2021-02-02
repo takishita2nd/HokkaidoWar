@@ -76,27 +76,50 @@ namespace HokkaidoWar.Scene
         {
             asd.Vector2DF pos = asd.Engine.Mouse.Position;
 
-            switch (gameData.gameStatus)
+            var maps = Singleton.FieldMap.GetAllMaps();
+            foreach(var map in maps)
             {
-                case GameData.GameStatus.SelectCity:
-                    cycleProcessSelectCity(pos);
+                if(map == null)
+                {
+                    continue;
+                }
+
+                if(map.IsOnMouse(pos))
+                {
+                    map.GetCity().PaintAttackColor();
+                    foreach(var linkedMap in map.GetLinkdMap())
+                    {
+                        linkedMap.GetCity().PaintDeffenceColor();
+                    }
                     break;
-                case GameData.GameStatus.VerificateCity:
-                    cycleProcessVerificateCity(pos);
-                    break;
-                case GameData.GameStatus.ActionEnemy:
-                    cycleProcessActionEnemy(pos);
-                    break;
-                case GameData.GameStatus.ActionPlayer:
-                    cycleProcessActionPlayer(pos);
-                    break;
-                case GameData.GameStatus.GameEnd:
-                    cycleProcessGameEnd();
-                    break;
-                case GameData.GameStatus.GameOver:
-                    cycleProcessGameOver(pos);
-                    break;
+                }
+                else
+                {
+                    map.GetCity().ClearPaint();
+                }
             }
+
+            //switch (gameData.gameStatus)
+            //{
+            //    case GameData.GameStatus.SelectCity:
+            //        cycleProcessSelectCity(pos);
+            //        break;
+            //    case GameData.GameStatus.VerificateCity:
+            //        cycleProcessVerificateCity(pos);
+            //        break;
+            //    case GameData.GameStatus.ActionEnemy:
+            //        cycleProcessActionEnemy(pos);
+            //        break;
+            //    case GameData.GameStatus.ActionPlayer:
+            //        cycleProcessActionPlayer(pos);
+            //        break;
+            //    case GameData.GameStatus.GameEnd:
+            //        cycleProcessGameEnd();
+            //        break;
+            //    case GameData.GameStatus.GameOver:
+            //        cycleProcessGameOver(pos);
+            //        break;
+            //}
 
             if (asd.Engine.Mouse.LeftButton.ButtonState == asd.ButtonState.Push)
             {
