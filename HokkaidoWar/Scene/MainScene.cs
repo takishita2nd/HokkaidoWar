@@ -66,8 +66,8 @@ namespace HokkaidoWar.Scene
                 }
             }
 
-            var info = Singleton.InfomationWindow;
-            info.AddLayer(layer);
+            //var info = Singleton.InfomationWindow;
+            //info.AddLayer(layer);
             //var info2 = Singleton.GameProcessInfomation;
             //info2.AddLayer(layer);
         }

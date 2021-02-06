@@ -22,7 +22,7 @@ namespace HokkaidoWar
         {
         }
 
-        public void AddLayer(Layer2D layer)
+        public void Show(Layer2D layer)
         {
             _windowBox = new GeometryObject2D();
             _windowBox.DrawingPriority = 10;
@@ -45,6 +45,16 @@ namespace HokkaidoWar
             _valueText.Font = Singleton.Font;
             _valueText.DrawingPriority = 20;
             layer.AddObject(_valueText);
+        }
+
+        public void Hide(Layer2D layer)
+        {
+            layer.RemoveObject(_windowBox);
+            for (int i = 0; i < 4; i++)
+            {
+                layer.RemoveObject(_geometryObj[i]);
+            }
+            layer.RemoveObject(_valueText);
         }
 
         public void ShowText(Vector2DF pos, string text)

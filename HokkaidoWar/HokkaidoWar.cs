@@ -36,8 +36,7 @@ namespace HokkaidoWar
             // asd.Engine.File.AddRootPackage("hokkaido.pack");
 
             // シーンの登録
-            var scene = new TitleScene();
-            asd.Engine.ChangeScene(scene);
+            asd.Engine.ChangeScene(new TitleScene());
 
             while (asd.Engine.DoEvents())
             {

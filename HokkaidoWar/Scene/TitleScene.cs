@@ -87,7 +87,7 @@ namespace HokkaidoWar.Scene
             {
                 if (isOnMouse(pos, _newgame))
                 {
-                    var scene = new MainScene();
+                    var scene = new SelectCityScene();
                     asd.Engine.ChangeSceneWithTransition(scene, new asd.TransitionFade(1.5f, 1.5f));
                 }
             }
