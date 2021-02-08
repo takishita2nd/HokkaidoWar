@@ -14,6 +14,7 @@ namespace HokkaidoWar
             None,
             SelectCity,
             VerificateCity,
+            ShowTurn,
             ActionEnemy,
             ActionPlayer,
             GameEnd,
@@ -33,6 +34,7 @@ namespace HokkaidoWar
         public Battle Battle = null;
         public Player Player = null;
         public MapData MapData = null;
+        public int TurnNumber = 1;
 
         public GameData()
         {
@@ -91,6 +93,11 @@ namespace HokkaidoWar
         public bool IsPlayerAlive()
         {
             return AliveCities.Contains(Player.City);
+        }
+
+        public string GetActionCity()
+        {
+            return Battle.GetActionCity().Name;
         }
 
         public void PlayNextCity()

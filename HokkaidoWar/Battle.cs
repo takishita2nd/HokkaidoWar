@@ -53,69 +53,70 @@ namespace HokkaidoWar
 
         public void NextTurn(City player)
         {
-            if (lastDeffece != null)
-            {
-                lastDeffece.ClearPaint();
-            }
-            if (lastAttack != null)
-            {
-                lastAttack.ClearPaint();
-            }
+            ////色を元に戻す
+            //if (lastDeffece != null)
+            //{
+            //    lastDeffece.ClearPaint();
+            //}
+            //if (lastAttack != null)
+            //{
+            //    lastAttack.ClearPaint();
+            //}
 
-            if (!_cities[cityCnt].IsAlive)
-            {
-                cityCnt++;
-                if (cityCnt >= _cities.Count)
-                {
-                    _cities = cityRandomReplace(aliveCities);
-                    aliveCities = copyCity(_cities);
-                    cityCnt = 0;
-                    turn++;
-                }
-                return;
-            }
+            //if (!_cities[cityCnt].IsAlive)
+            //{
+            //    cityCnt++;
+            //    if (cityCnt >= _cities.Count)
+            //    {
+            //        _cities = cityRandomReplace(aliveCities);
+            //        aliveCities = copyCity(_cities);
+            //        cityCnt = 0;
+            //        turn++;
+            //    }
+            //    return;
+            //}
 
-            var targets = _cities[cityCnt].GetLinkedCities();
-            var r = Singleton.Random;
-            int targetIdx = r.Next(0, targets.Count + 1);
-            lastAttack = _cities[cityCnt];
-            lastAttack.PaintAttackColor();
+            //var targets = _cities[cityCnt].GetLinkedCities();
+            //var r = Singleton.Random;
+            //int targetIdx = r.Next(0, targets.Count + 1);
+            //lastAttack = _cities[cityCnt];
+            //lastAttack.PaintAttackColor();
 
-            var info = Singleton.GameProcessInfomation;
-            if(targetIdx >= targets.Count)
-            {
-                info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}",
-                    turn, cityCnt + 1, _cities.Count, lastAttack.Name));
-            }
-            else
-            {
-                lastDeffece = targets[targetIdx];
-                lastDeffece.PaintDeffenceColor();
-                if(lastDeffece.Equals(player))
-                {
-                    var scene = new BattleScene(lastAttack, player, BattleScene.Player.Deffence);
-                    asd.Engine.ChangeScene(scene);
-                }
-                else
-                {
-                    double attack = lastAttack.Population * (double)(r.Next(minRate, maxRate) / 10.0);
-                    double deffence = lastDeffece.Population * (double)(r.Next(minRate, maxRate) / 10.0);
-                    if (attack > deffence)
-                    {
-                        info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nwin",
-                            turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
-                        lastAttack.CombinationCity(lastDeffece);
-                        lastDeffece.Lose();
-                        aliveCities.Remove(lastDeffece);
-                        lastDeffece = null;
-                    }
-                    else
-                    {
-                        info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nlose",
-                            turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
-                    }
-                }
-            }
+            //var info = Singleton.GameProcessInfomation;
+            //if(targetIdx >= targets.Count)
+            //{
+            //    info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}",
+            //        turn, cityCnt + 1, _cities.Count, lastAttack.Name));
+            //}
+            //else
+            //{
+            //    lastDeffece = targets[targetIdx];
+            //    lastDeffece.PaintDeffenceColor();
+            //    if(lastDeffece.Equals(player))
+            //    {
+            //        var scene = new BattleScene(lastAttack, player, BattleScene.Player.Deffence);
+            //        asd.Engine.ChangeScene(scene);
+            //    }
+            //    else
+            //    {
+            //        double attack = lastAttack.Population * (double)(r.Next(minRate, maxRate) / 10.0);
+            //        double deffence = lastDeffece.Population * (double)(r.Next(minRate, maxRate) / 10.0);
+            //        if (attack > deffence)
+            //        {
+            //            info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nwin",
+            //                turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
+            //            lastAttack.CombinationCity(lastDeffece);
+            //            lastDeffece.Lose();
+            //            aliveCities.Remove(lastDeffece);
+            //            lastDeffece = null;
+            //        }
+            //        else
+            //        {
+            //            info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nlose",
+            //                turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
+            //        }
+            //    }
+            //}
 
             cityCnt++;
             if(cityCnt >= _cities.Count)
@@ -148,8 +149,8 @@ namespace HokkaidoWar
             {
                 lastAttack.ClearPaint();
             }
-            var info = Singleton.GameProcessInfomation;
-            info.ShowText(player.GetPosition(), string.Format("{0} turn {1} / {2} {3}", turn, cityCnt + 1, _cities.Count, player.Name));
+            //var info = Singleton.GameProcessInfomation;
+            //info.ShowText(player.GetPosition(), string.Format("{0} turn {1} / {2} {3}", turn, cityCnt + 1, _cities.Count, player.Name));
         }
 
         public void MyTrunAttack(City player, City target)

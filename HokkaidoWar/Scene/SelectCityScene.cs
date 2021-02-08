@@ -136,8 +136,8 @@ namespace HokkaidoWar.Scene
                     if (selectcity != null)
                     {
                         gameData.CreatePlayer(selectcity);
-                        gameData.gameStatus = GameData.GameStatus.ActionEnemy;
-                        asd.Engine.ChangeSceneWithTransition(new MainScene(), new asd.TransitionFade(1.5f, 1.5f));
+                        gameData.gameStatus = GameData.GameStatus.ShowTurn;
+                        asd.Engine.ChangeScene(new MainScene());
                     }
                     break;
                 case Dialog.Result.Cancel:

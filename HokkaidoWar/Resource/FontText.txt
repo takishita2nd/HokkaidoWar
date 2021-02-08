@@ -197,3 +197,5 @@ abcdefghijklmnopqrstuvwxyz
 敗北しました
 戦闘力：
 でよろしいですか？
+ターン
+の行動

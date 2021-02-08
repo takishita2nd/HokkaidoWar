@@ -1,4 +1,5 @@
-﻿using HokkaidoWar.Model;
+﻿using asd;
+using HokkaidoWar.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,9 @@ namespace HokkaidoWar.Scene
     class MainScene : asd.Scene
     {
         private GameData gameData = null;
-        private Dialog dialog = new Dialog();
-        private asd.Layer2D layer = null;
+        private Layer2D layer = null;
+        private TextObject2D _turnText;
+        private TextObject2D _playCity;
 
         public MainScene()
         {
@@ -66,6 +68,18 @@ namespace HokkaidoWar.Scene
                 }
             }
 
+            _turnText = new TextObject2D();
+            _turnText.Font = Singleton.LargeFont;
+            _turnText.DrawingPriority = 20;
+            _turnText.Position = new Vector2DF(1000, 50);
+            layer.AddObject(_turnText);
+
+            _playCity = new TextObject2D();
+            _playCity.Font = Singleton.LargeFont;
+            _playCity.DrawingPriority = 20;
+            _playCity.Position = new Vector2DF(1000, 150);
+            layer.AddObject(_playCity);
+
             //var info = Singleton.InfomationWindow;
             //info.AddLayer(layer);
             //var info2 = Singleton.GameProcessInfomation;
@@ -99,69 +113,57 @@ namespace HokkaidoWar.Scene
                 }
             }
 
-            //switch (gameData.gameStatus)
-            //{
-            //    case GameData.GameStatus.SelectCity:
-            //        cycleProcessSelectCity(pos);
-            //        break;
-            //    case GameData.GameStatus.VerificateCity:
-            //        cycleProcessVerificateCity(pos);
-            //        break;
-            //    case GameData.GameStatus.ActionEnemy:
-            //        cycleProcessActionEnemy(pos);
-            //        break;
-            //    case GameData.GameStatus.ActionPlayer:
-            //        cycleProcessActionPlayer(pos);
-            //        break;
-            //    case GameData.GameStatus.GameEnd:
-            //        cycleProcessGameEnd();
-            //        break;
-            //    case GameData.GameStatus.GameOver:
-            //        cycleProcessGameOver(pos);
-            //        break;
-            //}
+            switch (gameData.gameStatus)
+            {
+                case GameData.GameStatus.ShowTurn:
+                    cycleShowTurn(pos);
+                    break;
+                case GameData.GameStatus.ActionEnemy:
+                    cycleProcessActionEnemy(pos);
+                    break;
+                case GameData.GameStatus.ActionPlayer:
+                    cycleProcessActionPlayer(pos);
+                    break;
+                case GameData.GameStatus.GameEnd:
+                    cycleProcessGameEnd();
+                    break;
+                case GameData.GameStatus.GameOver:
+                    cycleProcessGameOver(pos);
+                    break;
+            }
 
             if (asd.Engine.Mouse.LeftButton.ButtonState == asd.ButtonState.Push)
             {
-                //switch (gameData.gameStatus)
-                //{
-                //    case GameData.GameStatus.SelectCity:
-                //        onClickMouseSelectCity(pos);
-                //        break;
-                //    case GameData.GameStatus.VerificateCity:
-                //        onClickVerificateCity(pos);
-                //        break;
-                //    case GameData.GameStatus.ActionEnemy:
-                //        break;
-                //    case GameData.GameStatus.ActionPlayer:
-                //        onClickMouseActionPlayer(pos);
-                //        break;
-                //    case GameData.GameStatus.GameEnd:
-                //        break;
-                //    case GameData.GameStatus.GameOver:
-                //        break;
-                //}
+                switch (gameData.gameStatus)
+                {
+                    case GameData.GameStatus.ShowTurn:
+                        break;
+                    case GameData.GameStatus.ActionEnemy:
+                        break;
+                    case GameData.GameStatus.ActionPlayer:
+                        onClickMouseActionPlayer(pos);
+                        break;
+                    case GameData.GameStatus.GameEnd:
+                        break;
+                    case GameData.GameStatus.GameOver:
+                        break;
+                }
             }
         }
 
-        private void onMouse(asd.Vector2DF pos)
+        private void onMouse(Vector2DF pos)
         {
             gameData.OnMouseCity(pos);
         }
 
-        private void cycleProcessSelectCity(asd.Vector2DF pos)
+        private void cycleShowTurn(Vector2DF pos)
         {
-            var info = Singleton.InfomationWindow;
-            info.ShowText(pos, "都市を選択してください\r\n");
-            onMouse(pos);
+            _turnText.Text = "ターン" + gameData.TurnNumber;
+            Thread.Sleep(1000);
+            gameData.gameStatus = GameData.GameStatus.ActionEnemy;
         }
 
-        private void cycleProcessVerificateCity(asd.Vector2DF pos)
-        {
-            dialog.OnMouse(pos);
-        }
-
-        private void cycleProcessActionEnemy(asd.Vector2DF pos)
+        private void cycleProcessActionEnemy(Vector2DF pos)
         {
             if (gameData.IsPlayerTrun())
             {
@@ -169,6 +171,7 @@ namespace HokkaidoWar.Scene
             }
             else
             {
+                _playCity.Text = gameData.GetActionCity() + "の行動";
                 Thread.Sleep(200);
                 gameData.PlayNextCity();
                 if (gameData.IsPlayerAlive() == false)
@@ -180,29 +183,6 @@ namespace HokkaidoWar.Scene
 
         private void cycleProcessActionPlayer(asd.Vector2DF pos)
         {
-            gameData.PlayPlayer();
-            var info = Singleton.InfomationWindow;
-            info.ShowText(pos, "都市を選択してください\r\n");
-            if (gameData.IsOnMousePlayerCity(pos))
-            {
-                gameData.OnMousePlayerCity(pos);
-            }
-            else
-            {
-                var linkedCities = gameData.GetPlayerLinkedCities();
-                foreach (var city in linkedCities)
-                {
-                    if (city.IsOnMouse(pos))
-                    {
-                        city.OnMouse(pos);
-                        city.PaintDeffenceColor();
-                    }
-                    else
-                    {
-                        city.ClearPaint();
-                    }
-                }
-            }
         }
 
         private void cycleProcessGameEnd()
@@ -220,40 +200,6 @@ namespace HokkaidoWar.Scene
             gameinfo.ShowText(gameData.GetPlayCityPosition(), string.Empty);
             var info = Singleton.InfomationWindow;
             info.ShowText(pos, "敗北しました\r\n");
-        }
-
-        private City selectcity = null;
-        private void onClickMouseSelectCity(asd.Vector2DF pos)
-        {
-            selectcity = gameData.GetSelectedCity(pos);
-            if (selectcity != null)
-            {
-                dialog.ShowDialog(layer, selectcity.Name);
-                gameData.gameStatus = GameData.GameStatus.VerificateCity;
-            }
-        }
-
-        private void onClickVerificateCity(asd.Vector2DF pos)
-        {
-            switch (dialog.OnClick(pos))
-            {
-                case Dialog.Result.OK:
-                    var info = Singleton.InfomationWindow;
-                    info.ShowText(pos, string.Empty);
-                    dialog.CloseDialog(layer);
-                    if (selectcity != null)
-                    {
-                        gameData.CreatePlayer(selectcity);
-                        gameData.gameStatus = GameData.GameStatus.ActionEnemy;
-                    }
-                    break;
-                case Dialog.Result.Cancel:
-                    dialog.CloseDialog(layer);
-                    gameData.gameStatus = GameData.GameStatus.SelectCity;
-                    break;
-                case Dialog.Result.None:
-                    break;
-            }
         }
 
         private City _target = null;
