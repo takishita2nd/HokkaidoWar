@@ -15,6 +15,11 @@ namespace HokkaidoWar.Scene
         private Layer2D layer = null;
         private TextObject2D _turnText;
         private TextObject2D _playCity;
+        private TextureObject2D _attackButton;
+        private TextureObject2D _powerupButton;
+
+        private const int buttonWidth = 330;
+        private const int buttonHeight = 80;
 
         public MainScene()
         {
@@ -77,11 +82,17 @@ namespace HokkaidoWar.Scene
             _playCity = new TextObject2D();
             _playCity.Font = Singleton.LargeFont;
             _playCity.DrawingPriority = 20;
-            _playCity.Position = new Vector2DF(1000, 150);
+            _playCity.Position = new Vector2DF(1000, 100);
             layer.AddObject(_playCity);
 
-            //var info = Singleton.InfomationWindow;
-            //info.AddLayer(layer);
+            _attackButton = new TextureObject2D();
+            _attackButton.Position = new Vector2DF(1000, 300);
+            layer.AddObject(_attackButton);
+
+            _powerupButton = new TextureObject2D();
+            _powerupButton.Position = new Vector2DF(1000, 400);
+            layer.AddObject(_powerupButton);
+
             //var info2 = Singleton.GameProcessInfomation;
             //info2.AddLayer(layer);
         }
@@ -89,29 +100,6 @@ namespace HokkaidoWar.Scene
         protected override void OnUpdated()
         {
             asd.Vector2DF pos = asd.Engine.Mouse.Position;
-
-            var maps = Singleton.FieldMap.GetAllMaps();
-            foreach(var map in maps)
-            {
-                if(map == null)
-                {
-                    continue;
-                }
-
-                if(map.IsOnMouse(pos))
-                {
-                    map.GetCity().PaintAttackColor();
-                    foreach(var linkedMap in map.GetLinkdMap())
-                    {
-                        linkedMap.GetCity().PaintDeffenceColor();
-                    }
-                    break;
-                }
-                else
-                {
-                    map.GetCity().ClearPaint();
-                }
-            }
 
             switch (gameData.gameStatus)
             {
@@ -167,6 +155,9 @@ namespace HokkaidoWar.Scene
         {
             if (gameData.IsPlayerTrun())
             {
+                var info = Singleton.InfomationWindow;
+                info.Show(layer);
+                _playCity.Text = gameData.GetActionCity() + "の行動";
                 gameData.gameStatus = GameData.GameStatus.ActionPlayer;
             }
             else
@@ -181,8 +172,42 @@ namespace HokkaidoWar.Scene
             }
         }
 
-        private void cycleProcessActionPlayer(asd.Vector2DF pos)
+        private void cycleProcessActionPlayer(Vector2DF pos)
         {
+            var info = Singleton.InfomationWindow;
+            if(pos.X <= 1000)
+            {
+                if (!info.IsShow())
+                {
+                    info.Show(layer);
+                }
+                info.ShowText(pos, string.Empty);
+                onMouse(pos);
+            }
+            else
+            {
+                if (info.IsShow())
+                {
+                    info.Hide(layer);
+                }
+            }
+
+            if(isOnMouse(pos, _attackButton))
+            {
+                _attackButton.Texture = Singleton.ImageAttack2;
+            }
+            else
+            {
+                _attackButton.Texture = Singleton.ImageAttack;
+            }
+            if (isOnMouse(pos, _powerupButton))
+            {
+                _powerupButton.Texture = Singleton.ImagePowerup2;
+            }
+            else
+            {
+                _powerupButton.Texture = Singleton.ImagePowerup;
+            }
         }
 
         private void cycleProcessGameEnd()
@@ -217,5 +242,16 @@ namespace HokkaidoWar.Scene
                 }
             }
         }
+
+        private bool isOnMouse(Vector2DF pos, TextureObject2D button)
+        {
+            if (pos.X > button.Position.X && pos.X < button.Position.X + buttonWidth
+                && pos.Y > button.Position.Y && pos.Y < button.Position.Y + buttonHeight)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

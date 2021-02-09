@@ -17,6 +17,7 @@ namespace HokkaidoWar
         private const int rectWidth = 250;
         private const int rectHeight = 70;
         private const int xPositionOffset = 10;
+        private bool _isShow = false;
 
         public InfomationWindow()
         {
@@ -45,6 +46,7 @@ namespace HokkaidoWar
             _valueText.Font = Singleton.Font;
             _valueText.DrawingPriority = 20;
             layer.AddObject(_valueText);
+            _isShow = true;
         }
 
         public void Hide(Layer2D layer)
@@ -55,6 +57,12 @@ namespace HokkaidoWar
                 layer.RemoveObject(_geometryObj[i]);
             }
             layer.RemoveObject(_valueText);
+            _isShow = false;
+        }
+
+        public bool IsShow()
+        {
+            return _isShow;
         }
 
         public void ShowText(Vector2DF pos, string text)
