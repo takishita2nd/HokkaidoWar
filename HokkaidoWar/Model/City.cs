@@ -95,43 +95,19 @@ namespace HokkaidoWar.Model
 
         public List<City> GetLinkedCities()
         {
-            //List<City> cities = new List<City>();
-            //foreach (var m in _maps)
-            //{
-            //    if (m.Up != null)
-            //    {
-            //        var c = m.Up.GetCity();
-            //        if (cities.Contains(c) == false && c != this)
-            //        {
-            //            cities.Add(c);
-            //        }
-            //    }
-            //    if (m.Down != null)
-            //    {
-            //        var c = m.Down.GetCity();
-            //        if (cities.Contains(c) == false && c != this)
-            //        {
-            //            cities.Add(c);
-            //        }
-            //    }
-            //    if (m.Left != null)
-            //    {
-            //        var c = m.Left.GetCity();
-            //        if (cities.Contains(c) == false && c != this)
-            //        {
-            //            cities.Add(c);
-            //        }
-            //    }
-            //    if (m.Right != null)
-            //    {
-            //        var c = m.Right.GetCity();
-            //        if (cities.Contains(c) == false && c != this)
-            //        {
-            //            cities.Add(c);
-            //        }
-            //    }
-            //}
-            return null;
+            List<City> cities = new List<City>();
+            foreach (var m in _maps)
+            {
+                foreach(var linkedMap in m.GetLinkdMap())
+                {
+                    var c = linkedMap.GetCity();
+                    if (cities.Contains(c) == false && c != this)
+                    {
+                        cities.Add(c);
+                    }
+                }
+            }
+            return cities;
         }
 
         public void PaintAttackColor()

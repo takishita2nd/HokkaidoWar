@@ -53,15 +53,15 @@ namespace HokkaidoWar
 
         public void NextTurn(City player)
         {
-            ////色を元に戻す
+            //色を元に戻す
             //if (lastDeffece != null)
             //{
             //    lastDeffece.ClearPaint();
             //}
-            //if (lastAttack != null)
-            //{
-            //    lastAttack.ClearPaint();
-            //}
+            if (lastAttack != null)
+            {
+                lastAttack.ClearPaint();
+            }
 
             //if (!_cities[cityCnt].IsAlive)
             //{
@@ -79,8 +79,8 @@ namespace HokkaidoWar
             //var targets = _cities[cityCnt].GetLinkedCities();
             //var r = Singleton.Random;
             //int targetIdx = r.Next(0, targets.Count + 1);
-            //lastAttack = _cities[cityCnt];
-            //lastAttack.PaintAttackColor();
+            lastAttack = _cities[cityCnt];
+            lastAttack.PaintAttackColor();
 
             //var info = Singleton.GameProcessInfomation;
             //if(targetIdx >= targets.Count)

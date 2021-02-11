@@ -17,6 +17,8 @@ namespace HokkaidoWar
             ShowTurn,
             ActionEnemy,
             ActionPlayer,
+            SelectTargetCity,
+            InputPowerUpPoint,
             GameEnd,
             GameOver
         }

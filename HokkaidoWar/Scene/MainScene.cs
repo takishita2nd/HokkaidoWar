@@ -17,6 +17,8 @@ namespace HokkaidoWar.Scene
         private TextObject2D _playCity;
         private TextureObject2D _attackButton;
         private TextureObject2D _powerupButton;
+        private TextureObject2D _cancelButton;
+        private List<City> linkedCities;
 
         private const int buttonWidth = 330;
         private const int buttonHeight = 80;
@@ -93,6 +95,10 @@ namespace HokkaidoWar.Scene
             _powerupButton.Position = new Vector2DF(1000, 400);
             layer.AddObject(_powerupButton);
 
+            _cancelButton = new TextureObject2D();
+            _cancelButton.Position = new Vector2DF(1000, 500);
+            layer.AddObject(_cancelButton);
+
             //var info2 = Singleton.GameProcessInfomation;
             //info2.AddLayer(layer);
         }
@@ -112,6 +118,11 @@ namespace HokkaidoWar.Scene
                 case GameData.GameStatus.ActionPlayer:
                     cycleProcessActionPlayer(pos);
                     break;
+                case GameData.GameStatus.SelectTargetCity:
+                    cycleSelectTargetCity(pos);
+                    break;
+                case GameData.GameStatus.InputPowerUpPoint:
+                    break;
                 case GameData.GameStatus.GameEnd:
                     cycleProcessGameEnd();
                     break;
@@ -130,6 +141,11 @@ namespace HokkaidoWar.Scene
                         break;
                     case GameData.GameStatus.ActionPlayer:
                         onClickMouseActionPlayer(pos);
+                        break;
+                    case GameData.GameStatus.SelectTargetCity:
+                        onClickSelectTargetCity(pos);
+                        break;
+                    case GameData.GameStatus.InputPowerUpPoint:
                         break;
                     case GameData.GameStatus.GameEnd:
                         break;
@@ -153,16 +169,15 @@ namespace HokkaidoWar.Scene
 
         private void cycleProcessActionEnemy(Vector2DF pos)
         {
+            _playCity.Text = gameData.GetActionCity() + "の行動";
             if (gameData.IsPlayerTrun())
             {
                 var info = Singleton.InfomationWindow;
                 info.Show(layer);
-                _playCity.Text = gameData.GetActionCity() + "の行動";
                 gameData.gameStatus = GameData.GameStatus.ActionPlayer;
             }
             else
             {
-                _playCity.Text = gameData.GetActionCity() + "の行動";
                 Thread.Sleep(200);
                 gameData.PlayNextCity();
                 if (gameData.IsPlayerAlive() == false)
@@ -210,6 +225,37 @@ namespace HokkaidoWar.Scene
             }
         }
 
+        private void cycleSelectTargetCity(Vector2DF pos)
+        {
+            var info = Singleton.InfomationWindow;
+            if (pos.X <= 1000)
+            {
+                if (!info.IsShow())
+                {
+                    info.Show(layer);
+                }
+                info.ShowText(pos, "都市を選択してください\r\n");
+                onMouse(pos);
+            }
+            else
+            {
+                if (info.IsShow())
+                {
+                    info.Hide(layer);
+                }
+            }
+
+            if (isOnMouse(pos, _cancelButton))
+            {
+                _cancelButton.Texture = Singleton.ImageCancel2;
+            }
+            else
+            {
+                _cancelButton.Texture = Singleton.ImageCancel;
+            }
+
+        }
+
         private void cycleProcessGameEnd()
         {
             var gameinfo = Singleton.GameProcessInfomation;
@@ -227,19 +273,38 @@ namespace HokkaidoWar.Scene
             info.ShowText(pos, "敗北しました\r\n");
         }
 
-        private City _target = null;
         private void onClickMouseActionPlayer(asd.Vector2DF pos)
         {
-            var info = Singleton.InfomationWindow;
-            info.ShowText(pos, String.Empty);
-            var linkedCities = gameData.GetPlayerLinkedCities();
-            foreach (var city in linkedCities)
+            if(isOnMouse(pos, _attackButton))
             {
-                if (city.IsOnMouse(pos))
+                linkedCities = gameData.GetPlayerLinkedCities();
+                foreach (var city in linkedCities)
                 {
-                    _target = city;
-                    gameData.PlayerAttackCity(_target);
+                    city.PaintDeffenceColor();
                 }
+                _attackButton.Texture = null;
+                _powerupButton.Texture = null;
+                _cancelButton.Texture = Singleton.ImageCancel;
+                gameData.gameStatus = GameData.GameStatus.SelectTargetCity;
+            }
+            if(isOnMouse(pos, _powerupButton))
+            {
+                gameData.gameStatus = GameData.GameStatus.InputPowerUpPoint;
+            }
+        }
+
+        private void onClickSelectTargetCity(asd.Vector2DF pos)
+        {
+            if (isOnMouse(pos, _cancelButton))
+            {
+                foreach (var city in linkedCities)
+                {
+                    city.ClearPaint();
+                }
+                _attackButton.Texture = Singleton.ImageAttack;
+                _powerupButton.Texture = Singleton.ImagePowerup;
+                _cancelButton.Texture = null;
+                gameData.gameStatus = GameData.GameStatus.ActionPlayer;
             }
         }
 
