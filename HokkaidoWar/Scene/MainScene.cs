@@ -169,9 +169,11 @@ namespace HokkaidoWar.Scene
 
         private void cycleProcessActionEnemy(Vector2DF pos)
         {
+            _turnText.Text = "ターン" + gameData.TurnNumber;
             _playCity.Text = gameData.GetActionCity() + "の行動";
             if (gameData.IsPlayerTrun())
             {
+                gameData.PlayPlayer();
                 var info = Singleton.InfomationWindow;
                 info.Show(layer);
                 gameData.gameStatus = GameData.GameStatus.ActionPlayer;
@@ -189,6 +191,7 @@ namespace HokkaidoWar.Scene
 
         private void cycleProcessActionPlayer(Vector2DF pos)
         {
+            _turnText.Text = "ターン" + gameData.TurnNumber;
             var info = Singleton.InfomationWindow;
             if(pos.X <= 1000)
             {
@@ -305,6 +308,24 @@ namespace HokkaidoWar.Scene
                 _powerupButton.Texture = Singleton.ImagePowerup;
                 _cancelButton.Texture = null;
                 gameData.gameStatus = GameData.GameStatus.ActionPlayer;
+            }
+            else
+            {
+                foreach(var city in linkedCities)
+                {
+                    if(city.IsOnMouse(pos))
+                    {
+                        foreach (var c in linkedCities)
+                        {
+                            c.ClearPaint();
+                        }
+                        var info = Singleton.InfomationWindow;
+                        info.Hide(layer);
+                        _cancelButton.Texture = null;
+                        gameData.PlayerAttackCity(city);
+                        gameData.gameStatus = GameData.GameStatus.ActionEnemy;
+                    }
+                }
             }
         }
 

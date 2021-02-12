@@ -17,7 +17,6 @@ namespace HokkaidoWar
 
         private List<City> _cities = null;
         private List<City> aliveCities = null;
-        private int turn;
         private int cityCnt;
 
         private City lastAttack = null;
@@ -25,7 +24,6 @@ namespace HokkaidoWar
 
         public Battle(List<City> cities)
         {
-            turn = 1;
             cityCnt = 0;
             _cities = new List<City>();
             foreach(var c in cities)
@@ -124,7 +122,7 @@ namespace HokkaidoWar
                 _cities = cityRandomReplace(aliveCities);
                 aliveCities = copyCity(_cities);
                 cityCnt = 0;
-                turn++;
+                Singleton.GameData.TurnNumber++;
             }
         }
 
@@ -157,8 +155,8 @@ namespace HokkaidoWar
         {
             lastAttack = player;
             lastDeffece = target;
-            var scene = new BattleScene(player, target, BattleScene.Player.Attack);
-            asd.Engine.ChangeScene(scene);
+            //var scene = new BattleScene(player, target, BattleScene.Player.Attack);
+            //asd.Engine.ChangeScene(scene);
         }
 
         public void MyTurnEnd(BattleResult result)
@@ -181,7 +179,7 @@ namespace HokkaidoWar
                 _cities = cityRandomReplace(aliveCities);
                 aliveCities = copyCity(_cities);
                 cityCnt = 0;
-                turn++;
+                Singleton.GameData.TurnNumber++;
             }
         }
 
