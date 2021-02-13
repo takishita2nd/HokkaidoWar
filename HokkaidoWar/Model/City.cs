@@ -70,7 +70,7 @@ namespace HokkaidoWar.Model
                 if(m.IsOnMouse(pos))
                 {
                     var info = Singleton.InfomationWindow;
-                    info.AppendText(pos, _name + "\r\n" + _population.ToString());
+                    info.AppendText(pos, _name + "\r\n人口" + _population.ToString() + "\r\n面積" + _money.ToString());
                 }
             }
         }

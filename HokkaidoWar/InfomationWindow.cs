@@ -15,7 +15,7 @@ namespace HokkaidoWar
         private RectangleShape _rect;
         private LineShape[] _line = new LineShape[4];
         private const int rectWidth = 250;
-        private const int rectHeight = 70;
+        private const int rectHeight = 100;
         private const int xPositionOffset = 10;
         private bool _isShow = false;
 
