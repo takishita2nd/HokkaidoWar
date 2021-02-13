@@ -133,6 +133,7 @@ namespace HokkaidoWar
         public void PlayerAttackCity(City target)
         {
             Battle.MyTrunAttack(Player.City, target);
+            Battle.MyTurnEnd(BattleResult.win);
         }
 
         public asd.Vector2DF GetPlayCityPosition()
