@@ -16,6 +16,8 @@ namespace HokkaidoWar.Model
         private int[] _link;
         private City _city;
         private Color _color;
+        private int _population;
+        private int _area;
         private GeometryObject2D _geometryObj;
 
         private readonly int width = 12;
@@ -27,14 +29,18 @@ namespace HokkaidoWar.Model
         public int Y { get { return _y; } }
         public int CenterX { get { return _x + centerOffset; } }
         public int CenterY { get { return _y + centerOffset; } }
+        public int Population { get { return _population; } }
+        public int Area { get { return _area; } }
 
-        public Map(int id, int x, int y, asd.Color color, int[] link)
+        public Map(int id, int x, int y, int population, int area, asd.Color color, int[] link)
         {   
             _id = id;
             _x = x;
             _y = y;
             _link = link;
             _color = color;
+            _population = population;
+            _area = area;
         }
 
         public void AddLayer(Layer2D layer)

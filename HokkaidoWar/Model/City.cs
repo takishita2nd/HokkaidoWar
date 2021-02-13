@@ -10,21 +10,48 @@ namespace HokkaidoWar.Model
     class City
     {
         private string _name = string.Empty;
-        private int _population = 0;
-        private int _money = 0;
         private bool _isAlive;
         private List<Map> _maps = null;
-        private asd.Color _color;
+        private Color _color;
+        private int _money;
+        private int _power;
+        private float _bonus;
 
         public string Name { get { return _name; } }
-        public int Population { get { return _population; } }
+        public int Population
+        {
+            get
+            {
+                var population = 0;
+                foreach(var m in _maps)
+                {
+                    population += m.Population;
+                }
+                return population;
+            }
+        }
+        public int Area
+        {
+            get
+            {
+                var area = 0;
+                foreach (var m in _maps)
+                {
+                    area += m.Area;
+                }
+                return area;
+            }
+        }
+        public int Money {  get { return _money; } }
+        public int Power { get { return (int)(_power * _bonus); } }
         public bool IsAlive { get { return _isAlive; } }
 
         public City(Citydata citydata)
         {
-            _name = citydata.name;
-            _population = citydata.population;
             _money = citydata.money;
+            _power = citydata.population;
+            _bonus = 1.0f;
+            _name = citydata.name;
             _isAlive = true;
             _maps = new List<Map>();
             var r = Singleton.Random;
@@ -32,7 +59,7 @@ namespace HokkaidoWar.Model
 
             var fieldMap = Singleton.FieldMap;
 
-            Map m = new Map(citydata.id, citydata.point.x, citydata.point.y, _color, citydata.link);
+            Map m = new Map(citydata.id, citydata.point.x, citydata.point.y, citydata.population, citydata.money, _color, citydata.link);
             m.SetCity(this);
             _maps.Add(m);
             fieldMap.SetMap(m);
@@ -41,12 +68,6 @@ namespace HokkaidoWar.Model
         public List<Map> GetMaps()
         {
             return _maps;
-        }
-
-        public void CombinationCity(City lose)
-        {
-            addMaps(lose.GetMaps());
-            _population += lose.Population;
         }
 
         public void Lose()
@@ -63,14 +84,28 @@ namespace HokkaidoWar.Model
             _maps.AddRange(maps);
         }
 
-        public void OnMouse(Vector2DF pos)
+        public void OnMouse(Vector2DF pos, bool allInfo)
         {
             foreach (var m in _maps)
             {
                 if(m.IsOnMouse(pos))
                 {
-                    var info = Singleton.InfomationWindow;
-                    info.AppendText(pos, _name + "\r\n人口" + _population.ToString() + "\r\n面積" + _money.ToString());
+                    if(allInfo)
+                    {
+                        var info = Singleton.InfomationWindow;
+                        info.AppendText(pos, _name +
+                            "\r\n  金" + Money.ToString() +
+                            "\r\n  戦力" + Power.ToString() +
+                            "\r\n  人口" + Population.ToString() +
+                            "\r\n  面積" + Area.ToString());
+                    }
+                    else
+                    {
+                        var info = Singleton.InfomationWindow;
+                        info.AppendText(pos, _name +
+                            "\r\n  人口" + Population.ToString() +
+                            "\r\n  面積" + Area.ToString());
+                    }
                 }
             }
         }

@@ -123,6 +123,7 @@ namespace HokkaidoWar
                 aliveCities = copyCity(_cities);
                 cityCnt = 0;
                 Singleton.GameData.TurnNumber++;
+                Singleton.GameData.gameStatus = GameStatus.ShowTurn;
             }
         }
 
@@ -130,7 +131,7 @@ namespace HokkaidoWar
         {
             if(result == BattleResult.win)
             {
-                lastAttack.CombinationCity(lastDeffece);
+                //lastAttack.CombinationCity(lastDeffece);
                 lastDeffece.Lose();
                 aliveCities.Remove(lastDeffece);
                 lastDeffece = null;
@@ -163,7 +164,7 @@ namespace HokkaidoWar
         {
             if (result == BattleResult.win)
             {
-                lastAttack.CombinationCity(lastDeffece);
+                //lastAttack.CombinationCity(lastDeffece);
                 lastDeffece.Lose();
                 aliveCities.Remove(lastDeffece);
                 lastDeffece.ClearPaint();
@@ -180,6 +181,7 @@ namespace HokkaidoWar
                 aliveCities = copyCity(_cities);
                 cityCnt = 0;
                 Singleton.GameData.TurnNumber++;
+                Singleton.GameData.gameStatus = GameStatus.ShowTurn;
             }
         }
 

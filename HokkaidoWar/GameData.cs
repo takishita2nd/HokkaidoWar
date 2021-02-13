@@ -60,7 +60,14 @@ namespace HokkaidoWar
             {
                 foreach (var city in AliveCities)
                 {
-                    city.OnMouse(pos);
+                    if(Player != null && Player.City.Equals(city))
+                    {
+                        city.OnMouse(pos, true);
+                    }
+                    else
+                    {
+                        city.OnMouse(pos, false);
+                    }
                 }
             }
         }
@@ -118,11 +125,6 @@ namespace HokkaidoWar
         public bool IsOnMousePlayerCity(asd.Vector2DF pos)
         {
             return Player.City.IsOnMouse(pos);
-        }
-
-        public void OnMousePlayerCity(asd.Vector2DF pos)
-        {
-            Player.City.OnMouse(pos);
         }
 
         public List<City> GetPlayerLinkedCities()
