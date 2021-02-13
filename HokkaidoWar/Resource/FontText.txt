@@ -199,3 +199,4 @@ abcdefghijklmnopqrstuvwxyz
 でよろしいですか？
 ターン
 の行動
+人口
