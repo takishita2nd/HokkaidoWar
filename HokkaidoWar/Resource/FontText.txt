@@ -200,3 +200,4 @@ abcdefghijklmnopqrstuvwxyz
 ターン
 の行動
 人口
+面積
