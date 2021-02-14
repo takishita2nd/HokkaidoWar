@@ -72,6 +72,14 @@ namespace HokkaidoWar
             }
         }
 
+        public void GetMoney()
+        {
+            foreach (var city in AliveCities)
+            {
+                city.AddMoney();
+            }
+        }
+
         public City GetSelectedCity(asd.Vector2DF pos)
         {
             City retcity = null;

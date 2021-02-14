@@ -48,7 +48,7 @@ namespace HokkaidoWar.Model
 
         public City(Citydata citydata)
         {
-            _money = citydata.money;
+            _money = 0;
             _power = citydata.population;
             _bonus = 1.0f;
             _name = citydata.name;
@@ -73,6 +73,11 @@ namespace HokkaidoWar.Model
         public void Lose()
         {
             _isAlive = false;
+        }
+
+        public void AddMoney()
+        {
+            _money += Area;
         }
 
         private void addMaps(List<Map> maps)
