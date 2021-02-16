@@ -79,6 +79,7 @@
     <Compile Include="GameData.cs" />
     <Compile Include="Model\BattleIcon.cs" />
     <Compile Include="Model\City.cs" />
+    <Compile Include="Model\NumberDialog.cs" />
     <Compile Include="Model\Dialog.cs" />
     <Compile Include="Model\FieldMap.cs" />
     <Compile Include="FileAccess.cs" />

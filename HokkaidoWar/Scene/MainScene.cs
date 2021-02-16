@@ -18,6 +18,7 @@ namespace HokkaidoWar.Scene
         private TextureObject2D _attackButton;
         private TextureObject2D _powerupButton;
         private TextureObject2D _cancelButton;
+        private NumberDialog _numberDialog = new NumberDialog();
         private List<City> linkedCities;
 
         private const int buttonWidth = 330;
@@ -98,9 +99,6 @@ namespace HokkaidoWar.Scene
             _cancelButton = new TextureObject2D();
             _cancelButton.Position = new Vector2DF(1000, 500);
             layer.AddObject(_cancelButton);
-
-            //var info2 = Singleton.GameProcessInfomation;
-            //info2.AddLayer(layer);
         }
 
         protected override void OnUpdated()
@@ -122,6 +120,7 @@ namespace HokkaidoWar.Scene
                     cycleSelectTargetCity(pos);
                     break;
                 case GameData.GameStatus.InputPowerUpPoint:
+                    cycleInputPowerUpPoint(pos);
                     break;
                 case GameData.GameStatus.GameEnd:
                     cycleProcessGameEnd();
@@ -146,6 +145,7 @@ namespace HokkaidoWar.Scene
                         onClickSelectTargetCity(pos);
                         break;
                     case GameData.GameStatus.InputPowerUpPoint:
+                        pnClickInputPowerUpPoint(pos);
                         break;
                     case GameData.GameStatus.GameEnd:
                         break;
@@ -260,6 +260,11 @@ namespace HokkaidoWar.Scene
 
         }
 
+        private void cycleInputPowerUpPoint(Vector2DF pos)
+        {
+            _numberDialog.OnMouse(pos);
+        }
+
         private void cycleProcessGameEnd()
         {
             var gameinfo = Singleton.GameProcessInfomation;
@@ -293,11 +298,12 @@ namespace HokkaidoWar.Scene
             }
             if(isOnMouse(pos, _powerupButton))
             {
+                _numberDialog.ShowDialog(layer);
                 gameData.gameStatus = GameData.GameStatus.InputPowerUpPoint;
             }
         }
 
-        private void onClickSelectTargetCity(asd.Vector2DF pos)
+        private void onClickSelectTargetCity(Vector2DF pos)
         {
             if (isOnMouse(pos, _cancelButton))
             {
@@ -327,6 +333,24 @@ namespace HokkaidoWar.Scene
                         gameData.gameStatus = GameData.GameStatus.ActionEnemy;
                     }
                 }
+            }
+        }
+
+        private void pnClickInputPowerUpPoint(Vector2DF pos)
+        {
+            var result = _numberDialog.OnClick(pos);
+            switch(result)
+            {
+                case NumberDialog.Result.OK:
+                    _numberDialog.CloseDialog(layer);
+                    gameData.gameStatus = GameData.GameStatus.ActionPlayer;
+                    break;
+                case NumberDialog.Result.Cancel:
+                    _numberDialog.CloseDialog(layer);
+                    gameData.gameStatus = GameData.GameStatus.ActionPlayer;
+                    break;
+                default:
+                    break;
             }
         }
 
