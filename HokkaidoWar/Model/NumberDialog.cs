@@ -15,9 +15,9 @@ namespace HokkaidoWar.Model
             None
         }
 
-        private asd.GeometryObject2D _dialog = null;
-        private asd.TextureObject2D _okButton = null;
-        private asd.TextureObject2D _cancelButton = null;
+        private GeometryObject2D _dialog = null;
+        private TextureObject2D _okButton = null;
+        private TextureObject2D _cancelButton = null;
         private GeometryObject2D[] _geometryObj = new GeometryObject2D[4];
         private LineShape[] _line = new LineShape[4];
 
@@ -27,6 +27,12 @@ namespace HokkaidoWar.Model
         private const int dialogY = 300;
         private const int dialogWidth = 600;
         private const int dialogHeight = 400;
+
+        private TextObject2D[] _number = new TextObject2D[7];
+        private NumberDialogButton[] _up = new NumberDialogButton[7];
+        private NumberDialogButton[] _down = new NumberDialogButton[7];
+        private TextObject2D _money = new TextObject2D();
+        private TextObject2D _max = new TextObject2D();
 
         public NumberDialog()
         {
@@ -66,6 +72,33 @@ namespace HokkaidoWar.Model
             _line[3].StartingPosition = new Vector2DF(dialogX, dialogY + dialogHeight);
             _line[3].EndingPosition = new Vector2DF(dialogX, dialogY);
 
+            for(int i = 0; i<7; i++)
+            {
+                _number[i] = new TextObject2D();
+                _number[i].Font = Singleton.LargeFont;
+                _number[i].Text = "0";
+                _number[i].Position = new Vector2DF(450 + 40 * i, 450);
+                _number[i].DrawingPriority = 15;
+
+                _up[i] = new NumberDialogButton(NumberDialogButton.UpDown.Up);
+                _up[i].SetPosition(new Vector2DF(440 + 40 * i, 400));
+
+                _down[i] = new NumberDialogButton(NumberDialogButton.UpDown.Down);
+                _down[i].SetPosition(new Vector2DF(440 + 40 * i, 500));
+            }
+
+            _max = new TextObject2D();
+            _max.Font = Singleton.LargeFont;
+            _max.Text = "MAX";
+            _max.Position = new Vector2DF(740, 450);
+            _max.DrawingPriority = 15;
+
+            _money = new TextObject2D();
+            _money.Font = Singleton.LargeFont;
+            _money.Text = "金";
+            _money.Position = new Vector2DF(370, 320);
+            _money.DrawingPriority = 15;
+
         }
 
         public void ShowDialog(Layer2D layer)
@@ -75,8 +108,16 @@ namespace HokkaidoWar.Model
             {
                 layer.AddObject(_geometryObj[i]);
             }
+            for (int i = 0; i < 7; i++)
+            {
+                layer.AddObject(_number[i]);
+                _up[i].Show(layer);
+                _down[i].Show(layer);
+            }
             layer.AddObject(_okButton);
             layer.AddObject(_cancelButton);
+            layer.AddObject(_max);
+            layer.AddObject(_money);
         }
 
         public void CloseDialog(asd.Layer2D layer)
@@ -86,8 +127,16 @@ namespace HokkaidoWar.Model
             {
                 layer.RemoveObject(_geometryObj[i]);
             }
+            for (int i = 0; i < 7; i++)
+            {
+                layer.RemoveObject(_number[i]);
+                _up[i].Hide(layer);
+                _down[i].Hide(layer);
+            }
             layer.RemoveObject(_okButton);
             layer.RemoveObject(_cancelButton);
+            layer.RemoveObject(_max);
+            layer.RemoveObject(_money);
         }
 
         public void OnMouse(asd.Vector2DF pos)
