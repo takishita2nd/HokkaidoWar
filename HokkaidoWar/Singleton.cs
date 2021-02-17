@@ -31,6 +31,7 @@ namespace HokkaidoWar
         private static asd.Texture2D _texture_attack2 = null;
         private static asd.Texture2D _texture_powerup = null;
         private static asd.Texture2D _texture_powerup2 = null;
+        private static asd.Texture2D _texture_max = null;
 
         public static GameData GameData
         {
@@ -274,6 +275,17 @@ namespace HokkaidoWar
                     _texture_powerup2 = asd.Engine.Graphics.CreateTexture2D("powerup2.png");
                 }
                 return _texture_powerup2;
+            }
+        }
+        public static asd.Texture2D ImageMAX
+        {
+            get
+            {
+                if (_texture_max == null)
+                {
+                    _texture_max = asd.Engine.Graphics.CreateTexture2D("max.png");
+                }
+                return _texture_max;
             }
         }
     }

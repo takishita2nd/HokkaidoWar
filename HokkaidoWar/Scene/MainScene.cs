@@ -298,7 +298,7 @@ namespace HokkaidoWar.Scene
             }
             if(isOnMouse(pos, _powerupButton))
             {
-                _numberDialog.ShowDialog(layer);
+                _numberDialog.ShowDialog(layer, gameData.Player.City.Money);
                 gameData.gameStatus = GameData.GameStatus.InputPowerUpPoint;
             }
         }

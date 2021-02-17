@@ -12,9 +12,11 @@ namespace HokkaidoWar.Model
         public enum Result{
             OK,
             Cancel,
+            Number,
             None
         }
 
+        private int max;
         private GeometryObject2D _dialog = null;
         private TextureObject2D _okButton = null;
         private TextureObject2D _cancelButton = null;
@@ -23,6 +25,8 @@ namespace HokkaidoWar.Model
 
         private const int buttonWidth = 267;
         private const int buttonHeight = 63;
+        private const int buttonMaxWidth = 180;
+        private const int buttonMaxHeight = 80;
         private const int dialogX = 300;
         private const int dialogY = 300;
         private const int dialogWidth = 600;
@@ -32,7 +36,7 @@ namespace HokkaidoWar.Model
         private NumberDialogButton[] _up = new NumberDialogButton[7];
         private NumberDialogButton[] _down = new NumberDialogButton[7];
         private TextObject2D _money = new TextObject2D();
-        private TextObject2D _max = new TextObject2D();
+        private TextureObject2D _max = new TextureObject2D();
 
         public NumberDialog()
         {
@@ -87,10 +91,9 @@ namespace HokkaidoWar.Model
                 _down[i].SetPosition(new Vector2DF(440 + 40 * i, 500));
             }
 
-            _max = new TextObject2D();
-            _max.Font = Singleton.LargeFont;
-            _max.Text = "MAX";
-            _max.Position = new Vector2DF(740, 450);
+            _max = new TextureObject2D();
+            _max.Texture = Singleton.ImageMAX;
+            _max.Position = new Vector2DF(700, 430);
             _max.DrawingPriority = 15;
 
             _money = new TextObject2D();
@@ -101,8 +104,10 @@ namespace HokkaidoWar.Model
 
         }
 
-        public void ShowDialog(Layer2D layer)
+        public void ShowDialog(Layer2D layer, int money)
         {
+            max = money;
+            _money.Text = "金" + money.ToString();
             layer.AddObject(_dialog);
             for (int i = 0; i < 4; i++)
             {
@@ -129,6 +134,7 @@ namespace HokkaidoWar.Model
             }
             for (int i = 0; i < 7; i++)
             {
+                _number[i].Text = "0";
                 layer.RemoveObject(_number[i]);
                 _up[i].Hide(layer);
                 _down[i].Hide(layer);
@@ -162,6 +168,42 @@ namespace HokkaidoWar.Model
 
         public Result OnClick(asd.Vector2DF pos)
         {
+            foreach (var item in _up.Select((value, index) => new { up = value, Index = index }))
+            {
+                if (item.up.IsClick(pos))
+                {
+                    int value = int.Parse(_number[item.Index].Text);
+                    value++;
+                    if(value >= 10) { value = 0; }
+                    _number[item.Index].Text = value.ToString();
+                    if(getInputValue(_number) > max)
+                    {
+                        setMaxValue();
+                    }
+                    return Result.Number;
+                }
+            }
+            foreach (var item in _down.Select((value, index) => new { down = value, Index = index }))
+            {
+                if (item.down.IsClick(pos))
+                {
+                    int value = int.Parse(_number[item.Index].Text);
+                    value--;
+                    if (value < 0) { value = 9; }
+                    _number[item.Index].Text = value.ToString();
+                    if (getInputValue(_number) > max)
+                    {
+                        setMaxValue();
+                    }
+                    return Result.Number;
+                }
+            }
+            if(isClickMAX(pos))
+            {
+                setMaxValue();
+                return Result.Number;
+            }
+
             if (isClickOK(pos))
             {
                 return Result.OK;
@@ -198,6 +240,36 @@ namespace HokkaidoWar.Model
             else
             {
                 return false;
+            }
+        }
+        private bool isClickMAX(asd.Vector2DF pos)
+        {
+            if (pos.X > _max.Position.X && pos.X < _max.Position.X + buttonMaxWidth
+                && pos.Y > _max.Position.Y && pos.Y < _max.Position.Y + buttonMaxHeight)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private int getInputValue(TextObject2D[] number)
+        {
+            string value = string.Empty;
+            foreach(var n in number)
+            {
+                value += n.Text;
+            }
+            return int.Parse(value);
+        }
+
+        private void setMaxValue()
+        {
+            var value = string.Format("{0:0000000}", max);
+            foreach (var item in value.ToArray().Select((v, index) => new { chara = v, Index = index }))
+            {
+                _number[item.Index].Text = item.chara.ToString();
             }
         }
     }
