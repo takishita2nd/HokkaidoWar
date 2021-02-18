@@ -120,7 +120,7 @@ namespace HokkaidoWar.Scene
             {
                 var info = Singleton.InfomationWindow;
                 info.Hide(layer);
-                dialog.ShowDialog(layer, selectcity.Name);
+                dialog.ShowDialog(layer, selectcity.Name + "でよろしいですか？");
                 gameData.gameStatus = GameData.GameStatus.VerificateCity;
             }
         }

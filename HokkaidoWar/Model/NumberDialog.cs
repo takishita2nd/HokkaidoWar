@@ -218,6 +218,11 @@ namespace HokkaidoWar.Model
             }
         }
 
+        public int GetValue()
+        {
+            return getInputValue(_number);
+        }
+
         private bool isClickOK(asd.Vector2DF pos)
         {
             if (pos.X > _okButton.Position.X && pos.X < _okButton.Position.X + buttonWidth

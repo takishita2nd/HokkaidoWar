@@ -80,6 +80,16 @@ namespace HokkaidoWar.Model
             _money += Area;
         }
 
+        public void PayMoney(int money)
+        {
+            _money -= money;
+        }
+
+        public void AddPower(int power)
+        {
+            _power += power;
+        }
+
         private void addMaps(List<Map> maps)
         {
             foreach(var m in maps)

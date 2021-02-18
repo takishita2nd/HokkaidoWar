@@ -24,6 +24,8 @@ namespace HokkaidoWar.Scene
         private const int buttonWidth = 330;
         private const int buttonHeight = 80;
 
+        private Dialog _dialog = new Dialog();
+
         public MainScene()
         {
             gameData = Singleton.GameData;
@@ -122,6 +124,9 @@ namespace HokkaidoWar.Scene
                 case GameData.GameStatus.InputPowerUpPoint:
                     cycleInputPowerUpPoint(pos);
                     break;
+                case GameData.GameStatus.VerificateInputPowerUp:
+                    cycleVerificateInputPowerUp(pos);
+                    break;
                 case GameData.GameStatus.GameEnd:
                     cycleProcessGameEnd();
                     break;
@@ -145,7 +150,10 @@ namespace HokkaidoWar.Scene
                         onClickSelectTargetCity(pos);
                         break;
                     case GameData.GameStatus.InputPowerUpPoint:
-                        pnClickInputPowerUpPoint(pos);
+                        onClickInputPowerUpPoint(pos);
+                        break;
+                    case GameData.GameStatus.VerificateInputPowerUp:
+                        onClickVerificateInputPowerUp(pos);
                         break;
                     case GameData.GameStatus.GameEnd:
                         break;
@@ -265,6 +273,11 @@ namespace HokkaidoWar.Scene
             _numberDialog.OnMouse(pos);
         }
 
+        private void cycleVerificateInputPowerUp(Vector2DF pos)
+        {
+            _dialog.OnMouse(pos);
+        }
+
         private void cycleProcessGameEnd()
         {
             var gameinfo = Singleton.GameProcessInfomation;
@@ -336,18 +349,41 @@ namespace HokkaidoWar.Scene
             }
         }
 
-        private void pnClickInputPowerUpPoint(Vector2DF pos)
+        private void onClickInputPowerUpPoint(Vector2DF pos)
         {
             var result = _numberDialog.OnClick(pos);
             switch(result)
             {
                 case NumberDialog.Result.OK:
-                    _numberDialog.CloseDialog(layer);
-                    gameData.gameStatus = GameData.GameStatus.ActionPlayer;
+                    _dialog.ShowDialog(layer, "戦力" + _numberDialog.GetValue() + "を購入します。\r\nよろしいですか？");
+                    gameData.gameStatus = GameData.GameStatus.VerificateInputPowerUp;
                     break;
                 case NumberDialog.Result.Cancel:
                     _numberDialog.CloseDialog(layer);
                     gameData.gameStatus = GameData.GameStatus.ActionPlayer;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void onClickVerificateInputPowerUp(Vector2DF pos)
+        {
+            var result = _dialog.OnClick(pos);
+            switch(result)
+            {
+                case Dialog.Result.OK:
+                    var power = _numberDialog.GetValue();
+                    gameData.Player.City.PayMoney(power);
+                    gameData.Player.City.AddPower(power);
+                    _numberDialog.CloseDialog(layer);
+                    _dialog.CloseDialog(layer);
+                    gameData.PlayerTurnEnd();
+                    gameData.gameStatus = GameData.GameStatus.ActionEnemy;
+                    break;
+                case Dialog.Result.Cancel:
+                    _dialog.CloseDialog(layer);
+                    gameData.gameStatus = GameData.GameStatus.InputPowerUpPoint;
                     break;
                 default:
                     break;

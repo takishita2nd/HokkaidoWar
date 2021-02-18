@@ -19,6 +19,7 @@ namespace HokkaidoWar
             ActionPlayer,
             SelectTargetCity,
             InputPowerUpPoint,
+            VerificateInputPowerUp,
             GameEnd,
             GameOver
         }
@@ -144,6 +145,11 @@ namespace HokkaidoWar
         {
             Battle.MyTrunAttack(Player.City, target);
             Battle.MyTurnEnd(BattleResult.win);
+        }
+
+        public void PlayerTurnEnd()
+        {
+            Battle.MyTurnEnd();
         }
 
         public asd.Vector2DF GetPlayCityPosition()

@@ -185,6 +185,22 @@ namespace HokkaidoWar
             }
         }
 
+        public void MyTurnEnd()
+        {
+            lastAttack.ClearPaint();
+            lastAttack = null;
+
+            cityCnt++;
+            if (cityCnt >= _cities.Count)
+            {
+                _cities = cityRandomReplace(aliveCities);
+                aliveCities = copyCity(_cities);
+                cityCnt = 0;
+                Singleton.GameData.TurnNumber++;
+                Singleton.GameData.gameStatus = GameStatus.ShowTurn;
+            }
+        }
+
         private List<City> copyCity(List<City> cities)
         {
             List<City> ret = new List<City>();
