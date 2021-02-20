@@ -160,6 +160,22 @@ namespace HokkaidoWar.Model
             return cities;
         }
 
+        public List<Map> GetLinkedMaps()
+        {
+            List<Map> maps = new List<Map>();
+            foreach (var m in _maps)
+            {
+                foreach (var linkedMap in m.GetLinkdMap())
+                {
+                    if(maps.Contains(linkedMap) == false && linkedMap.GetCity() != this)
+                    {
+                        maps.Add(linkedMap);
+                    }
+                }
+            }
+            return maps;
+        }
+
         public void PaintAttackColor()
         {
             var color = new asd.Color(200, 0, 0);

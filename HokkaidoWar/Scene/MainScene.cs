@@ -19,7 +19,7 @@ namespace HokkaidoWar.Scene
         private TextureObject2D _powerupButton;
         private TextureObject2D _cancelButton;
         private NumberDialog _numberDialog = new NumberDialog();
-        private List<City> linkedCities;
+        private List<Map> linkedMaps;
 
         private const int buttonWidth = 330;
         private const int buttonHeight = 80;
@@ -299,10 +299,10 @@ namespace HokkaidoWar.Scene
         {
             if(isOnMouse(pos, _attackButton))
             {
-                linkedCities = gameData.GetPlayerLinkedCities();
-                foreach (var city in linkedCities)
+                linkedMaps = gameData.GetPlayerLinkedMaps();
+                foreach (var map in linkedMaps)
                 {
-                    city.PaintDeffenceColor();
+                    map.PaintAttackColor();
                 }
                 _attackButton.Texture = null;
                 _powerupButton.Texture = null;
@@ -320,9 +320,9 @@ namespace HokkaidoWar.Scene
         {
             if (isOnMouse(pos, _cancelButton))
             {
-                foreach (var city in linkedCities)
+                foreach (var map in linkedMaps)
                 {
-                    city.ClearPaint();
+                    map.SetColor(map.GetCity().GetColor());
                 }
                 _attackButton.Texture = Singleton.ImageAttack;
                 _powerupButton.Texture = Singleton.ImagePowerup;
@@ -331,19 +331,19 @@ namespace HokkaidoWar.Scene
             }
             else
             {
-                foreach(var city in linkedCities)
+                foreach(var map in linkedMaps)
                 {
-                    if(city.IsOnMouse(pos))
+                    if(map.IsOnMouse(pos))
                     {
-                        foreach (var c in linkedCities)
+                        foreach (var m in linkedMaps)
                         {
-                            c.ClearPaint();
+                            m.SetColor(m.GetCity().GetColor());
                         }
+
                         var info = Singleton.InfomationWindow;
                         info.Hide(layer);
                         _cancelButton.Texture = null;
-                        gameData.PlayerAttackCity(city);
-                        gameData.gameStatus = GameData.GameStatus.ActionEnemy;
+                        gameData.PlayerAttackCity(map.GetCity());
                     }
                 }
             }

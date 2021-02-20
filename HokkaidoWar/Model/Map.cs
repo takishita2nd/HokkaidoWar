@@ -60,6 +60,11 @@ namespace HokkaidoWar.Model
             _geometryObj.Color = color;
         }
 
+        public void PaintAttackColor()
+        {
+            _geometryObj.Color = new asd.Color(0, 0, 200);
+        }
+
         public void SetCity(City city)
         {
             _city = city;

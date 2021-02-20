@@ -141,6 +141,11 @@ namespace HokkaidoWar
             return Player.City.GetLinkedCities();
         }
 
+        public List<Map> GetPlayerLinkedMaps()
+        {
+            return Player.City.GetLinkedMaps();
+        }
+
         public void PlayerAttackCity(City target)
         {
             Battle.MyTrunAttack(Player.City, target);

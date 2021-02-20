@@ -61,20 +61,20 @@ namespace HokkaidoWar
                 lastAttack.ClearPaint();
             }
 
-            //if (!_cities[cityCnt].IsAlive)
-            //{
-            //    cityCnt++;
-            //    if (cityCnt >= _cities.Count)
-            //    {
-            //        _cities = cityRandomReplace(aliveCities);
-            //        aliveCities = copyCity(_cities);
-            //        cityCnt = 0;
-            //        turn++;
-            //    }
-            //    return;
-            //}
+            if (!_cities[cityCnt].IsAlive)
+            {
+                cityCnt++;
+                if (cityCnt >= _cities.Count)
+                {
+                    _cities = cityRandomReplace(aliveCities);
+                    aliveCities = copyCity(_cities);
+                    cityCnt = 0;
+                    Singleton.GameData.TurnNumber++;
+                }
+                return;
+            }
 
-            //var targets = _cities[cityCnt].GetLinkedCities();
+            var targets = _cities[cityCnt].GetLinkedCities();
             //var r = Singleton.Random;
             //int targetIdx = r.Next(0, targets.Count + 1);
             lastAttack = _cities[cityCnt];
@@ -182,6 +182,10 @@ namespace HokkaidoWar
                 cityCnt = 0;
                 Singleton.GameData.TurnNumber++;
                 Singleton.GameData.gameStatus = GameStatus.ShowTurn;
+            }
+            else
+            {
+                Singleton.GameData.gameStatus = GameStatus.ActionEnemy;
             }
         }
 
