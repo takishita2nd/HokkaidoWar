@@ -15,6 +15,7 @@ namespace HokkaidoWar.Scene
         private Layer2D layer = null;
         private TextObject2D _turnText;
         private TextObject2D _playCity;
+        private TextObject2D _actionText;
         private TextureObject2D _attackButton;
         private TextureObject2D _powerupButton;
         private TextureObject2D _cancelButton;
@@ -90,6 +91,13 @@ namespace HokkaidoWar.Scene
             _playCity.Position = new Vector2DF(1000, 100);
             layer.AddObject(_playCity);
 
+            _actionText = new TextObject2D();
+            _actionText.Font = Singleton.LargeFont;
+            _actionText.DrawingPriority = 20;
+            _actionText.Position = new Vector2DF(1000, 150);
+            layer.AddObject(_actionText);
+
+
             _attackButton = new TextureObject2D();
             _attackButton.Position = new Vector2DF(1000, 300);
             layer.AddObject(_attackButton);
@@ -105,6 +113,8 @@ namespace HokkaidoWar.Scene
 
         protected override void OnUpdated()
         {
+            _actionText.Text = string.Empty;
+
             asd.Vector2DF pos = asd.Engine.Mouse.Position;
 
             switch (gameData.gameStatus)
@@ -180,6 +190,7 @@ namespace HokkaidoWar.Scene
         {
             _turnText.Text = "ターン" + gameData.TurnNumber;
             _playCity.Text = gameData.GetActionCity() + "の行動";
+
             if (gameData.IsPlayerTrun())
             {
                 gameData.PlayPlayer();
@@ -190,7 +201,7 @@ namespace HokkaidoWar.Scene
             else
             {
                 Thread.Sleep(200);
-                gameData.PlayNextCity();
+                _actionText.Text = gameData.PlayNextCity();
                 if (gameData.IsPlayerAlive() == false)
                 {
                     gameData.gameStatus = GameData.GameStatus.GameOver;

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static HokkaidoWar.GameData;
 
@@ -21,6 +22,14 @@ namespace HokkaidoWar
 
         private City lastAttack = null;
         private City lastDeffece = null;
+
+        public enum BattleAction
+        {
+            Charge,
+            Siege,
+            Shoot,
+        }
+        private BattleAction[] Action = { BattleAction.Charge, BattleAction.Shoot, BattleAction.Siege };
 
         public Battle(List<City> cities)
         {
@@ -49,13 +58,14 @@ namespace HokkaidoWar
             return _cities[cityCnt];
         }
 
-        public void NextTurn(City player)
+        public string NextTurn(City player)
         {
+            string message = string.Empty;
             //色を元に戻す
-            //if (lastDeffece != null)
-            //{
-            //    lastDeffece.ClearPaint();
-            //}
+            if (lastDeffece != null)
+            {
+                lastDeffece.ClearPaint();
+            }
             if (lastAttack != null)
             {
                 lastAttack.ClearPaint();
@@ -71,50 +81,42 @@ namespace HokkaidoWar
                     cityCnt = 0;
                     Singleton.GameData.TurnNumber++;
                 }
-                return;
+                return message;
             }
 
-            var targets = _cities[cityCnt].GetLinkedCities();
-            //var r = Singleton.Random;
-            //int targetIdx = r.Next(0, targets.Count + 1);
+            var targets = _cities[cityCnt].GetLinkedMaps();
+            var r = Singleton.Random;
+            int targetIdx = r.Next(0, targets.Count + 1);
+            
             lastAttack = _cities[cityCnt];
             lastAttack.PaintAttackColor();
 
-            //var info = Singleton.GameProcessInfomation;
-            //if(targetIdx >= targets.Count)
-            //{
-            //    info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}",
-            //        turn, cityCnt + 1, _cities.Count, lastAttack.Name));
-            //}
-            //else
-            //{
-            //    lastDeffece = targets[targetIdx];
-            //    lastDeffece.PaintDeffenceColor();
-            //    if(lastDeffece.Equals(player))
-            //    {
-            //        var scene = new BattleScene(lastAttack, player, BattleScene.Player.Deffence);
-            //        asd.Engine.ChangeScene(scene);
-            //    }
-            //    else
-            //    {
-            //        double attack = lastAttack.Population * (double)(r.Next(minRate, maxRate) / 10.0);
-            //        double deffence = lastDeffece.Population * (double)(r.Next(minRate, maxRate) / 10.0);
-            //        if (attack > deffence)
-            //        {
-            //            info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nwin",
-            //                turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
-            //            lastAttack.CombinationCity(lastDeffece);
-            //            lastDeffece.Lose();
-            //            aliveCities.Remove(lastDeffece);
-            //            lastDeffece = null;
-            //        }
-            //        else
-            //        {
-            //            info.ShowText(lastAttack.GetPosition(), string.Format("{0} turn {1} / {2} {3}\r\ntarget {4} \r\n{5} vs {6}\r\nlose",
-            //                turn, cityCnt + 1, _cities.Count, lastAttack.Name, lastDeffece.Name, (int)attack, (int)deffence));
-            //        }
-            //    }
-            //}
+            if(targetIdx < targets.Count)
+            {
+                var target = targets[targetIdx];
+                lastDeffece = target.GetCity();
+                message = lastDeffece.Name + "に攻撃";
+                lastDeffece.PaintDeffenceColor();
+                if (lastDeffece.Equals(player))
+                {
+                    //var scene = new BattleScene(lastAttack, player, BattleScene.Player.Deffence);
+                    //asd.Engine.ChangeScene(scene);
+                }
+                else
+                {
+                    var result = enemyBattle(lastAttack, lastDeffece);
+                    if(result == BattleResult.win)
+                    {
+                        message += "\r\n勝利";
+                        lastAttack.AddMap(target);
+                        lastDeffece.LostMap(target);
+                    }
+                    else
+                    {
+                        message += "\r\n敗北";
+                    }
+                }
+            }
 
             cityCnt++;
             if(cityCnt >= _cities.Count)
@@ -125,6 +127,7 @@ namespace HokkaidoWar
                 Singleton.GameData.TurnNumber++;
                 Singleton.GameData.gameStatus = GameStatus.ShowTurn;
             }
+            return message;
         }
 
         public void EnemyTurnEnd(BattleResult result)
@@ -228,6 +231,123 @@ namespace HokkaidoWar
             }
 
             return afterCities;
+        }
+
+        private BattleResult enemyBattle(City attack, City deffence)
+        {
+            var r = Singleton.Random;
+
+            BattleAction battleActionAttack = Action[r.Next(0, Action.Length - 1)];
+            BattleAction battleActionDeffence = Action[r.Next(0, Action.Length - 1)];
+            switch (battleActionAttack)
+            {
+                case BattleAction.Charge:
+                    switch (battleActionDeffence)
+                    {
+                        case BattleAction.Charge:
+                            if (attack.Power > deffence.Power)
+                            {
+                                return BattleResult.win;
+                            }
+                            else
+                            {
+                                return BattleResult.lose;
+                            }
+                        case BattleAction.Siege:
+                            if (attack.Power * 1.5f > deffence.Power)
+                            {
+                                return BattleResult.win;
+                            }
+                            else
+                            {
+                                return BattleResult.lose;
+                            }
+                        case BattleAction.Shoot:
+                            if (attack.Power > deffence.Power * 1.5f)
+                            {
+                                return BattleResult.win;
+                            }
+                            else
+                            {
+                                return BattleResult.lose;
+                            }
+                        default:
+                            return BattleResult.win;
+                    }
+                    break;
+                case BattleAction.Siege:
+                    switch (battleActionDeffence)
+                    {
+                        case BattleAction.Siege:
+                            if (attack.Power > deffence.Power)
+                            {
+                                return BattleResult.win;
+                            }
+                            else
+                            {
+                                return BattleResult.lose;
+                            }
+                        case BattleAction.Shoot:
+                            if (attack.Power * 1.5f > deffence.Power)
+                            {
+                                return BattleResult.win;
+                            }
+                            else
+                            {
+                                return BattleResult.lose;
+                            }
+                        case BattleAction.Charge:
+                            if (attack.Power > deffence.Power * 1.5f)
+                            {
+                                return BattleResult.win;
+                            }
+                            else
+                            {
+                                return BattleResult.lose;
+                            }
+
+                        default:
+                            return BattleResult.win;
+                    }
+                    break;
+                case BattleAction.Shoot:
+                    switch (battleActionDeffence)
+                    {
+                        case BattleAction.Shoot:
+                            if (attack.Power > deffence.Power)
+                            {
+                                return BattleResult.win;
+                            }
+                            else
+                            {
+                                return BattleResult.lose;
+                            }
+                        case BattleAction.Charge:
+                            if (attack.Power * 1.5f > deffence.Power)
+                            {
+                                return BattleResult.win;
+                            }
+                            else
+                            {
+                                return BattleResult.lose;
+                            }
+                        case BattleAction.Siege:
+                            if (attack.Power > deffence.Power * 1.5f)
+                            {
+                                return BattleResult.win;
+                            }
+                            else
+                            {
+                                return BattleResult.lose;
+                            }
+                        default:
+                            return BattleResult.win;
+                    }
+                    break;
+                default:
+                    return BattleResult.win;
+            }
+
         }
     }
 }

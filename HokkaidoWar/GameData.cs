@@ -118,10 +118,11 @@ namespace HokkaidoWar
             return Battle.GetActionCity().Name;
         }
 
-        public void PlayNextCity()
+        public string PlayNextCity()
         {
-            Battle.NextTurn(Player.City);
+            string message = Battle.NextTurn(Player.City);
             AliveCities = Battle.GetAliveCityList();
+            return message;
         }
 
         public void PlayPlayer()

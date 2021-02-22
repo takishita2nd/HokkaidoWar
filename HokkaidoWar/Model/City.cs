@@ -70,6 +70,25 @@ namespace HokkaidoWar.Model
             return _maps;
         }
 
+        public void AddMap(Map map)
+        {
+            _maps.Add(map);
+            map.SetCity(this);
+            map.SetColor(_color);
+        }
+
+        public void LostMap(Map map)
+        {
+            if(_maps.Contains(map))
+            {
+                _maps.Remove(map);
+                if(_maps.Count == 0)
+                {
+                    Lose();
+                }
+            }
+        }
+
         public void Lose()
         {
             _isAlive = false;
