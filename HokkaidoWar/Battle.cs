@@ -99,8 +99,8 @@ namespace HokkaidoWar
                 lastDeffece.PaintDeffenceColor();
                 if (lastDeffece.Equals(player))
                 {
-                    //var scene = new BattleScene(lastAttack, player, BattleScene.Player.Deffence);
-                    //asd.Engine.ChangeScene(scene);
+                    var scene = new BattleScene(lastAttack, player, BattleScene.Player.Deffence);
+                    asd.Engine.ChangeScene(scene);
                 }
                 else
                 {
@@ -159,8 +159,8 @@ namespace HokkaidoWar
         {
             lastAttack = player;
             lastDeffece = target;
-            //var scene = new BattleScene(player, target, BattleScene.Player.Attack);
-            //asd.Engine.ChangeScene(scene);
+            var scene = new BattleScene(player, target, BattleScene.Player.Attack);
+            asd.Engine.ChangeScene(scene);
         }
 
         public void MyTurnEnd(BattleResult result)

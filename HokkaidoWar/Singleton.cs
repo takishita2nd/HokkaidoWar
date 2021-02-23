@@ -31,6 +31,14 @@ namespace HokkaidoWar
         private static asd.Texture2D _texture_attack2 = null;
         private static asd.Texture2D _texture_powerup = null;
         private static asd.Texture2D _texture_powerup2 = null;
+        private static asd.Texture2D _texture_charge = null;
+        private static asd.Texture2D _texture_charge2 = null;
+        private static asd.Texture2D _texture_siege = null;
+        private static asd.Texture2D _texture_siege2 = null;
+        private static asd.Texture2D _texture_shoot = null;
+        private static asd.Texture2D _texture_shoot2 = null;
+        private static asd.Texture2D _texture_deffence = null;
+        private static asd.Texture2D _texture_deffence2 = null;
         private static asd.Texture2D _texture_max = null;
 
         public static GameData GameData
@@ -277,6 +285,95 @@ namespace HokkaidoWar
                 return _texture_powerup2;
             }
         }
+        public static asd.Texture2D ImageCharge
+        {
+            get
+            {
+                if (_texture_charge == null)
+                {
+                    _texture_charge = asd.Engine.Graphics.CreateTexture2D("Command_Charge.png");
+                }
+                return _texture_charge;
+            }
+        }
+        public static asd.Texture2D ImageCharge2
+        {
+            get
+            {
+                if (_texture_charge2 == null)
+                {
+                    _texture_charge2 = asd.Engine.Graphics.CreateTexture2D("Command_Charge2.png");
+                }
+                return _texture_charge2;
+            }
+        }
+        public static asd.Texture2D ImageSiege
+        {
+            get
+            {
+                if (_texture_siege == null)
+                {
+                    _texture_siege = asd.Engine.Graphics.CreateTexture2D("Command_Siege.png");
+                }
+                return _texture_siege;
+            }
+        }
+        public static asd.Texture2D ImageSiege2
+        {
+            get
+            {
+                if (_texture_siege2 == null)
+                {
+                    _texture_siege2 = asd.Engine.Graphics.CreateTexture2D("Command_Siege2.png");
+                }
+                return _texture_siege2;
+            }
+        }
+        public static asd.Texture2D ImageShoot
+        {
+            get
+            {
+                if (_texture_shoot == null)
+                {
+                    _texture_shoot = asd.Engine.Graphics.CreateTexture2D("Command_Shoot.png");
+                }
+                return _texture_shoot;
+            }
+        }
+        public static asd.Texture2D ImageShoot2
+        {
+            get
+            {
+                if (_texture_shoot2 == null)
+                {
+                    _texture_shoot2 = asd.Engine.Graphics.CreateTexture2D("Command_Shoot2.png");
+                }
+                return _texture_shoot2;
+            }
+        }
+        public static asd.Texture2D ImageDeffence
+        {
+            get
+            {
+                if (_texture_deffence == null)
+                {
+                    _texture_deffence = asd.Engine.Graphics.CreateTexture2D("Command_Deffence.png");
+                }
+                return _texture_deffence;
+            }
+        }
+        public static asd.Texture2D ImageDeffence2
+        {
+            get
+            {
+                if (_texture_deffence2 == null)
+                {
+                    _texture_deffence2 = asd.Engine.Graphics.CreateTexture2D("Command_Deffence2.png");
+                }
+                return _texture_deffence2;
+            }
+        }
+
         public static asd.Texture2D ImageMAX
         {
             get
