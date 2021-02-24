@@ -274,7 +274,6 @@ namespace HokkaidoWar
                         default:
                             return BattleResult.win;
                     }
-                    break;
                 case BattleAction.Siege:
                     switch (battleActionDeffence)
                     {
@@ -309,7 +308,6 @@ namespace HokkaidoWar
                         default:
                             return BattleResult.win;
                     }
-                    break;
                 case BattleAction.Shoot:
                     switch (battleActionDeffence)
                     {
@@ -343,7 +341,6 @@ namespace HokkaidoWar
                         default:
                             return BattleResult.win;
                     }
-                    break;
                 default:
                     return BattleResult.win;
             }
