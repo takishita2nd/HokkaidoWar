@@ -354,7 +354,7 @@ namespace HokkaidoWar.Scene
                         var info = Singleton.InfomationWindow;
                         info.Hide(layer);
                         _cancelButton.Texture = null;
-                        gameData.PlayerAttackCity(map.GetCity());
+                        gameData.PlayerAttackCity(map.GetCity(), map);
                     }
                 }
             }

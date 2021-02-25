@@ -22,6 +22,7 @@ namespace HokkaidoWar
 
         private City lastAttack = null;
         private City lastDeffece = null;
+        private Map targetMap = null;
 
         public enum BattleAction
         {
@@ -93,8 +94,8 @@ namespace HokkaidoWar
 
             if(targetIdx < targets.Count)
             {
-                var target = targets[targetIdx];
-                lastDeffece = target.GetCity();
+                targetMap = targets[targetIdx];
+                lastDeffece = targetMap.GetCity();
                 message = lastDeffece.Name + "に攻撃";
                 lastDeffece.PaintDeffenceColor();
                 if (lastDeffece.Equals(player))
@@ -108,13 +109,14 @@ namespace HokkaidoWar
                     if(result == BattleResult.win)
                     {
                         message += "\r\n勝利";
-                        lastAttack.AddMap(target);
-                        lastDeffece.LostMap(target);
+                        lastAttack.AddMap(targetMap);
+                        lastDeffece.LostMap(targetMap);
                     }
                     else
                     {
                         message += "\r\n敗北";
                     }
+                    targetMap = null;
                 }
             }
 
@@ -134,9 +136,12 @@ namespace HokkaidoWar
         {
             if(result == BattleResult.win)
             {
-                //lastAttack.CombinationCity(lastDeffece);
-                lastDeffece.Lose();
-                aliveCities.Remove(lastDeffece);
+                lastAttack.AddMap(targetMap);
+                lastDeffece.LostMap(targetMap);
+                if(!lastDeffece.IsAlive)
+                {
+                    aliveCities.Remove(lastDeffece);
+                }
                 lastDeffece = null;
             }
         }
@@ -151,14 +156,13 @@ namespace HokkaidoWar
             {
                 lastAttack.ClearPaint();
             }
-            //var info = Singleton.GameProcessInfomation;
-            //info.ShowText(player.GetPosition(), string.Format("{0} turn {1} / {2} {3}", turn, cityCnt + 1, _cities.Count, player.Name));
         }
 
-        public void MyTrunAttack(City player, City target)
+        public void MyTrunAttack(City player, City target, Map map)
         {
             lastAttack = player;
             lastDeffece = target;
+            targetMap = map;
             var scene = new BattleScene(player, target, BattleScene.Player.Attack);
             asd.Engine.ChangeScene(scene);
         }
@@ -167,15 +171,19 @@ namespace HokkaidoWar
         {
             if (result == BattleResult.win)
             {
-                //lastAttack.CombinationCity(lastDeffece);
-                lastDeffece.Lose();
-                aliveCities.Remove(lastDeffece);
-                lastDeffece.ClearPaint();
-                lastDeffece = null;
+                lastAttack.AddMap(targetMap);
+                lastDeffece.LostMap(targetMap);
+                if (!lastDeffece.IsAlive)
+                {
+                    aliveCities.Remove(lastDeffece);
+                }
             }
 
+            lastDeffece.ClearPaint();
+            lastDeffece = null;
             lastAttack.ClearPaint();
             lastAttack = null;
+            targetMap = null;
 
             cityCnt++;
             if (cityCnt >= _cities.Count)

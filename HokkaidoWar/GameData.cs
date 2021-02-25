@@ -147,10 +147,9 @@ namespace HokkaidoWar
             return Player.City.GetLinkedMaps();
         }
 
-        public void PlayerAttackCity(City target)
+        public void PlayerAttackCity(City target, Map map)
         {
-            Battle.MyTrunAttack(Player.City, target);
-            Battle.MyTurnEnd(BattleResult.win);
+            Battle.MyTrunAttack(Player.City, target, map);
         }
 
         public void PlayerTurnEnd()
@@ -169,7 +168,7 @@ namespace HokkaidoWar
             {
                 Battle.EnemyTurnEnd(result);
             }
-            else if (gameStatus == GameStatus.ActionPlayer)
+            else if (gameStatus == GameStatus.SelectTargetCity)
             {
                 Battle.MyTurnEnd(result);
                 var aliveCity = Battle.GetAliveCityList();
