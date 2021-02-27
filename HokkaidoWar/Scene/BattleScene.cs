@@ -385,10 +385,10 @@ namespace HokkaidoWar.Scene
         private void onClickMouseShowActionResult(asd.Vector2DF pos)
         {
             var result = judge(selectedAttack, selectedDeffece);
-            if(result == BattleResult.win)
+            if (result == BattleResult.win)
             {
                 _deffencePower -= (int)Math.Floor(_attackPower * (Singleton.Random.NextDouble() + 0.1));
-                if(_deffencePower <= 0)
+                if (_deffencePower <= 0)
                 {
                     Singleton.GameData.BattleResultUpdate(BattleResult.win);
                     asd.Engine.ChangeScene(new MainScene());
@@ -399,9 +399,9 @@ namespace HokkaidoWar.Scene
                     _deffenceParam.Text = "戦闘力：" + _deffencePower;
                 }
             }
-            else if(result == BattleResult.lose)
+            else if (result == BattleResult.lose)
             {
-                
+
                 _attackPower -= (int)Math.Floor(_deffencePower * (Singleton.Random.NextDouble() + 0.1));
                 if (_attackPower <= 0)
                 {
@@ -412,6 +412,32 @@ namespace HokkaidoWar.Scene
                 else
                 {
                     _attackParam.Text = "戦闘力：" + _attackPower;
+                }
+            }
+            else if (result == BattleResult.guard)
+            {
+                var attackDamage = _deffencePower / 10;
+                var deffenceDamage = _attackPower / 10;
+                _deffencePower -= deffenceDamage;
+                _attackPower -= attackDamage;
+                if (_deffencePower <= 0)
+                {
+                    Singleton.GameData.BattleResultUpdate(BattleResult.win);
+                    asd.Engine.ChangeScene(new MainScene());
+                    _deffenceParam.Text = "戦闘力：0";
+                    _attackParam.Text = "戦闘力：" + _attackPower;
+                }
+                else if (_attackPower <= 0)
+                {
+                    Singleton.GameData.BattleResultUpdate(BattleResult.lose);
+                    asd.Engine.ChangeScene(new MainScene());
+                    _deffenceParam.Text = "戦闘力：" + _deffencePower;
+                    _attackParam.Text = "戦闘力：0";
+                }
+                else
+                {
+                    _attackParam.Text = "戦闘力：" + _attackPower;
+                    _deffenceParam.Text = "戦闘力：" + _deffencePower;
                 }
             }
             _attackResult.Texture = null;
@@ -433,7 +459,7 @@ namespace HokkaidoWar.Scene
                         case Action.Shoot:
                             return BattleResult.lose;
                         default:
-                            return BattleResult.draw;
+                            return BattleResult.guard;
                     }
                 case Action.Siege:
                     switch (deffence)
@@ -445,7 +471,7 @@ namespace HokkaidoWar.Scene
                         case Action.Shoot:
                             return BattleResult.win;
                         default:
-                            return BattleResult.draw;
+                            return BattleResult.guard;
                     }
                 case Action.Shoot:
                     switch (deffence)
@@ -457,10 +483,10 @@ namespace HokkaidoWar.Scene
                         case Action.Shoot:
                             return BattleResult.draw;
                         default:
-                            return BattleResult.draw;
+                            return BattleResult.guard;
                     }
                 default:
-                    return BattleResult.draw;
+                    return BattleResult.guard;
             }
         }
         private bool isOnMouse(asd.Vector2DF pos, asd.TextureObject2D button)

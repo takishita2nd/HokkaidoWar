@@ -28,7 +28,8 @@ namespace HokkaidoWar
         {
             win,
             draw,
-            lose
+            lose,
+            guard
         }
 
         public GameStatus gameStatus = GameStatus.None;
