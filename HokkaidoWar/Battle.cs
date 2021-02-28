@@ -87,7 +87,7 @@ namespace HokkaidoWar
 
             var targets = _cities[cityCnt].GetLinkedMaps();
             var r = Singleton.Random;
-            int targetIdx = r.Next(0, targets.Count + 1);
+            int targetIdx = r.Next(0, targets.Count + 2);
             
             lastAttack = _cities[cityCnt];
             lastAttack.PaintAttackColor();
@@ -118,6 +118,12 @@ namespace HokkaidoWar
                     }
                     targetMap = null;
                 }
+            }
+            else if(targetIdx < targets.Count + 1)
+            {
+                int payMoney = r.Next(0, lastAttack.Money);
+                lastAttack.PayMoney(payMoney);
+                lastAttack.AddPower(payMoney);
             }
 
             cityCnt++;
