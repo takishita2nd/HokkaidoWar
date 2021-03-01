@@ -111,10 +111,13 @@ namespace HokkaidoWar
                         message += "\r\n勝利";
                         lastAttack.AddMap(targetMap);
                         lastDeffece.LostMap(targetMap);
+                        lastAttack.ResetPower();
                     }
                     else
                     {
                         message += "\r\n敗北";
+                        lastAttack.ResetPower();
+                        lastDeffece.ResetPower();
                     }
                     targetMap = null;
                 }
@@ -183,6 +186,10 @@ namespace HokkaidoWar
                 {
                     aliveCities.Remove(lastDeffece);
                 }
+            }
+            if (lastAttack.Power < lastAttack.Population)
+            {
+                lastAttack.ResetPower();
             }
 
             lastDeffece.ClearPaint();

@@ -58,9 +58,9 @@ namespace HokkaidoWar.Scene
         public BattleScene(City attack, City deffence, Player player)
         {
             _attack = attack;
-            _attackPower = attack.Population;
+            _attackPower = attack.Power;
             _deffence = deffence;
-            _deffencePower = deffence.Population;
+            _deffencePower = deffence.Power;
             _player = player;
             _status = GameStatus.SelectDeffenceAction; ;
         }
@@ -390,6 +390,7 @@ namespace HokkaidoWar.Scene
                 _deffencePower -= (int)Math.Floor(_attackPower * (Singleton.Random.NextDouble() + 0.1));
                 if (_deffencePower <= 0)
                 {
+                    _attack.UpdatePower(_attackPower);
                     Singleton.GameData.BattleResultUpdate(BattleResult.win);
                     asd.Engine.ChangeScene(new MainScene());
                     _deffenceParam.Text = "戦闘力：0";
@@ -405,6 +406,7 @@ namespace HokkaidoWar.Scene
                 _attackPower -= (int)Math.Floor(_deffencePower * (Singleton.Random.NextDouble() + 0.1));
                 if (_attackPower <= 0)
                 {
+                    _deffence.UpdatePower(_deffencePower);
                     Singleton.GameData.BattleResultUpdate(BattleResult.lose);
                     asd.Engine.ChangeScene(new MainScene());
                     _attackParam.Text = "戦闘力：0";
@@ -422,6 +424,7 @@ namespace HokkaidoWar.Scene
                 _attackPower -= attackDamage;
                 if (_deffencePower <= 0)
                 {
+                    _attack.UpdatePower(_attackPower);
                     Singleton.GameData.BattleResultUpdate(BattleResult.win);
                     asd.Engine.ChangeScene(new MainScene());
                     _deffenceParam.Text = "戦闘力：0";
@@ -429,6 +432,7 @@ namespace HokkaidoWar.Scene
                 }
                 else if (_attackPower <= 0)
                 {
+                    _deffence.UpdatePower(_deffencePower);
                     Singleton.GameData.BattleResultUpdate(BattleResult.lose);
                     asd.Engine.ChangeScene(new MainScene());
                     _deffenceParam.Text = "戦闘力：" + _deffencePower;

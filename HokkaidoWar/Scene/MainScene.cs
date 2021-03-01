@@ -384,6 +384,8 @@ namespace HokkaidoWar.Scene
             switch(result)
             {
                 case Dialog.Result.OK:
+                    _attackButton.Texture = null;
+                    _powerupButton.Texture = null;
                     var power = _numberDialog.GetValue();
                     gameData.Player.City.PayMoney(power);
                     gameData.Player.City.AddPower(power);

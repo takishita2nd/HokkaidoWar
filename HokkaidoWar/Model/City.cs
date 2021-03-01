@@ -109,6 +109,23 @@ namespace HokkaidoWar.Model
             _power += power;
         }
 
+        public void ResetPower()
+        {
+            _power = Population;
+        }
+
+        public void UpdatePower(int power)
+        {
+            if(power > Population)
+            {
+                _power = power;
+            }
+            else
+            {
+                _power = Population;
+            }
+        }
+
         private void addMaps(List<Map> maps)
         {
             foreach(var m in maps)
