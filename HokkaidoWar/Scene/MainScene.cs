@@ -189,7 +189,11 @@ namespace HokkaidoWar.Scene
         private void cycleProcessActionEnemy(Vector2DF pos)
         {
             _turnText.Text = "ターン" + gameData.TurnNumber;
-            _playCity.Text = gameData.GetActionCity() + "の行動";
+            var city = gameData.GetActionCity();
+            if(city.IsAlive)
+            {
+                _playCity.Text = city.Name + "の行動";
+            }
 
             if (gameData.IsPlayerTrun())
             {
@@ -200,7 +204,10 @@ namespace HokkaidoWar.Scene
             }
             else
             {
-                Thread.Sleep(200);
+                if (city.IsAlive)
+                {
+                    Thread.Sleep(200);
+                }
                 _actionText.Text = gameData.PlayNextCity();
                 if (gameData.IsPlayerAlive() == false)
                 {

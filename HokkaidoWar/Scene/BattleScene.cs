@@ -125,9 +125,12 @@ namespace HokkaidoWar.Scene
             _commandShoot.Position = new asd.Vector2DF(1100, 500);
             layer.AddObject(_commandShoot);
 
-            _commandDeffence = new asd.TextureObject2D();
-            _commandDeffence.Position = new asd.Vector2DF(1100, 600);
-            layer.AddObject(_commandDeffence);
+            if(_player == Player.Deffence)
+            {
+                _commandDeffence = new asd.TextureObject2D();
+                _commandDeffence.Position = new asd.Vector2DF(1100, 600);
+                layer.AddObject(_commandDeffence);
+            }
 
             _attackResult = new asd.TextureObject2D();
             _attackResult.Position = new asd.Vector2DF(450, 500);
@@ -199,14 +202,6 @@ namespace HokkaidoWar.Scene
                 {
                     _commandShoot.Texture = Singleton.ImageShoot;
                 }
-                if (isOnMouse(pos, _commandDeffence))
-                {
-                    _commandDeffence.Texture = Singleton.ImageDeffence2;
-                }
-                else
-                {
-                    _commandDeffence.Texture = Singleton.ImageDeffence;
-                }
             }
             else
             {
@@ -223,7 +218,7 @@ namespace HokkaidoWar.Scene
                         selectedAttack = Action.Shoot;
                         break;
                 }
-                showCommand(false);
+                showCommand();
                 _status = GameStatus.ShowActionResult;
             }
 
@@ -281,7 +276,7 @@ namespace HokkaidoWar.Scene
                         selectedDeffece = Action.Shoot;
                         break;
                 }
-                showCommand(true);
+                showCommand();
                 _status = GameStatus.SelectAttackAction;
             }
         }
@@ -370,12 +365,6 @@ namespace HokkaidoWar.Scene
                 if (isOnMouse(pos, _commandShoot))
                 {
                     selectedAttack = Action.Shoot;
-                    hideCommand();
-                    _status = GameStatus.ShowActionResult;
-                }
-                if (isOnMouse(pos, _commandDeffence))
-                {
-                    selectedAttack = Action.Deffence;
                     hideCommand();
                     _status = GameStatus.ShowActionResult;
                 }
@@ -503,12 +492,12 @@ namespace HokkaidoWar.Scene
             return false;
         }
 
-        private void showCommand(bool isAttack)
+        private void showCommand()
         {
             _commandCharge.Texture = Singleton.ImageCharge;
             _commandSiege.Texture = Singleton.ImageSiege;
             _commandShoot.Texture = Singleton.ImageShoot;
-            if (!isAttack)
+            if (_player == Player.Deffence)
             {
                 _commandDeffence.Texture = Singleton.ImageDeffence;
             }
@@ -518,8 +507,10 @@ namespace HokkaidoWar.Scene
             _commandCharge.Texture = null;
             _commandSiege.Texture = null;
             _commandShoot.Texture = null;
-            _commandDeffence.Texture = null;
-
+            if (_player == Player.Deffence)
+            {
+                _commandDeffence.Texture = null;
+            }
         }
     }
 }

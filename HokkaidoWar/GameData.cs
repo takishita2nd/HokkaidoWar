@@ -114,9 +114,9 @@ namespace HokkaidoWar
             return AliveCities.Contains(Player.City);
         }
 
-        public string GetActionCity()
+        public City GetActionCity()
         {
-            return Battle.GetActionCity().Name;
+            return Battle.GetActionCity();
         }
 
         public string PlayNextCity()
