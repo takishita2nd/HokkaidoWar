@@ -26,5 +26,35 @@ namespace HokkaidoWar
             //string json = Encoding.UTF8.GetString(buffer.ToArray());
             return JsonConvert.DeserializeObject<MapData>(json);
         }
+
+        private const string _savefilename = "save.json";
+        public static void SaveData(GameData gamedata)
+        {
+            SaveData saveData = new SaveData();
+            saveData.Turn = gamedata.TurnNumber;
+            saveData.PlayerId = gamedata.Player.City.Id;
+            saveData.Citydata = new List<CityData>();
+            foreach(var city in gamedata.AliveCities)
+            {
+                if (city.IsAlive)
+                {
+                    CityData data = new CityData();
+                    data.id = city.Id;
+                    data.money = city.Money;
+                    data.power = city.Power;
+                    data.mapid = new List<int>();
+                    foreach (var map in city.GetMaps())
+                    {
+                        data.mapid.Add(map.Id);
+                    }
+                    saveData.Citydata.Add(data);
+                }
+            }
+            string json = JsonConvert.SerializeObject(saveData);
+            using (var stream = new StreamWriter(_savefilename, false))
+            {
+                stream.WriteLine(json);
+            }
+        }
     }
 }

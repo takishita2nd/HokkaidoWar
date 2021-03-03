@@ -9,6 +9,8 @@ namespace HokkaidoWar.Model
 {
     class City
     {
+        public int Id { get; }
+
         private string _name = string.Empty;
         private bool _isAlive;
         private List<Map> _maps = null;
@@ -16,7 +18,6 @@ namespace HokkaidoWar.Model
         private int _money;
         private int _power;
         private float _bonus;
-
         public string Name { get { return _name; } }
         public int Population
         {
@@ -48,6 +49,7 @@ namespace HokkaidoWar.Model
 
         public City(Citydata citydata)
         {
+            Id = citydata.id;
             _money = 0;
             _power = citydata.population;
             _bonus = 1.0f;

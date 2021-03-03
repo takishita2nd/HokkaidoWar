@@ -181,6 +181,7 @@ namespace HokkaidoWar.Scene
         private void cycleShowTurn(Vector2DF pos)
         {
             _turnText.Text = "ターン" + gameData.TurnNumber;
+            FileAccess.SaveData(gameData);
             gameData.GetMoney();
             Thread.Sleep(1000);
             gameData.gameStatus = GameData.GameStatus.ActionEnemy;
