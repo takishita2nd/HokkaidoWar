@@ -33,7 +33,7 @@ namespace HokkaidoWar
             SaveData saveData = new SaveData();
             saveData.Turn = gamedata.TurnNumber;
             saveData.PlayerId = gamedata.Player.City.Id;
-            saveData.Citydata = new List<CityData>();
+            List<CityData> cityDatas = new List<CityData>();
             foreach(var city in gamedata.AliveCities)
             {
                 if (city.IsAlive)
@@ -42,19 +42,31 @@ namespace HokkaidoWar
                     data.id = city.Id;
                     data.money = city.Money;
                     data.power = city.Power;
-                    data.mapid = new List<int>();
+                    List<int> mapid = new List<int>();
                     foreach (var map in city.GetMaps())
                     {
-                        data.mapid.Add(map.Id);
+                        mapid.Add(map.Id);
                     }
-                    saveData.Citydata.Add(data);
+                    data.mapid = mapid.ToArray();
+                    cityDatas.Add(data);
                 }
             }
+            saveData.Citydata = cityDatas.ToArray();
             string json = JsonConvert.SerializeObject(saveData);
             using (var stream = new StreamWriter(_savefilename, false))
             {
                 stream.WriteLine(json);
             }
+        }
+
+        public static SaveData LoadData()
+        {
+            string json;
+            using (var stream = new StreamReader(_savefilename, true))
+            {
+                json = stream.ReadToEnd();
+            }
+            return JsonConvert.DeserializeObject<SaveData>(json);
         }
     }
 }

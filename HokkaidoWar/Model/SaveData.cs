@@ -10,7 +10,7 @@ namespace HokkaidoWar.Model
     {
         public int Turn { get; set; }
         public int PlayerId { get; set; }
-        public List<CityData> Citydata { get; set; }
+        public CityData[] Citydata { get; set; }
     }
 
     public class CityData
@@ -18,6 +18,6 @@ namespace HokkaidoWar.Model
         public int id { get; set; }
         public int money { get; set; }
         public int power { get; set; }
-        public List<int> mapid { get; set; }
+        public int[] mapid { get; set; }
     }
 }

@@ -90,6 +90,10 @@ namespace HokkaidoWar.Scene
                     var scene = new SelectCityScene();
                     asd.Engine.ChangeSceneWithTransition(scene, new asd.TransitionFade(1.5f, 1.5f));
                 }
+                if (isOnMouse(pos, _load))
+                {
+                    var data = FileAccess.LoadData();
+                }
             }
         }
 
