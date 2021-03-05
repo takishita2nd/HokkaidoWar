@@ -135,6 +135,7 @@ namespace HokkaidoWar.Scene
                     dialog.CloseDialog(layer);
                     if (selectcity != null)
                     {
+                        gameData.Battleinitialize();
                         gameData.CreatePlayer(selectcity);
                         gameData.gameStatus = GameData.GameStatus.ShowTurn;
                         asd.Engine.ChangeScene(new MainScene());

@@ -15,6 +15,14 @@ namespace HokkaidoWar.Model
             None
         }
 
+        private bool _isShow = false;
+        public bool IsShow
+        {
+            get
+            {
+                return _isShow;
+            }
+        }
         private asd.GeometryObject2D _dialog = null;
         private asd.TextureObject2D _okButton = null;
         private asd.TextureObject2D _cancelButton = null;
@@ -85,6 +93,7 @@ namespace HokkaidoWar.Model
             layer.AddObject(_valueText);
             layer.AddObject(_okButton);
             layer.AddObject(_cancelButton);
+            _isShow = true;
         }
 
         public void CloseDialog(asd.Layer2D layer)
@@ -97,6 +106,7 @@ namespace HokkaidoWar.Model
             layer.RemoveObject(_valueText);
             layer.RemoveObject(_okButton);
             layer.RemoveObject(_cancelButton);
+            _isShow = false;
         }
 
         public void OnMouse(asd.Vector2DF pos)
