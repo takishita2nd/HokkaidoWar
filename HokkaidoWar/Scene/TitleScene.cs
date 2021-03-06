@@ -98,7 +98,31 @@ namespace HokkaidoWar.Scene
                 if (dialog.IsShow)
                 {
                     var result = dialog.OnClick(pos);
-                    if(result == Dialog.Result.Cancel)
+                    if(result == Dialog.Result.OK)
+                    {
+                        var gamedata = Singleton.GameData;
+                        gamedata.Cities = new List<City>();
+                        var data = FileAccess.LoadData();
+                        foreach (var city in data.Citydata)
+                        {
+                            gamedata.Cities.Add(new City(city));
+                        }
+                        City player = null;
+                        foreach (var city in gamedata.Cities)
+                        {
+                            if(data.PlayerId == city.Id)
+                            {
+                                player = city;
+                            }
+                        }
+                        gamedata.TurnNumber = data.Turn;
+
+                        gamedata.Battleinitialize();
+                        gamedata.CreatePlayer(player);
+                        gamedata.gameStatus = GameData.GameStatus.ShowTurn;
+                        asd.Engine.ChangeScene(new MainScene());
+                    }
+                    if (result == Dialog.Result.Cancel)
                     {
                         dialog.CloseDialog(layer);
                     }

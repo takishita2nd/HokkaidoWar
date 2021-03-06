@@ -266,7 +266,7 @@ namespace HokkaidoWar
                     switch (battleActionDeffence)
                     {
                         case BattleAction.Charge:
-                            if (attack.Power > deffence.Power)
+                            if (attack.Power * attack.Bonus > deffence.Power * deffence.Bonus)
                             {
                                 return BattleResult.win;
                             }
@@ -275,7 +275,7 @@ namespace HokkaidoWar
                                 return BattleResult.lose;
                             }
                         case BattleAction.Siege:
-                            if (attack.Power * 1.5f > deffence.Power)
+                            if (attack.Power * attack.Bonus * 1.5f > deffence.Power * deffence.Bonus)
                             {
                                 return BattleResult.win;
                             }
@@ -284,7 +284,7 @@ namespace HokkaidoWar
                                 return BattleResult.lose;
                             }
                         case BattleAction.Shoot:
-                            if (attack.Power > deffence.Power * 1.5f)
+                            if (attack.Power * attack.Bonus > deffence.Power * deffence.Bonus * 1.5f)
                             {
                                 return BattleResult.win;
                             }
@@ -299,7 +299,7 @@ namespace HokkaidoWar
                     switch (battleActionDeffence)
                     {
                         case BattleAction.Siege:
-                            if (attack.Power > deffence.Power)
+                            if (attack.Power * attack.Bonus > deffence.Power * deffence.Bonus)
                             {
                                 return BattleResult.win;
                             }
@@ -308,7 +308,7 @@ namespace HokkaidoWar
                                 return BattleResult.lose;
                             }
                         case BattleAction.Shoot:
-                            if (attack.Power * 1.5f > deffence.Power)
+                            if (attack.Power * attack.Bonus * 1.5f > deffence.Power * deffence.Bonus)
                             {
                                 return BattleResult.win;
                             }
@@ -317,7 +317,7 @@ namespace HokkaidoWar
                                 return BattleResult.lose;
                             }
                         case BattleAction.Charge:
-                            if (attack.Power > deffence.Power * 1.5f)
+                            if (attack.Power * attack.Bonus > deffence.Power * deffence.Bonus * 1.5f)
                             {
                                 return BattleResult.win;
                             }
@@ -333,7 +333,7 @@ namespace HokkaidoWar
                     switch (battleActionDeffence)
                     {
                         case BattleAction.Shoot:
-                            if (attack.Power > deffence.Power)
+                            if (attack.Power * attack.Bonus > deffence.Power * deffence.Bonus)
                             {
                                 return BattleResult.win;
                             }
@@ -342,7 +342,7 @@ namespace HokkaidoWar
                                 return BattleResult.lose;
                             }
                         case BattleAction.Charge:
-                            if (attack.Power * 1.5f > deffence.Power)
+                            if (attack.Power * attack.Bonus * 1.5f > deffence.Power * deffence.Bonus)
                             {
                                 return BattleResult.win;
                             }
@@ -351,7 +351,7 @@ namespace HokkaidoWar
                                 return BattleResult.lose;
                             }
                         case BattleAction.Siege:
-                            if (attack.Power > deffence.Power * 1.5f)
+                            if (attack.Power * attack.Bonus > deffence.Power * deffence.Bonus * 1.5f)
                             {
                                 return BattleResult.win;
                             }

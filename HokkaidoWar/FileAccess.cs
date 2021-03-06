@@ -40,8 +40,10 @@ namespace HokkaidoWar
                 {
                     CityData data = new CityData();
                     data.id = city.Id;
+                    data.name = city.Name;
                     data.money = city.Money;
                     data.power = city.Power;
+                    data.bonus = city.Bonus;
                     List<int> mapid = new List<int>();
                     foreach (var map in city.GetMaps())
                     {

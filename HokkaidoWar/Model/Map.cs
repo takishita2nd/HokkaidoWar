@@ -55,7 +55,12 @@ namespace HokkaidoWar.Model
             layer.AddObject(_geometryObj);
         }
 
-        public void SetColor(asd.Color color)
+        public void SaveColor(Color color)
+        {
+            _color = color;
+        }
+
+        public void SetColor(Color color)
         {
             _geometryObj.Color = color;
         }

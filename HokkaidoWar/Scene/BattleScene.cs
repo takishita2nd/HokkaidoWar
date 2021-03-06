@@ -58,9 +58,9 @@ namespace HokkaidoWar.Scene
         public BattleScene(City attack, City deffence, Player player)
         {
             _attack = attack;
-            _attackPower = attack.Power;
+            _attackPower = (int)(attack.Power * attack.Bonus);
             _deffence = deffence;
-            _deffencePower = deffence.Power;
+            _deffencePower = (int)(deffence.Power * deffence.Bonus);
             _player = player;
             _status = GameStatus.SelectDeffenceAction; ;
         }

@@ -16,8 +16,10 @@ namespace HokkaidoWar.Model
     public class CityData
     {
         public int id { get; set; }
+        public string name { get; set; }
         public int money { get; set; }
         public int power { get; set; }
+        public float bonus { get; set; }
         public int[] mapid { get; set; }
     }
 }

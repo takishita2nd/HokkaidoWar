@@ -44,7 +44,8 @@ namespace HokkaidoWar.Model
             }
         }
         public int Money {  get { return _money; } }
-        public int Power { get { return (int)(_power * _bonus); } }
+        public int Power { get { return _power; } }
+        public float Bonus { get { return _bonus; } }
         public bool IsAlive { get { return _isAlive; } }
 
         public City(Citydata citydata)
@@ -65,6 +66,29 @@ namespace HokkaidoWar.Model
             m.SetCity(this);
             _maps.Add(m);
             fieldMap.SetMap(m);
+        }
+
+        public City(CityData cityData)
+        {
+            Id = cityData.id;
+            _money = cityData.money;
+            _power = cityData.power;
+            _bonus = cityData.bonus;
+            _name = cityData.name;
+            _isAlive = true;
+            _maps = new List<Map>();
+            var r = Singleton.Random;
+            _color = new Color((byte)r.Next(0, 255), (byte)r.Next(0, 255), (byte)r.Next(0, 255));
+
+            var fieldMap = Singleton.FieldMap;
+
+            foreach(var mid in cityData.mapid)
+            {
+                var map = fieldMap.GetMap(mid);
+                map.SetCity(this);
+                _maps.Add(map);
+                map.SaveColor(_color);
+            }
         }
 
         public List<Map> GetMaps()
@@ -149,7 +173,7 @@ namespace HokkaidoWar.Model
                         var info = Singleton.InfomationWindow;
                         info.AppendText(pos, _name +
                             "\r\n  金" + Money.ToString() +
-                            "\r\n  戦力" + Power.ToString() +
+                            "\r\n  戦力" + ((int)(Power * Bonus)).ToString() +
                             "\r\n  人口" + Population.ToString() +
                             "\r\n  面積" + Area.ToString());
                     }
