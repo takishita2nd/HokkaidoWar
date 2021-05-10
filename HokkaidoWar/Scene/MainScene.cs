@@ -15,13 +15,17 @@ namespace HokkaidoWar.Scene
         private Layer2D layer = null;
         private TextObject2D _turnText;
         private TextObject2D _playCity;
+        private TextObject2D _actionText;
         private TextureObject2D _attackButton;
         private TextureObject2D _powerupButton;
         private TextureObject2D _cancelButton;
-        private List<City> linkedCities;
+        private NumberDialog _numberDialog = new NumberDialog();
+        private List<Map> linkedMaps;
 
         private const int buttonWidth = 330;
         private const int buttonHeight = 80;
+
+        private Dialog _dialog = new Dialog();
 
         public MainScene()
         {
@@ -87,6 +91,13 @@ namespace HokkaidoWar.Scene
             _playCity.Position = new Vector2DF(1000, 100);
             layer.AddObject(_playCity);
 
+            _actionText = new TextObject2D();
+            _actionText.Font = Singleton.LargeFont;
+            _actionText.DrawingPriority = 20;
+            _actionText.Position = new Vector2DF(1000, 150);
+            layer.AddObject(_actionText);
+
+
             _attackButton = new TextureObject2D();
             _attackButton.Position = new Vector2DF(1000, 300);
             layer.AddObject(_attackButton);
@@ -98,13 +109,12 @@ namespace HokkaidoWar.Scene
             _cancelButton = new TextureObject2D();
             _cancelButton.Position = new Vector2DF(1000, 500);
             layer.AddObject(_cancelButton);
-
-            //var info2 = Singleton.GameProcessInfomation;
-            //info2.AddLayer(layer);
         }
 
         protected override void OnUpdated()
         {
+            _actionText.Text = string.Empty;
+
             asd.Vector2DF pos = asd.Engine.Mouse.Position;
 
             switch (gameData.gameStatus)
@@ -122,6 +132,10 @@ namespace HokkaidoWar.Scene
                     cycleSelectTargetCity(pos);
                     break;
                 case GameData.GameStatus.InputPowerUpPoint:
+                    cycleInputPowerUpPoint(pos);
+                    break;
+                case GameData.GameStatus.VerificateInputPowerUp:
+                    cycleVerificateInputPowerUp(pos);
                     break;
                 case GameData.GameStatus.GameEnd:
                     cycleProcessGameEnd();
@@ -146,6 +160,10 @@ namespace HokkaidoWar.Scene
                         onClickSelectTargetCity(pos);
                         break;
                     case GameData.GameStatus.InputPowerUpPoint:
+                        onClickInputPowerUpPoint(pos);
+                        break;
+                    case GameData.GameStatus.VerificateInputPowerUp:
+                        onClickVerificateInputPowerUp(pos);
                         break;
                     case GameData.GameStatus.GameEnd:
                         break;
@@ -163,6 +181,8 @@ namespace HokkaidoWar.Scene
         private void cycleShowTurn(Vector2DF pos)
         {
             _turnText.Text = "ターン" + gameData.TurnNumber;
+            FileAccess.SaveData(gameData);
+            gameData.GetMoney();
             Thread.Sleep(1000);
             gameData.gameStatus = GameData.GameStatus.ActionEnemy;
         }
@@ -170,7 +190,12 @@ namespace HokkaidoWar.Scene
         private void cycleProcessActionEnemy(Vector2DF pos)
         {
             _turnText.Text = "ターン" + gameData.TurnNumber;
-            _playCity.Text = gameData.GetActionCity() + "の行動";
+            var city = gameData.GetActionCity();
+            if(city.IsAlive)
+            {
+                _playCity.Text = city.Name + "の行動";
+            }
+
             if (gameData.IsPlayerTrun())
             {
                 gameData.PlayPlayer();
@@ -180,8 +205,11 @@ namespace HokkaidoWar.Scene
             }
             else
             {
-                Thread.Sleep(200);
-                gameData.PlayNextCity();
+                if (city.IsAlive)
+                {
+                    Thread.Sleep(200);
+                }
+                _actionText.Text = gameData.PlayNextCity();
                 if (gameData.IsPlayerAlive() == false)
                 {
                     gameData.gameStatus = GameData.GameStatus.GameOver;
@@ -259,6 +287,16 @@ namespace HokkaidoWar.Scene
 
         }
 
+        private void cycleInputPowerUpPoint(Vector2DF pos)
+        {
+            _numberDialog.OnMouse(pos);
+        }
+
+        private void cycleVerificateInputPowerUp(Vector2DF pos)
+        {
+            _dialog.OnMouse(pos);
+        }
+
         private void cycleProcessGameEnd()
         {
             var gameinfo = Singleton.GameProcessInfomation;
@@ -280,10 +318,10 @@ namespace HokkaidoWar.Scene
         {
             if(isOnMouse(pos, _attackButton))
             {
-                linkedCities = gameData.GetPlayerLinkedCities();
-                foreach (var city in linkedCities)
+                linkedMaps = gameData.GetPlayerLinkedMaps();
+                foreach (var map in linkedMaps)
                 {
-                    city.PaintDeffenceColor();
+                    map.PaintAttackColor();
                 }
                 _attackButton.Texture = null;
                 _powerupButton.Texture = null;
@@ -292,17 +330,18 @@ namespace HokkaidoWar.Scene
             }
             if(isOnMouse(pos, _powerupButton))
             {
+                _numberDialog.ShowDialog(layer, gameData.Player.City.Money);
                 gameData.gameStatus = GameData.GameStatus.InputPowerUpPoint;
             }
         }
 
-        private void onClickSelectTargetCity(asd.Vector2DF pos)
+        private void onClickSelectTargetCity(Vector2DF pos)
         {
             if (isOnMouse(pos, _cancelButton))
             {
-                foreach (var city in linkedCities)
+                foreach (var map in linkedMaps)
                 {
-                    city.ClearPaint();
+                    map.SetColor(map.GetCity().GetColor());
                 }
                 _attackButton.Texture = Singleton.ImageAttack;
                 _powerupButton.Texture = Singleton.ImagePowerup;
@@ -311,21 +350,64 @@ namespace HokkaidoWar.Scene
             }
             else
             {
-                foreach(var city in linkedCities)
+                foreach(var map in linkedMaps)
                 {
-                    if(city.IsOnMouse(pos))
+                    if(map.IsOnMouse(pos))
                     {
-                        foreach (var c in linkedCities)
+                        foreach (var m in linkedMaps)
                         {
-                            c.ClearPaint();
+                            m.SetColor(m.GetCity().GetColor());
                         }
+
                         var info = Singleton.InfomationWindow;
                         info.Hide(layer);
                         _cancelButton.Texture = null;
-                        gameData.PlayerAttackCity(city);
-                        gameData.gameStatus = GameData.GameStatus.ActionEnemy;
+                        gameData.PlayerAttackCity(map.GetCity(), map);
                     }
                 }
+            }
+        }
+
+        private void onClickInputPowerUpPoint(Vector2DF pos)
+        {
+            var result = _numberDialog.OnClick(pos);
+            switch(result)
+            {
+                case NumberDialog.Result.OK:
+                    _dialog.ShowDialog(layer, "戦力" + _numberDialog.GetValue() + "を購入します。\r\nよろしいですか？");
+                    gameData.gameStatus = GameData.GameStatus.VerificateInputPowerUp;
+                    break;
+                case NumberDialog.Result.Cancel:
+                    _numberDialog.CloseDialog(layer);
+                    gameData.gameStatus = GameData.GameStatus.ActionPlayer;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void onClickVerificateInputPowerUp(Vector2DF pos)
+        {
+            var result = _dialog.OnClick(pos);
+            switch(result)
+            {
+                case Dialog.Result.OK:
+                    _attackButton.Texture = null;
+                    _powerupButton.Texture = null;
+                    var power = _numberDialog.GetValue();
+                    gameData.Player.City.PayMoney(power);
+                    gameData.Player.City.AddPower(power);
+                    _numberDialog.CloseDialog(layer);
+                    _dialog.CloseDialog(layer);
+                    gameData.PlayerTurnEnd();
+                    gameData.gameStatus = GameData.GameStatus.ActionEnemy;
+                    break;
+                case Dialog.Result.Cancel:
+                    _dialog.CloseDialog(layer);
+                    gameData.gameStatus = GameData.GameStatus.InputPowerUpPoint;
+                    break;
+                default:
+                    break;
             }
         }
 

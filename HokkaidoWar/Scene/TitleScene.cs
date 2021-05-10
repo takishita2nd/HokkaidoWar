@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HokkaidoWar.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,8 @@ namespace HokkaidoWar.Scene
         private asd.Texture2D newgame2Image = asd.Engine.Graphics.CreateTexture2D("newgame2.png");
         private asd.Texture2D load1Image = asd.Engine.Graphics.CreateTexture2D("load1.png");
         private asd.Texture2D load2Image = asd.Engine.Graphics.CreateTexture2D("load2.png");
+
+        private Dialog dialog = new Dialog();
 
         private const int buttonWidth = 330;
         private const int buttonHeight = 80;
@@ -65,30 +68,88 @@ namespace HokkaidoWar.Scene
         {
             asd.Vector2DF pos = asd.Engine.Mouse.Position;
 
-            if(isOnMouse(pos, _newgame))
+            if(dialog.IsShow)
             {
-                _newgame.Texture = newgame2Image;
+                dialog.OnMouse(pos);
             }
             else
             {
-                _newgame.Texture = newgame1Image;
-            }
+                if (isOnMouse(pos, _newgame))
+                {
+                    _newgame.Texture = newgame2Image;
+                }
+                else
+                {
+                    _newgame.Texture = newgame1Image;
+                }
 
-            if (isOnMouse(pos, _load))
-            {
-                _load.Texture = load2Image;
-            }
-            else
-            {
-                _load.Texture = load1Image;
+                if (isOnMouse(pos, _load))
+                {
+                    _load.Texture = load2Image;
+                }
+                else
+                {
+                    _load.Texture = load1Image;
+                }
             }
 
             if (asd.Engine.Mouse.LeftButton.ButtonState == asd.ButtonState.Push)
             {
-                if (isOnMouse(pos, _newgame))
+                if (dialog.IsShow)
                 {
-                    var scene = new SelectCityScene();
-                    asd.Engine.ChangeSceneWithTransition(scene, new asd.TransitionFade(1.5f, 1.5f));
+                    var result = dialog.OnClick(pos);
+                    if(result == Dialog.Result.OK)
+                    {
+                        var gamedata = Singleton.GameData;
+                        gamedata.Cities = new List<City>();
+                        var data = FileAccess.LoadData();
+                        foreach (var city in data.Citydata)
+                        {
+                            gamedata.Cities.Add(new City(city));
+                        }
+                        City player = null;
+                        foreach (var city in gamedata.Cities)
+                        {
+                            if(data.PlayerId == city.Id)
+                            {
+                                player = city;
+                            }
+                        }
+                        gamedata.TurnNumber = data.Turn;
+
+                        gamedata.Battleinitialize();
+                        gamedata.CreatePlayer(player);
+                        gamedata.gameStatus = GameData.GameStatus.ShowTurn;
+                        asd.Engine.ChangeScene(new MainScene());
+                    }
+                    if (result == Dialog.Result.Cancel)
+                    {
+                        dialog.CloseDialog(layer);
+                    }
+                }
+                else
+                {
+                    if (isOnMouse(pos, _newgame))
+                    {
+                        var scene = new SelectCityScene();
+                        asd.Engine.ChangeSceneWithTransition(scene, new asd.TransitionFade(1.5f, 1.5f));
+                    }
+                    if (isOnMouse(pos, _load))
+                    {
+                        var data = FileAccess.LoadData();
+                        Citydata player = null;
+                        foreach (var city in Singleton.GameData.MapData.citydata)
+                        {
+                            if (data.PlayerId == city.id)
+                            {
+                                player = city;
+                            }
+                        }
+                        dialog.ShowDialog(layer,
+                             player.name + "\r\n" +
+                            "ターン" + data.Turn + "\r\n" +
+                            "再開しますか？");
+                    }
                 }
             }
         }

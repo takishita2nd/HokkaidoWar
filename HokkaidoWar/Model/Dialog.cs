@@ -15,6 +15,14 @@ namespace HokkaidoWar.Model
             None
         }
 
+        private bool _isShow = false;
+        public bool IsShow
+        {
+            get
+            {
+                return _isShow;
+            }
+        }
         private asd.GeometryObject2D _dialog = null;
         private asd.TextureObject2D _okButton = null;
         private asd.TextureObject2D _cancelButton = null;
@@ -33,7 +41,7 @@ namespace HokkaidoWar.Model
         {
             _dialog = new asd.GeometryObject2D();
             _dialog.Color = new asd.Color(255, 255, 255);
-            _dialog.DrawingPriority = 15;
+            _dialog.DrawingPriority = 20;
 
             var dialogRect = new asd.RectangleShape();
             dialogRect.DrawingArea = new asd.RectF(dialogX, dialogY, dialogWidth, dialogHeight);
@@ -42,17 +50,17 @@ namespace HokkaidoWar.Model
             _valueText = new asd.TextObject2D();
             _valueText.Position = new asd.Vector2DF(310, 410);
             _valueText.Font = Singleton.Font;
-            _valueText.DrawingPriority = 15;
+            _valueText.DrawingPriority = 20;
 
             _okButton = new asd.TextureObject2D();
             _okButton.Texture = Singleton.ImageOK;
             _okButton.Position = new asd.Vector2DF(310, 500);
-            _okButton.DrawingPriority = 15;
+            _okButton.DrawingPriority = 20;
 
             _cancelButton = new asd.TextureObject2D();
             _cancelButton.Texture = Singleton.ImageCancel;
             _cancelButton.Position = new asd.Vector2DF(620, 500);
-            _cancelButton.DrawingPriority = 15;
+            _cancelButton.DrawingPriority = 20;
 
             for (int i = 0; i < 4; i++)
             {
@@ -74,17 +82,18 @@ namespace HokkaidoWar.Model
 
         }
 
-        public void ShowDialog(asd.Layer2D layer, string cityName)
+        public void ShowDialog(asd.Layer2D layer, string message)
         {
             layer.AddObject(_dialog);
             for (int i = 0; i < 4; i++)
             {
                 layer.AddObject(_geometryObj[i]);
             }
-            _valueText.Text = cityName + "でよろしいですか？";
+            _valueText.Text = message;
             layer.AddObject(_valueText);
             layer.AddObject(_okButton);
             layer.AddObject(_cancelButton);
+            _isShow = true;
         }
 
         public void CloseDialog(asd.Layer2D layer)
@@ -97,6 +106,7 @@ namespace HokkaidoWar.Model
             layer.RemoveObject(_valueText);
             layer.RemoveObject(_okButton);
             layer.RemoveObject(_cancelButton);
+            _isShow = false;
         }
 
         public void OnMouse(asd.Vector2DF pos)

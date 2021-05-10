@@ -22,16 +22,22 @@ namespace HokkaidoWar.Scene
             Deffence
         }
 
-        private BattleIcon _image_gu_attack = null;
-        private BattleIcon _image_choki_attack = null;
-        private BattleIcon _image_par_attack = null;
-        private BattleIcon _image_gu_deffence = null;
-        private BattleIcon _image_choki_deffence = null;
-        private BattleIcon _image_par_deffence = null;
-        private BattleIcon _attackResult = null;
-        private BattleIcon _deffenceResult = null;
+        enum Action
+        {
+            Charge,
+            Siege,
+            Shoot,
+            Deffence
+        }
+
+        private asd.TextureObject2D _attackResult = null;
+        private asd.TextureObject2D _deffenceResult = null;
         private asd.TextObject2D _attackParam = null;
         private asd.TextObject2D _deffenceParam = null;
+        private asd.TextureObject2D _commandCharge = null;
+        private asd.TextureObject2D _commandSiege = null;
+        private asd.TextureObject2D _commandShoot = null;
+        private asd.TextureObject2D _commandDeffence = null;
 
         private City _attack = null;
         private City _deffence = null;
@@ -40,8 +46,11 @@ namespace HokkaidoWar.Scene
         private Player _player;
         private GameStatus _status;
 
-        private BattleIcon.Icon selectedAttack;
-        private BattleIcon.Icon selectedDeffece;
+        private Action selectedAttack;
+        private Action selectedDeffece;
+
+        private const int buttonWidth = 330;
+        private const int buttonHeight = 80;
 
         /**
          * コンストラクタ
@@ -49,11 +58,11 @@ namespace HokkaidoWar.Scene
         public BattleScene(City attack, City deffence, Player player)
         {
             _attack = attack;
-            _attackPower = attack.Population;
+            _attackPower = (int)(attack.Power * attack.Bonus);
             _deffence = deffence;
-            _deffencePower = deffence.Population;
+            _deffencePower = (int)(deffence.Power * deffence.Bonus);
             _player = player;
-            _status = GameStatus.SelectDeffenceAction;
+            _status = GameStatus.SelectDeffenceAction; ;
         }
 
         protected override void OnRegistered()
@@ -65,7 +74,7 @@ namespace HokkaidoWar.Scene
             var background = new asd.GeometryObject2D();
             layer.AddObject(background);
             var bgRect = new asd.RectangleShape();
-            bgRect.DrawingArea = new asd.RectF(0, 0, 1800, 1000);
+            bgRect.DrawingArea = new asd.RectF(0, 0, 1900, 1000);
             background.Shape = bgRect;
 
             var label = new asd.TextObject2D();
@@ -98,30 +107,38 @@ namespace HokkaidoWar.Scene
             _deffenceParam.Position = new asd.Vector2DF(700, 150);
             layer.AddObject(_deffenceParam);
 
-            _image_gu_attack = new BattleIcon(BattleIcon.Icon.Gu, BattleIcon.Position.Attack);
-            _image_gu_attack.AddLayer(layer);
-            _image_gu_attack.Hide();
-            _image_choki_attack = new BattleIcon(BattleIcon.Icon.Choki, BattleIcon.Position.Attack);
-            _image_choki_attack.AddLayer(layer);
-            _image_choki_attack.Hide();
-            _image_par_attack = new BattleIcon(BattleIcon.Icon.Par, BattleIcon.Position.Attack);
-            _image_par_attack.AddLayer(layer);
-            _image_par_attack.Hide();
-            _image_gu_deffence = new BattleIcon(BattleIcon.Icon.Gu, BattleIcon.Position.Deffence);
-            _image_gu_deffence.AddLayer(layer);
-            _image_gu_deffence.Hide();
-            _image_choki_deffence = new BattleIcon(BattleIcon.Icon.Choki, BattleIcon.Position.Deffence);
-            _image_choki_deffence.AddLayer(layer);
-            _image_choki_deffence.Hide();
-            _image_par_deffence = new BattleIcon(BattleIcon.Icon.Par, BattleIcon.Position.Deffence);
-            _image_par_deffence.AddLayer(layer);
-            _image_par_deffence.Hide();
-            _attackResult = new BattleIcon(BattleIcon.Icon.Choki, BattleIcon.Position.Attack);
-            _attackResult.AddLayer(layer);
-            _attackResult.Hide();
-            _deffenceResult = new BattleIcon(BattleIcon.Icon.Choki, BattleIcon.Position.Deffence);
-            _deffenceResult.AddLayer(layer);
-            _deffenceResult.Hide();
+            var decision = new asd.TextureObject2D();
+            decision.Texture = asd.Engine.Graphics.CreateTexture2D("decision.png");
+            decision.Position = new asd.Vector2DF(50, 50);
+            decision.Scale = new asd.Vector2DF(0.5f, 0.5f);
+            layer.AddObject(decision);
+
+            _commandCharge = new asd.TextureObject2D();
+            _commandCharge.Position = new asd.Vector2DF(1100, 300);
+            layer.AddObject(_commandCharge);
+
+            _commandSiege = new asd.TextureObject2D();
+            _commandSiege.Position = new asd.Vector2DF(1100, 400);
+            layer.AddObject(_commandSiege);
+
+            _commandShoot = new asd.TextureObject2D();
+            _commandShoot.Position = new asd.Vector2DF(1100, 500);
+            layer.AddObject(_commandShoot);
+
+            if(_player == Player.Deffence)
+            {
+                _commandDeffence = new asd.TextureObject2D();
+                _commandDeffence.Position = new asd.Vector2DF(1100, 600);
+                layer.AddObject(_commandDeffence);
+            }
+
+            _attackResult = new asd.TextureObject2D();
+            _attackResult.Position = new asd.Vector2DF(450, 500);
+            layer.AddObject(_attackResult);
+
+            _deffenceResult = new asd.TextureObject2D();
+            _deffenceResult.Position = new asd.Vector2DF(450, 250);
+            layer.AddObject(_deffenceResult);
         }
 
         protected override void OnUpdated()
@@ -130,11 +147,11 @@ namespace HokkaidoWar.Scene
 
             switch (_status)
             {
-                case GameStatus.SelectDeffenceAction:
-                    cycleProcessSelectDeffenceAction(pos);
-                    break;
                 case GameStatus.SelectAttackAction:
                     cycleProcessSelectAttackAction(pos);
+                    break;
+                case GameStatus.SelectDeffenceAction:
+                    cycleProcessSelectDeffenceAction(pos);
                     break;
                 case GameStatus.ShowActionResult:
                     cycleProcessShowActionResult(pos);
@@ -144,11 +161,11 @@ namespace HokkaidoWar.Scene
             {
                 switch (_status)
                 {
-                    case GameStatus.SelectDeffenceAction:
-                        onClickMouseSelectDeffenceAction(pos);
-                        break;
                     case GameStatus.SelectAttackAction:
                         onClickMouseSelectAttackAction(pos);
+                        break;
+                    case GameStatus.SelectDeffenceAction:
+                        onClickMouseSelectDeffenceAction(pos);
                         break;
                     case GameStatus.ShowActionResult:
                         onClickMouseShowActionResult(pos);
@@ -157,46 +174,34 @@ namespace HokkaidoWar.Scene
             }
         }
 
-        private void cycleProcessSelectDeffenceAction(asd.Vector2DF pos)
-        {
-            if(_player == Player.Deffence)
-            {
-                _image_gu_deffence.Show();
-                _image_choki_deffence.Show();
-                _image_par_deffence.Show();
-                _image_gu_deffence.OnMouse(pos);
-                _image_choki_deffence.OnMouse(pos);
-                _image_par_deffence.OnMouse(pos);
-            }
-            else
-            {
-                var r = Singleton.Random;
-                switch(r.Next(0, 3))
-                {
-                    case 0:
-                        selectedDeffece = BattleIcon.Icon.Gu;
-                        break;
-                    case 1:
-                        selectedDeffece = BattleIcon.Icon.Choki;
-                        break;
-                    case 2:
-                        selectedDeffece = BattleIcon.Icon.Par;
-                        break;
-                }
-                _status = GameStatus.SelectAttackAction;
-            }
-        }
-
         private void cycleProcessSelectAttackAction(asd.Vector2DF pos)
         {
             if (_player == Player.Attack)
             {
-                _image_gu_attack.Show();
-                _image_choki_attack.Show();
-                _image_par_attack.Show();
-                _image_gu_attack.OnMouse(pos);
-                _image_choki_attack.OnMouse(pos);
-                _image_par_attack.OnMouse(pos);
+                if (isOnMouse(pos, _commandCharge))
+                {
+                    _commandCharge.Texture = Singleton.ImageCharge2;
+                }
+                else
+                {
+                    _commandCharge.Texture = Singleton.ImageCharge;
+                }
+                if (isOnMouse(pos, _commandSiege))
+                {
+                    _commandSiege.Texture = Singleton.ImageSiege2;
+                }
+                else
+                {
+                    _commandSiege.Texture = Singleton.ImageSiege;
+                }
+                if (isOnMouse(pos, _commandShoot))
+                {
+                    _commandShoot.Texture = Singleton.ImageShoot2;
+                }
+                else
+                {
+                    _commandShoot.Texture = Singleton.ImageShoot;
+                }
             }
             else
             {
@@ -204,53 +209,138 @@ namespace HokkaidoWar.Scene
                 switch (r.Next(0, 3))
                 {
                     case 0:
-                        selectedAttack = BattleIcon.Icon.Gu;
+                        selectedAttack = Action.Charge;
                         break;
                     case 1:
-                        selectedAttack = BattleIcon.Icon.Choki;
+                        selectedAttack = Action.Siege;
                         break;
                     case 2:
-                        selectedAttack = BattleIcon.Icon.Par;
+                        selectedAttack = Action.Shoot;
                         break;
                 }
+                showCommand();
                 _status = GameStatus.ShowActionResult;
+            }
+
+        }
+
+        private void cycleProcessSelectDeffenceAction(asd.Vector2DF pos)
+        {
+            if (_player == Player.Deffence)
+            {
+                if (isOnMouse(pos, _commandCharge))
+                {
+                    _commandCharge.Texture = Singleton.ImageCharge2;
+                }
+                else
+                {
+                    _commandCharge.Texture = Singleton.ImageCharge;
+                }
+                if (isOnMouse(pos, _commandSiege))
+                {
+                    _commandSiege.Texture = Singleton.ImageSiege2;
+                }
+                else
+                {
+                    _commandSiege.Texture = Singleton.ImageSiege;
+                }
+                if (isOnMouse(pos, _commandShoot))
+                {
+                    _commandShoot.Texture = Singleton.ImageShoot2;
+                }
+                else
+                {
+                    _commandShoot.Texture = Singleton.ImageShoot;
+                }
+                if (isOnMouse(pos, _commandDeffence))
+                {
+                    _commandDeffence.Texture = Singleton.ImageDeffence2;
+                }
+                else
+                {
+                    _commandDeffence.Texture = Singleton.ImageDeffence;
+                }
+            }
+            else
+            {
+                var r = Singleton.Random;
+                switch (r.Next(0, 3))
+                {
+                    case 0:
+                        selectedDeffece = Action.Charge;
+                        break;
+                    case 1:
+                        selectedDeffece = Action.Siege;
+                        break;
+                    case 2:
+                        selectedDeffece = Action.Shoot;
+                        break;
+                }
+                showCommand();
+                _status = GameStatus.SelectAttackAction;
             }
         }
 
         private void cycleProcessShowActionResult(asd.Vector2DF pos)
         {
-            _attackResult.SetIcon(selectedAttack);
-            _attackResult.Show();
-            _deffenceResult.SetIcon(selectedDeffece);
-            _deffenceResult.Show();
+            switch (selectedAttack)
+            {
+                case Action.Charge:
+                    _attackResult.Texture = Singleton.ImageCharge;
+                    break;
+                case Action.Siege:
+                    _attackResult.Texture = Singleton.ImageSiege;
+                    break;
+                case Action.Shoot:
+                    _attackResult.Texture = Singleton.ImageShoot;
+                    break;
+                default:
+                    _attackResult.Texture = Singleton.ImageDeffence;
+                    break;
+            }
+            switch(selectedDeffece)
+            {
+                case Action.Charge:
+                    _deffenceResult.Texture = Singleton.ImageCharge;
+                    break;
+                case Action.Siege:
+                    _deffenceResult.Texture = Singleton.ImageSiege;
+                    break;
+                case Action.Shoot:
+                    _deffenceResult.Texture = Singleton.ImageShoot;
+                    break;
+                default:
+                    _deffenceResult.Texture = Singleton.ImageDeffence;
+                    break;
+            }
         }
 
         private void onClickMouseSelectDeffenceAction(asd.Vector2DF pos)
         {
             if (_player == Player.Deffence)
             {
-                if (_image_gu_deffence.IsOnMouse(pos))
+                if (isOnMouse(pos, _commandCharge))
                 {
-                    selectedDeffece = BattleIcon.Icon.Gu;
-                    _image_gu_deffence.Hide();
-                    _image_choki_deffence.Hide();
-                    _image_par_deffence.Hide();
+                    selectedDeffece = Action.Charge;
+                    hideCommand();
                     _status = GameStatus.SelectAttackAction;
                 }
-                else if (_image_choki_deffence.IsOnMouse(pos))
+                if (isOnMouse(pos, _commandSiege))
                 {
-                    selectedDeffece = BattleIcon.Icon.Choki;
-                    _image_gu_deffence.Hide();
-                    _image_choki_deffence.Hide();
-                    _image_par_deffence.Hide();
+                    selectedDeffece = Action.Siege;
+                    hideCommand();
                     _status = GameStatus.SelectAttackAction;
                 }
-                else if (_image_par_deffence.IsOnMouse(pos))
+                if (isOnMouse(pos, _commandShoot))
                 {
-                    selectedDeffece = BattleIcon.Icon.Par;
-                    _image_gu_deffence.Hide();
-                    _image_choki_deffence.Hide();
-                    _image_par_deffence.Hide();
+                    selectedDeffece = Action.Shoot;
+                    hideCommand();
+                    _status = GameStatus.SelectAttackAction;
+                }
+                if (isOnMouse(pos, _commandDeffence))
+                {
+                    selectedDeffece = Action.Deffence;
+                    hideCommand();
                     _status = GameStatus.SelectAttackAction;
                 }
             }
@@ -260,40 +350,38 @@ namespace HokkaidoWar.Scene
         {
             if (_player == Player.Attack)
             {
-                if (_image_gu_attack.IsOnMouse(pos))
+                if (isOnMouse(pos, _commandCharge))
                 {
-                    selectedAttack = BattleIcon.Icon.Gu;
+                    selectedAttack = Action.Charge;
+                    hideCommand();
+                    _status = GameStatus.ShowActionResult;
                 }
-                else if (_image_choki_attack.IsOnMouse(pos))
+                if (isOnMouse(pos, _commandSiege))
                 {
-                    selectedAttack = BattleIcon.Icon.Choki;
+                    selectedAttack = Action.Siege;
+                    hideCommand();
+                    _status = GameStatus.ShowActionResult;
                 }
-                else if (_image_par_attack.IsOnMouse(pos))
+                if (isOnMouse(pos, _commandShoot))
                 {
-                    selectedAttack = BattleIcon.Icon.Par;
+                    selectedAttack = Action.Shoot;
+                    hideCommand();
+                    _status = GameStatus.ShowActionResult;
                 }
-                else
-                {
-                    return;
-                }
-                _image_gu_attack.Hide();
-                _image_choki_attack.Hide();
-                _image_par_attack.Hide();
-                _status = GameStatus.ShowActionResult;
             }
         }
 
         private void onClickMouseShowActionResult(asd.Vector2DF pos)
         {
-            var result = janken(selectedAttack, selectedDeffece);
-            if(result == BattleResult.win)
+            var result = judge(selectedAttack, selectedDeffece);
+            if (result == BattleResult.win)
             {
                 _deffencePower -= (int)Math.Floor(_attackPower * (Singleton.Random.NextDouble() + 0.1));
-                if(_deffencePower <= 0)
+                if (_deffencePower <= 0)
                 {
+                    _attack.UpdatePower(_attackPower);
                     Singleton.GameData.BattleResultUpdate(BattleResult.win);
-                    var scene = new MainScene();
-                    asd.Engine.ChangeScene(scene);
+                    asd.Engine.ChangeScene(new MainScene());
                     _deffenceParam.Text = "戦闘力：0";
                 }
                 else
@@ -301,15 +389,15 @@ namespace HokkaidoWar.Scene
                     _deffenceParam.Text = "戦闘力：" + _deffencePower;
                 }
             }
-            else if(result == BattleResult.lose)
+            else if (result == BattleResult.lose)
             {
-                
+
                 _attackPower -= (int)Math.Floor(_deffencePower * (Singleton.Random.NextDouble() + 0.1));
                 if (_attackPower <= 0)
                 {
+                    _deffence.UpdatePower(_deffencePower);
                     Singleton.GameData.BattleResultUpdate(BattleResult.lose);
-                    var scene = new MainScene();
-                    asd.Engine.ChangeScene(scene);
+                    asd.Engine.ChangeScene(new MainScene());
                     _attackParam.Text = "戦闘力：0";
                 }
                 else
@@ -317,53 +405,111 @@ namespace HokkaidoWar.Scene
                     _attackParam.Text = "戦闘力：" + _attackPower;
                 }
             }
-            _attackResult.Hide();
-            _deffenceResult.Hide();
+            else if (result == BattleResult.guard)
+            {
+                var attackDamage = _deffencePower / 10;
+                var deffenceDamage = _attackPower / 10;
+                _deffencePower -= deffenceDamage;
+                _attackPower -= attackDamage;
+                if (_deffencePower <= 0)
+                {
+                    _attack.UpdatePower(_attackPower);
+                    Singleton.GameData.BattleResultUpdate(BattleResult.win);
+                    asd.Engine.ChangeScene(new MainScene());
+                    _deffenceParam.Text = "戦闘力：0";
+                    _attackParam.Text = "戦闘力：" + _attackPower;
+                }
+                else if (_attackPower <= 0)
+                {
+                    _deffence.UpdatePower(_deffencePower);
+                    Singleton.GameData.BattleResultUpdate(BattleResult.lose);
+                    asd.Engine.ChangeScene(new MainScene());
+                    _deffenceParam.Text = "戦闘力：" + _deffencePower;
+                    _attackParam.Text = "戦闘力：0";
+                }
+                else
+                {
+                    _attackParam.Text = "戦闘力：" + _attackPower;
+                    _deffenceParam.Text = "戦闘力：" + _deffencePower;
+                }
+            }
+            _attackResult.Texture = null;
+            _deffenceResult.Texture = null;
             _status = GameStatus.SelectDeffenceAction;
         }
 
-        private BattleResult janken(BattleIcon.Icon attack, BattleIcon.Icon deffence)
+        private BattleResult judge(Action attack, Action deffence)
         {
             switch (attack)
             {
-                case BattleIcon.Icon.Gu:
+                case Action.Charge:
                     switch (deffence)
                     {
-                        case BattleIcon.Icon.Gu:
+                        case Action.Charge:
                             return BattleResult.draw;
-                        case BattleIcon.Icon.Choki:
+                        case Action.Siege:
                             return BattleResult.win;
-                        case BattleIcon.Icon.Par:
+                        case Action.Shoot:
                             return BattleResult.lose;
                         default:
-                            return BattleResult.draw;
+                            return BattleResult.guard;
                     }
-                case BattleIcon.Icon.Choki:
+                case Action.Siege:
                     switch (deffence)
                     {
-                        case BattleIcon.Icon.Gu:
+                        case Action.Charge:
                             return BattleResult.lose;
-                        case BattleIcon.Icon.Choki:
+                        case Action.Siege:
                             return BattleResult.draw;
-                        case BattleIcon.Icon.Par:
+                        case Action.Shoot:
                             return BattleResult.win;
                         default:
-                            return BattleResult.draw;
+                            return BattleResult.guard;
                     }
-                case BattleIcon.Icon.Par:
+                case Action.Shoot:
                     switch (deffence)
                     {
-                        case BattleIcon.Icon.Gu:
+                        case Action.Charge:
                             return BattleResult.win;
-                        case BattleIcon.Icon.Choki:
+                        case Action.Siege:
                             return BattleResult.lose;
-                        case BattleIcon.Icon.Par:
+                        case Action.Shoot:
                             return BattleResult.draw;
                         default:
-                            return BattleResult.draw;
+                            return BattleResult.guard;
                     }
                 default:
-                    return BattleResult.draw;
+                    return BattleResult.guard;
+            }
+        }
+        private bool isOnMouse(asd.Vector2DF pos, asd.TextureObject2D button)
+        {
+            if (pos.X > button.Position.X && pos.X < button.Position.X + buttonWidth
+                && pos.Y > button.Position.Y && pos.Y < button.Position.Y + buttonHeight)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void showCommand()
+        {
+            _commandCharge.Texture = Singleton.ImageCharge;
+            _commandSiege.Texture = Singleton.ImageSiege;
+            _commandShoot.Texture = Singleton.ImageShoot;
+            if (_player == Player.Deffence)
+            {
+                _commandDeffence.Texture = Singleton.ImageDeffence;
+            }
+        }
+        private void hideCommand()
+        {
+            _commandCharge.Texture = null;
+            _commandSiege.Texture = null;
+            _commandShoot.Texture = null;
+            if (_player == Player.Deffence)
+            {
+                _commandDeffence.Texture = null;
             }
         }
     }
