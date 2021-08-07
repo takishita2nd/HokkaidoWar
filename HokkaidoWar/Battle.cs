@@ -81,6 +81,7 @@ namespace HokkaidoWar
                     aliveCities = copyCity(_cities);
                     cityCnt = 0;
                     Singleton.GameData.TurnNumber++;
+                    Singleton.GameData.gameStatus = GameStatus.ShowTurn;
                 }
                 return message;
             }
