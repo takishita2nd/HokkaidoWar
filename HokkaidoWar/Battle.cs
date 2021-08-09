@@ -216,7 +216,10 @@ namespace HokkaidoWar
 
         public void MyTurnEnd()
         {
-            lastAttack.ClearPaint();
+            if(lastAttack != null)
+            {
+                lastAttack.ClearPaint();
+            }
             lastAttack = null;
 
             cityCnt++;

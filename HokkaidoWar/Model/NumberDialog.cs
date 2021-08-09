@@ -272,6 +272,10 @@ namespace HokkaidoWar.Model
         private void setMaxValue()
         {
             var value = string.Format("{0:0000000}", max);
+            if(value.ToArray().Length > 7)
+            {
+                value = "9999999";
+            }
             foreach (var item in value.ToArray().Select((v, index) => new { chara = v, Index = index }))
             {
                 _number[item.Index].Text = item.chara.ToString();

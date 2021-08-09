@@ -138,7 +138,7 @@ namespace HokkaidoWar.Scene
                     cycleVerificateInputPowerUp(pos);
                     break;
                 case GameData.GameStatus.GameEnd:
-                    cycleProcessGameEnd();
+                    cycleProcessGameEnd(pos);
                     break;
                 case GameData.GameStatus.GameOver:
                     cycleProcessGameOver(pos);
@@ -184,6 +184,18 @@ namespace HokkaidoWar.Scene
             FileAccess.SaveData(gameData);
             gameData.GetMoney();
             Thread.Sleep(1000);
+            if(gameData.AliveCities.Count == 1)
+            {
+                if(gameData.AliveCities[0].Equals(gameData.Player.City))
+                {
+                    gameData.gameStatus = GameData.GameStatus.GameEnd;
+                }
+                else
+                {
+                    gameData.gameStatus = GameData.GameStatus.GameOver;
+                }
+                return;
+            }
             gameData.gameStatus = GameData.GameStatus.ActionEnemy;
         }
 
@@ -297,20 +309,36 @@ namespace HokkaidoWar.Scene
             _dialog.OnMouse(pos);
         }
 
-        private void cycleProcessGameEnd()
+        private void cycleProcessGameEnd(Vector2DF pos)
         {
             var gameinfo = Singleton.GameProcessInfomation;
+            if (!gameinfo.IsShow())
+            {
+                gameinfo.Show(layer);
+            }
             gameinfo.ShowText(gameData.GetPlayCityPosition(), string.Empty);
             var info = Singleton.InfomationWindow;
-            info.ShowText(gameData.AliveCities[0].GetPosition(), "ゲームが終了しました\r\n");
-            info.ShowText(gameData.AliveCities[0].GetPosition(), gameData.AliveCities[0].Name + "の勝利です\r\n");
+            if (!info.IsShow())
+            {
+                info.Show(layer);
+            }
+            info.ShowText(pos, "ゲームが終了しました\r\n");
+            info.ShowText(pos, gameData.AliveCities[0].Name + "の勝利です\r\n");
         }
 
         private void cycleProcessGameOver(asd.Vector2DF pos)
         {
             var gameinfo = Singleton.GameProcessInfomation;
-            gameinfo.ShowText(gameData.GetPlayCityPosition(), string.Empty);
+            if (!gameinfo.IsShow())
+            {
+                gameinfo.Show(layer);
+            }
+            gameinfo.ShowText(pos, string.Empty);
             var info = Singleton.InfomationWindow;
+            if (!info.IsShow())
+            {
+                info.Show(layer);
+            }
             info.ShowText(pos, "敗北しました\r\n");
         }
 
