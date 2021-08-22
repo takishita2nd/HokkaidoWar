@@ -7,30 +7,25 @@ using System.Threading.Tasks;
 
 namespace HokkaidoWar.Model
 {
-    [JsonObject("MapDataModel")]
+
     public class MapData
     {
-        [JsonProperty("list")]
-        public List[] list { get; set; }
+        public Citydata[] citydata { get; set; }
     }
 
-    [JsonObject("List")]
-    public class List
+    public class Citydata
     {
-        [JsonProperty("name")]
+        public int id { get; set; }
         public string name { get; set; }
-        [JsonProperty("point")]
-        public Point[] point { get; set; }
-        [JsonProperty("population")]
         public int population { get; set; }
+        public int money { get; set; }
+        public Point point { get; set; }
+        public int[] link { get; set; }
     }
 
-    [JsonObject("Point")]
     public class Point
     {
-        [JsonProperty("x")]
         public int x { get; set; }
-        [JsonProperty("y")]
         public int y { get; set; }
     }
 

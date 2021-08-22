@@ -10,128 +10,64 @@ namespace HokkaidoWar.Model
 {
     class Map
     {
+        private int _id;
         private int _x;
         private int _y;
+        private int[] _link;
         private City _city;
-        private asd.Color _color;
-        private asd.GeometryObject2D _geometryObj;
+        private Color _color;
+        private int _population;
+        private int _area;
+        private GeometryObject2D _geometryObj;
 
-        private readonly int width = 24;
-        private readonly int height = 24;
-        private readonly int offsetx = 50;
-        private readonly int offsety = 50;
+        private readonly int width = 12;
+        private readonly int height = 12;
+        private readonly int centerOffset = 6;
 
+        public int Id { get { return _id; } }
         public int X { get { return _x; } }
         public int Y { get { return _y; } }
+        public int CenterX { get { return _x + centerOffset; } }
+        public int CenterY { get { return _y + centerOffset; } }
+        public int Population { get { return _population; } }
+        public int Area { get { return _area; } }
 
-        public Map Up { 
-            get {
-                var field = Singleton.FieldMap;
-                if(_x == 21 && _y == 0)
-                {
-                    return field.GetMap(26, 0);
-                }
-                else if(_x == 26 && _y == 0)
-                {
-                    return field.GetMap(21, 0);
-                }
-                else if (_x == 23 && _y == 4)
-                {
-                    return field.GetMap(21, 0);
-                }
-                else
-                {
-                    return field.GetMap(_x, _y - 1);
-                }
-            }
-        }
-
-        public Map Down
-        {
-            get
-            {
-                var field = Singleton.FieldMap;
-                if(_x == 21 && _y == 0)
-                {
-                    return field.GetMap(22, 1);
-                }
-                else
-                {
-                    return field.GetMap(_x, _y + 1);
-                }
-            }
-        }
-
-        public Map Left
-        {
-            get
-            {
-                var field = Singleton.FieldMap;
-                if (_x == 2 && _y == 31)
-                {
-                    return field.GetMap(0, 31);
-                }
-                else if(_x == 22 && _y == 1)
-                {
-                    return field.GetMap(21, 0);
-                }
-                else if (_x == 26 && _y == 0)
-                {
-                    return field.GetMap(23, 1);
-                }
-                else
-                {
-                    return field.GetMap(_x - 1, _y);
-                }
-            }
-        }
-
-        public Map Right
-        {
-            get
-            {
-                var field = Singleton.FieldMap;
-                if (_x == 0 && _y == 31)
-                {
-                    return field.GetMap(2, 31);
-                }
-                else if(_x == 21 && _y == 0)
-                {
-                    return field.GetMap(23, 1);
-                }
-                else if (_x == 23 && _y == 1)
-                {
-                    return field.GetMap(26, 0);
-                }
-                else
-                {
-                    return field.GetMap(_x + 1, _y);
-                }
-            }
-        }
-
-        public Map(int x, int y, asd.Color color)
-        {
+        public Map(int id, int x, int y, int population, int area, asd.Color color, int[] link)
+        {   
+            _id = id;
             _x = x;
             _y = y;
-            
+            _link = link;
             _color = color;
+            _population = population;
+            _area = area;
         }
 
-        public void AddLayer(asd.Layer2D layer)
+        public void AddLayer(Layer2D layer)
         {
-            _geometryObj = new asd.GeometryObject2D();
+            _geometryObj = new GeometryObject2D();
+            _geometryObj.DrawingPriority = 10;
             _geometryObj.Color = _color;
-            var rect = new asd.RectangleShape();
-            rect.DrawingArea = new asd.RectF(width * _x + offsetx, height * _y + offsety, width, height);
+            var rect = new RectangleShape();
+            rect.DrawingArea = new RectF(_x, _y, width, height);
             _geometryObj.Shape = rect;
 
             layer.AddObject(_geometryObj);
         }
 
-        public void SetColor(asd.Color color)
+        public void SaveColor(Color color)
+        {
+            _color = color;
+        }
+
+        public void SetColor(Color color)
         {
             _geometryObj.Color = color;
+        }
+
+        public void PaintAttackColor()
+        {
+            _geometryObj.Color = new asd.Color(0, 0, 200);
         }
 
         public void SetCity(City city)
@@ -145,10 +81,19 @@ namespace HokkaidoWar.Model
             return _city;
         }
 
+        public List<Map> GetLinkdMap()
+        {
+            List<Map> maps = new List<Map>();
+            foreach(var i in _link)
+            {
+                maps.Add(Singleton.FieldMap.GetMap(i));
+            }
+            return maps;
+        }
+
         public bool IsOnMouse(asd.Vector2DF pos)
         {
-            if (pos.X > width * _x + offsetx && pos.X < width * (_x + 1) + offsetx
-                && pos.Y > height * _y + offsety && pos.Y < height * (_y + 1) + offsety)
+            if (pos.X > _x && pos.X < _x + width && pos.Y > _y && pos.Y < _y + height)
             {
                 return true;
             }

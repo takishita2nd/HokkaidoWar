@@ -9,33 +9,85 @@ namespace HokkaidoWar.Model
 {
     class City
     {
+        public int Id { get; }
+
         private string _name = string.Empty;
-        private int _population = 0;
         private bool _isAlive;
         private List<Map> _maps = null;
-        private asd.Color _color;
-
+        private Color _color;
+        private int _money;
+        private int _power;
+        private float _bonus;
         public string Name { get { return _name; } }
-        public int Population { get { return _population; } }
+        public int Population
+        {
+            get
+            {
+                var population = 0;
+                foreach(var m in _maps)
+                {
+                    population += m.Population;
+                }
+                return population;
+            }
+        }
+        public int Area
+        {
+            get
+            {
+                var area = 0;
+                foreach (var m in _maps)
+                {
+                    area += m.Area;
+                }
+                return area;
+            }
+        }
+        public int Money {  get { return _money; } }
+        public int Power { get { return _power; } }
+        public float Bonus { get { return _bonus; } }
         public bool IsAlive { get { return _isAlive; } }
 
-        public City(string name, Point[] points, int population)
+        public City(Citydata citydata)
         {
-            _name = name;
-            _population = population;
+            Id = citydata.id;
+            _money = 0;
+            _power = citydata.population;
+            _bonus = 1.0f;
+            _name = citydata.name;
             _isAlive = true;
             _maps = new List<Map>();
             var r = Singleton.Random;
-            _color = new asd.Color((byte)r.Next(0, 255), (byte)r.Next(0, 255), (byte)r.Next(0, 255));
+            _color = new Color((byte)r.Next(0, 255), (byte)r.Next(0, 255), (byte)r.Next(0, 255));
 
             var fieldMap = Singleton.FieldMap;
 
-            foreach (var p in points)
+            Map m = new Map(citydata.id, citydata.point.x, citydata.point.y, citydata.population, citydata.money, _color, citydata.link);
+            m.SetCity(this);
+            _maps.Add(m);
+            fieldMap.SetMap(m);
+        }
+
+        public City(CityData cityData)
+        {
+            Id = cityData.id;
+            _money = cityData.money;
+            _power = cityData.power;
+            _bonus = cityData.bonus;
+            _name = cityData.name;
+            _isAlive = true;
+            _maps = new List<Map>();
+            var r = Singleton.Random;
+            _color = new Color((byte)r.Next(0, 255), (byte)r.Next(0, 255), (byte)r.Next(0, 255));
+
+            var fieldMap = Singleton.FieldMap;
+
+            foreach(var mid in cityData.mapid)
             {
-                Map m = new Map(p.x, p.y, _color);
-                m.SetCity(this);
-                _maps.Add(m);
-                fieldMap.SetMap(m);
+                var map = fieldMap.GetMap(mid);
+                map.SetCity(this);
+                _maps.Add(map);
+                map.SaveColor(_color);
             }
         }
 
@@ -44,15 +96,60 @@ namespace HokkaidoWar.Model
             return _maps;
         }
 
-        public void CombinationCity(City lose)
+        public void AddMap(Map map)
         {
-            addMaps(lose.GetMaps());
-            _population += lose.Population;
+            _maps.Add(map);
+            map.SetCity(this);
+            map.SetColor(_color);
+        }
+
+        public void LostMap(Map map)
+        {
+            if(_maps.Contains(map))
+            {
+                _maps.Remove(map);
+                if(_maps.Count == 0)
+                {
+                    Lose();
+                }
+            }
         }
 
         public void Lose()
         {
             _isAlive = false;
+        }
+
+        public void AddMoney()
+        {
+            _money += Area;
+        }
+
+        public void PayMoney(int money)
+        {
+            _money -= money;
+        }
+
+        public void AddPower(int power)
+        {
+            _power += power;
+        }
+
+        public void ResetPower()
+        {
+            _power = Population;
+        }
+
+        public void UpdatePower(int power)
+        {
+            if(power > Population)
+            {
+                _power = power;
+            }
+            else
+            {
+                _power = Population;
+            }
         }
 
         private void addMaps(List<Map> maps)
@@ -64,14 +161,29 @@ namespace HokkaidoWar.Model
             _maps.AddRange(maps);
         }
 
-        public void OnMouse(asd.Vector2DF pos)
+
+        public void OnMouse(Vector2DF pos, bool allInfo)
         {
             foreach (var m in _maps)
             {
                 if(m.IsOnMouse(pos))
                 {
-                    var info = Singleton.InfomationWindow;
-                    info.AppendText(pos, _name + "\r\n" + _population.ToString());
+                    if(allInfo)
+                    {
+                        var info = Singleton.InfomationWindow;
+                        info.AppendText(pos, _name +
+                            "\r\n  金" + Money.ToString() +
+                            "\r\n  戦力" + ((int)(Power * Bonus)).ToString() +
+                            "\r\n  人口" + Population.ToString() +
+                            "\r\n  面積" + Area.ToString());
+                    }
+                    else
+                    {
+                        var info = Singleton.InfomationWindow;
+                        info.AppendText(pos, _name +
+                            "\r\n  人口" + Population.ToString() +
+                            "\r\n  面積" + Area.ToString());
+                    }
                 }
             }
         }
@@ -99,33 +211,9 @@ namespace HokkaidoWar.Model
             List<City> cities = new List<City>();
             foreach (var m in _maps)
             {
-                if (m.Up != null)
+                foreach(var linkedMap in m.GetLinkdMap())
                 {
-                    var c = m.Up.GetCity();
-                    if (cities.Contains(c) == false && c != this)
-                    {
-                        cities.Add(c);
-                    }
-                }
-                if (m.Down != null)
-                {
-                    var c = m.Down.GetCity();
-                    if (cities.Contains(c) == false && c != this)
-                    {
-                        cities.Add(c);
-                    }
-                }
-                if (m.Left != null)
-                {
-                    var c = m.Left.GetCity();
-                    if (cities.Contains(c) == false && c != this)
-                    {
-                        cities.Add(c);
-                    }
-                }
-                if (m.Right != null)
-                {
-                    var c = m.Right.GetCity();
+                    var c = linkedMap.GetCity();
                     if (cities.Contains(c) == false && c != this)
                     {
                         cities.Add(c);
@@ -133,6 +221,22 @@ namespace HokkaidoWar.Model
                 }
             }
             return cities;
+        }
+
+        public List<Map> GetLinkedMaps()
+        {
+            List<Map> maps = new List<Map>();
+            foreach (var m in _maps)
+            {
+                foreach (var linkedMap in m.GetLinkdMap())
+                {
+                    if(maps.Contains(linkedMap) == false && linkedMap.GetCity() != this)
+                    {
+                        maps.Add(linkedMap);
+                    }
+                }
+            }
+            return maps;
         }
 
         public void PaintAttackColor()

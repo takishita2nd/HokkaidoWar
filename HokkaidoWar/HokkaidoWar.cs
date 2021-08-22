@@ -19,13 +19,23 @@ namespace HokkaidoWar
 
         public void Run()
         {
-            asd.Engine.Initialize("北海道大戦", 1200, 1000, new asd.EngineOption());
+            asd.Engine.Initialize("北海道大戦", 1900, 1000, new asd.EngineOption());
 
             asd.Engine.File.AddRootPackage("hokkaido.pack");
+            // マップデータの取得
+            var gameData = Singleton.GameData;
+            gameData.setMapData(FileAccess.Load());
+
+            foreach (var citydata in gameData.MapData.citydata)
+            {
+                City city = new City(citydata);
+                gameData.Cities.Add(city);
+            }
+            gameData.gameStatus = GameData.GameStatus.SelectCity;
+            gameData.Battleinitialize();
 
             // シーンの登録
-            var scene = new MainScene();
-            asd.Engine.ChangeScene(scene);
+            asd.Engine.ChangeScene(new TitleScene());
 
             while (asd.Engine.DoEvents())
             {

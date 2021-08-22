@@ -14,8 +14,12 @@ namespace HokkaidoWar
             None,
             SelectCity,
             VerificateCity,
+            ShowTurn,
             ActionEnemy,
             ActionPlayer,
+            SelectTargetCity,
+            InputPowerUpPoint,
+            VerificateInputPowerUp,
             GameEnd,
             GameOver
         }
@@ -24,7 +28,8 @@ namespace HokkaidoWar
         {
             win,
             draw,
-            lose
+            lose,
+            guard
         }
 
         public GameStatus gameStatus = GameStatus.None;
@@ -32,10 +37,17 @@ namespace HokkaidoWar
         public List<City> AliveCities = null;
         public Battle Battle = null;
         public Player Player = null;
+        public MapData MapData = null;
+        public int TurnNumber = 1;
 
         public GameData()
         {
             Cities = new List<City>();
+        }
+
+        public void setMapData(MapData mapData)
+        {
+            MapData = mapData;
         }
 
         public void Battleinitialize()
@@ -50,8 +62,23 @@ namespace HokkaidoWar
             {
                 foreach (var city in AliveCities)
                 {
-                    city.OnMouse(pos);
+                    if(Player != null && Player.City.Equals(city))
+                    {
+                        city.OnMouse(pos, true);
+                    }
+                    else
+                    {
+                        city.OnMouse(pos, false);
+                    }
                 }
+            }
+        }
+
+        public void GetMoney()
+        {
+            foreach (var city in AliveCities)
+            {
+                city.AddMoney();
             }
         }
 
@@ -87,10 +114,16 @@ namespace HokkaidoWar
             return AliveCities.Contains(Player.City);
         }
 
-        public void PlayNextCity()
+        public City GetActionCity()
         {
-            Battle.NextTurn(Player.City);
+            return Battle.GetActionCity();
+        }
+
+        public string PlayNextCity()
+        {
+            string message = Battle.NextTurn(Player.City);
             AliveCities = Battle.GetAliveCityList();
+            return message;
         }
 
         public void PlayPlayer()
@@ -105,19 +138,24 @@ namespace HokkaidoWar
             return Player.City.IsOnMouse(pos);
         }
 
-        public void OnMousePlayerCity(asd.Vector2DF pos)
-        {
-            Player.City.OnMouse(pos);
-        }
-
         public List<City> GetPlayerLinkedCities()
         {
             return Player.City.GetLinkedCities();
         }
 
-        public void PlayerAttackCity(City target)
+        public List<Map> GetPlayerLinkedMaps()
         {
-            Battle.MyTrunAttack(Player.City, target);
+            return Player.City.GetLinkedMaps();
+        }
+
+        public void PlayerAttackCity(City target, Map map)
+        {
+            Battle.MyTrunAttack(Player.City, target, map);
+        }
+
+        public void PlayerTurnEnd()
+        {
+            Battle.MyTurnEnd();
         }
 
         public asd.Vector2DF GetPlayCityPosition()
@@ -131,7 +169,7 @@ namespace HokkaidoWar
             {
                 Battle.EnemyTurnEnd(result);
             }
-            else if (gameStatus == GameStatus.ActionPlayer)
+            else if (gameStatus == GameStatus.SelectTargetCity)
             {
                 Battle.MyTurnEnd(result);
                 var aliveCity = Battle.GetAliveCityList();
